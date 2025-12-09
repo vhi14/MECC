@@ -1,0 +1,200 @@
+body {
+  font-family: 'Roboto', Arial, sans-serif;
+  color: #000000;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  overflow: hidden;
+  background-color: #f0f0f0; 
+}   
+.create{
+  color: rgb(2, 183, 255);
+}
+
+.background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('img/mpspc.jpg');
+  background-size: cover;
+  background-position: center;
+  filter: blur(6px);
+  z-index: -1;
+}
+
+.login-box {
+  background-color: #fce4ec;
+  padding: 50px;
+  border-radius: 20px;
+  width: 350px; 
+  text-align: center;
+  box-shadow: 0px 4px 20px rgba(237, 198, 122, 0.992); 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.login-container h1 {
+  font-size: 19px;
+  margin-bottom: 40px; 
+  color: black;
+  border-bottom: 2px solid rgba(75, 75, 75, 0.545);
+  padding-bottom: 10px;
+}
+/* Form Container */
+.form {
+  width: 100%;
+}
+
+.form-control {
+  width: 100%;
+  padding: 10px 15px;
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #000000;
+  background-color: rgba(249, 249, 249, 0.9);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: #04f624;
+  box-shadow: 0 0 15px rgba(0, 255, 195, 0.5);
+  background-color: rgba(249, 249, 249, 0.9);
+}
+
+.input-group {
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center; 
+  width: 100%;
+}
+
+.input-group .form-control {
+  border-radius: 12px;
+  padding: 10px; 
+  width: 80%; 
+}
+
+.input-group-text {
+  background: white;
+  color: black;
+  border-radius: 12px;
+}
+
+.btn {
+  border-radius: 12px;
+  font-size: 16px;
+  margin: 20px 0;
+  width: 80%; 
+  padding: 10px; 
+  cursor: pointer;
+  transition: all 0.3s ease; 
+  text-align: center; 
+  border: none;
+}
+
+.btn-primary {
+  background: #0d8f32;
+  color: white;
+}
+
+.btn-primary:hover {
+  background: goldenrod;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn-secondary {
+  background: #09ae38;
+  color: white;
+}
+
+.btn-secondary:hover {
+  background: goldenrod;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.error {
+  color: red;
+  font-size: 14px;
+  margin-bottom: 15px;
+}
+
+.alert {
+  padding: 12px 15px;
+  border-radius: 8px;
+  margin: 10px 0;
+  font-weight: 500;
+}
+
+.alert-danger {
+  background-color: rgba(248, 215, 218, 0.9);
+  color: #ff0019;
+  border: 1px solid #f5c6cb;
+}
+
+.alert-warning {
+  background-color: rgba(255, 243, 205, 0.9);
+  color: #856404;
+  border: 1px solid #ffeaa7;
+}
+
+a {
+  color: black;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+a:hover {
+  color: #0d5d24;
+}
+
+.card-body {
+  background-color: #fce4ec;
+  width: 100%;
+  display: flex;  
+  box-shadow: none;
+  justify-content: center;
+  align-items: center;
+  text-align:center;
+  padding-left: 0;
+
+}
+
+#crt{
+  color: rgb(57, 197, 244);
+}
+
+.role-selection {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.role-selection p {
+  font-size: 16px;
+  color: #000000;
+  margin-bottom: 20px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .login-box {
+    width: 90%;
+    padding: 30px 20px;
+  }
+  
+  .background {
+    background-size: 70%;
+  }
+}

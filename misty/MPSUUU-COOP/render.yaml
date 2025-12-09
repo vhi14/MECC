@@ -1,0 +1,42 @@
+services:
+  - type: web
+    name: mpsucoop-backend
+    env: python
+    plan: free
+    region: oregon
+    buildCommand: |
+      pip install -r mpsucoop/mcoop_db/mcoop_db/requirements.txt;
+      python mpsucoop/mcoop_db/manage.py collectstatic --noinput
+    startCommand: |
+      gunicorn mcoop_db.wsgi:application --chdir mpsucoop/mcoop_db --bind 0.0.0.0:$PORT
+    autoDeploy: true
+    healthCheckPath: /
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: "False"
+      - key: ALLOWED_HOSTS
+        value: mpsucoop-backend.onrender.com,localhost,127.0.0.1
+      - key: DATABASE_URL
+        fromDatabase:
+          name: mpsucoop-db
+          property: connectionString
+
+  - type: static_site
+    name: mpsucoop-frontend
+    buildCommand: |
+      cd mpsucoop/mpsu_coop_front;
+      npm ci;
+      npm run build
+    publishPath: mpsucoop/mpsu_coop_front/build
+    envVars:
+      - key: REACT_APP_API_BASE_URL
+        value: https://mpsucoop-backend.onrender.com
+    autoDeploy: true
+
+databases:
+  - name: mpsucoop-db
+    plan: free

@@ -1,0 +1,429 @@
+
+.addMemberForm {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.formContainer {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-width: 100%; 
+  margin: 0 15px;
+  position: relative;
+  overflow: auto;
+}
+.form-control {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc; /* Initial border color */
+  border-radius: 3px;
+  font-size: 14px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: #04f624; /* Green border on focus */
+  box-shadow: 0 0 15px rgba(0, 255, 195, 0.5); /* Glow effect */
+}
+
+input {
+  font-size: 1rem;
+  padding: 10px;
+  margin: 8px 0;
+  width: 100%;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+table {
+  width: 100%;
+  margin-top: 0px;
+  border-collapse: collapse;
+  color:rgb(0, 0, 0);
+}
+
+table th, table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #75757522;
+}
+
+table th {
+  background-color: #bababa;
+  font-weight: bold;
+  color: #000000;
+}
+
+button {
+  padding: 10px 15px;
+  background-color: #4CAF50;
+  color: #000000;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  flex-grow: 1; 
+  margin: 5px;
+}
+
+button[type="button"] {
+  background-color: #ff1515;
+}
+
+button:hover {
+  background-color: #00ff0d;
+}
+
+button[type="button"]:hover {
+  background-color: #ff0000;
+}
+
+button:last-of-type:hover {
+  background-color: #ff0000;
+}
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.61);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  box-shadow: 0px 0px 20px 0px rgb(154, 154, 154);
+  background: #bbbbbb;
+  color: rgb(0, 0, 0);
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  width: 350px;
+  font-size: 18px;
+}
+
+.modal-actions button {
+  margin: 10px;
+}
+
+/* Style for pop-up notification */
+.notification-popup {
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 5px;
+  width: auto;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.error {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.success {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.tableHeaderTitle {
+  margin-top: -10px;
+  padding: 20px;
+  text-align: center;
+  color: black;
+  font-size: 30px;
+}
+
+.searchBar {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.searchInput {
+  padding: 7px 40px 10px 10px;
+  font-size: 16px;
+  border-radius: 4px;
+  width: 250px;
+  margin-left: auto;
+  margin-bottom: 30px;
+  margin-top: -10px;
+  border: none;
+}
+
+.addButton {
+  background-color: #28a745;
+  color: black;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-right: auto;
+  margin-top: -65px;
+}
+
+.tableContainer {
+  max-height: 425px;
+  width: 100%;
+  overflow-y: auto;
+  box-shadow: 0px 0px 10px rgb(154, 154, 154);
+  margin-top: 20px 0;
+  padding: 0px;
+  border-radius: 5px;
+}
+
+.membersTable {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: center;
+  font-size: 16px;
+  border-spacing: 0;
+}
+
+.tableHeaderRow {
+  background-color: #f8f9fa;
+  color: #212529;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.tableHeaderCell {
+  padding: 15px;
+  font-weight: 600;
+  border-bottom: 2px solid #000000;
+}
+
+.tableRow {
+  transition: background-color 0.3s ease;
+}
+
+.tableRow:hover {
+  background-color: #f8f9fa;
+}
+
+.tableCell {
+  padding: 1px 15px;
+  vertical-align: middle;
+  border-bottom: 1px solid #dee2e6;
+  max-width: 150px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 14px;
+  color: rgb(0, 0, 0);
+}
+
+.actionButtons {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  gap: 20px;
+  padding: 5px;
+}
+
+.actionButton {
+  position: relative;
+  padding: 5px 10px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+  min-width: 40px;
+  height: 30px;
+  margin: 0;
+  color: rgb(0, 0, 0);
+}
+
+/* View button */
+.actionButtonView {
+  background-color: #007bff;
+}
+
+.actionButtonView:hover {
+  background-color: #0056b3;
+}
+
+/* Edit button */
+.actionButtonEdit {
+  background-color: #28a745;
+}
+
+.actionButtonEdit:hover {
+  background-color: #218838;
+}
+
+/* Fix for button text */
+.buttonText {
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.3s ease;
+  margin-top: 60px;
+}
+
+.actionButton:hover .buttonText {
+  opacity: 1;
+  transform: translateY(-30px);
+}
+
+/* Icon styling */
+.actionButton svg {
+  width: 16px;
+  height: 16px;
+}
+
+.actionButton:hover .buttonText {
+  opacity: 1;
+  transform: translateY(-30px);
+}
+
+/* Icon styling */
+.actionButton svg {
+  width: 16px;
+  height: 16px;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+}
+
+.modal-content {
+  background-color: white;
+  border-radius: 8px;
+  padding: 20px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: space-between;
+}
+
+.modalButtonConfirm {
+  padding: 5px 10px;
+  color: black;
+  background-color: #f44336;
+  border-radius: 5px;
+}
+
+.modalButtonCancel {
+  padding: 5px 10px;
+  color: black;
+  background-color: #ccc;
+  border-radius: 5px;
+}
+
+.memberDetailsPopup {
+  position: fixed;
+  top: 54%;
+  transform: translate(-50%, -50%);
+  animation: popupAnimation 0.6s ease forwards;
+  background-color: white;
+  border-radius: 8px;
+  padding: 5px;
+  z-index: 1;
+  width: 82%;
+  height: 86%;
+  overflow-y: auto;
+  margin-left: 628px;
+}
+
+.memberDetailsTitle {
+  margin-bottom: 10px;
+  text-align: center;
+  color: black;
+}
+
+.closePopupButton {
+  background-color: #f92121;
+  color: black;
+  border: none;
+  border-radius: 4px;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-size: 16px;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.closePopupIcon {
+  margin-right: 5px;
+}
+
+.memberDetailsTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+
+@media (max-width: 600px) {
+  .buttonContainer {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  button {
+    width: 100%;
+    font-size: 14px;
+  }
+}
+
+/* Table cell content spacing */
+.memberInfo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Pagination spacing (if you have pagination) */
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 20px 0;
+  padding: 10px;
+}

@@ -1,0 +1,43 @@
+.backg{
+  /* box-shadow: inset 0px 0px 15px 0px rgb(154, 154, 154); */
+  display:flex;
+  width: 1335px;
+  min-height: 50px;
+  margin: -4px;
+  align-content: center;
+  border-radius: 20px;
+  z-index: 1;
+  align-items: center;
+  color: #000;
+  font-weight: 500px;
+  justify-content: space-between;
+  margin-bottom: 30px;
+}
+
+@media (max-width: 991px) {
+  .dashboardHeader {
+    max-width: 100%;
+  }
+}
+header{
+  display:flex;
+  gap:350px;
+  align-items: center;
+}
+
+.welcomeAdmin {
+  width: 466px;
+  min-width: 240px;
+  font-size: 15px;
+  font-weight: 700;
+  flex: 1;
+  margin:  0;
+}
+
+@media (max-width: 991px) {
+  .welcomeAdmin {
+    max-width: 100%;
+  }
+}
+
+

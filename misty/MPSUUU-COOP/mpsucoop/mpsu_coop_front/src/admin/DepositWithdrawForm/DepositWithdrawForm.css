@@ -1,0 +1,157 @@
+.bertsss-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+
+  .bertsss-modal {
+    background-color: #ffffff;
+    color: #333;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 100%;
+    max-width: 400px;
+  }
+
+  .bertsss-message {
+    margin-bottom: 15px;
+    font-size: 18px;
+    color: #000000; 
+  }
+
+  .bertsss-closeButton {
+    padding: 10px 20px;
+    background-color: #e74c3c;
+    color: #000000;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .bertsss-closeButton:hover {
+    background-color: #c0392b;
+  }
+  
+  /* Header styling */
+  .bertsss-header {
+    color: #000000;
+    text-align: center;
+    margin-bottom: 10px;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  
+  /* Share capital section */
+  .bertsss-shareCapital {
+    margin-bottom: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    color: #000000;
+  }
+  
+  .bertsss-shareCapitalAmount {
+    font-size: 20px;
+    font-weight: bold;
+    color: #000000; 
+  }
+  
+  .bertsss-inactiveMessage {
+    text-align: center;
+    margin-top: 20px;
+    color: #000000;
+  }
+  
+  .bertsss-inactiveMessage h3 {
+    font-size: 22px;
+  }
+  
+  .bertsss-inactiveMessage p {
+    font-size: 18px;
+  }
+
+  .bertsss-form {
+    display: flex;
+    flex-direction: column;
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    border-radius: 8px;
+    font-size: 18px;
+  }
+  
+  .bertsss-input {
+    padding: 12px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    color: #000000;
+    transition: border-color 0.3s ease;
+  }
+  
+  .bertsss-input:focus {
+    border-color: #2fff6a; 
+    outline: none;
+  }
+  
+  /* Buttons container */
+  .bertsss-buttonContainer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
+  
+  .bertsss-button {
+    padding: 12px;
+    margin: 10px 5px;
+    background-color: #007BFF;
+    color: rgb(0, 0, 0);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    flex: 1;
+    transition: background-color 0.3s ease;
+  }
+
+  .bertsss-cancelButton {
+    background-color: #e74c3c;
+    color: rgb(0, 0, 0);
+    padding: 12px;
+    margin: 10px 5px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    flex: 1;
+    transition: background-color 0.3s ease;
+  }
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .bertsss-modal {
+      width: 90%;
+    }
+  
+    .bertsss-form {
+      padding: 15px;
+    }
+  
+    .bertsss-buttonContainer {
+      flex-direction: column;
+    }
+  
+    .bertsss-button, .bertsss-cancelButton {
+      margin: 5px 0;
+    }
+  }
+  

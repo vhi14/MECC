@@ -1,0 +1,633 @@
+/* Loan Manager Container */
+.loan-manager {
+    padding: 20px;
+}
+
+/* Loan Manager Header */
+.loan-manager-header {
+    width: 97%;
+    margin-top: -50px;
+    padding: 20px;
+    text-align: center;
+    color: black;
+    font-size: 24px;
+}
+
+.search-input {
+    padding: 7px 40px 10px 10px;
+    font-size: 16px;
+    border: '0px';
+    border-radius: 4px;
+    width: 260px;
+    margin-left: 955px;
+    margin-top: -5px;
+}
+
+/* Button Container */
+.button-container {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+/* Loan Form */
+.form-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem; 
+    margin-bottom: 1rem;
+}
+
+.form-group {
+    flex: 1; 
+    min-width: 230px;
+}
+
+label {
+    display: block; 
+    margin-bottom: 0.5rem;
+    color: #000000;
+    font-weight: bold;
+}
+
+.form-control {
+    width: 100%;
+}
+
+.loan-form {
+    box-shadow: 0px 0px 15px 0px rgb(154, 154, 154);
+    padding: 5px;
+    border-radius: 5px;
+    margin-top: 20px;
+    width: 100%;
+    height: auto;
+    position: relative;
+    
+}
+
+.form-header {
+    margin-bottom: 10px;
+    color: black;
+}
+
+.form-input {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+.form-control {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc; /* Initial border color */
+    font-size: 14px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .form-control:focus {
+    outline: none;
+    border-color: #04f624; /* Green border on focus */
+    box-shadow: 0 0 15px rgba(0, 255, 195, 0.5); /* Glow effect */
+  }
+
+.form-input-readonly {
+    background-color: #f8f9fa;
+}
+
+.form-submit {
+    background-color: #007bff;
+    color: black;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 10px;
+    margin-top: 45px;
+}
+
+.form-cancel {
+    background-color: #dc3545;
+    color: black;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.loan-table-wrapper {
+  width: 82%;
+  margin-left: -12px;
+  position: fixed;
+}
+
+.status-ongoing {
+  color: red;
+  font-weight: bold;
+}
+
+.status-paid {
+  color: rgb(15, 194, 15);
+  font-weight: bold;
+}
+
+/* Fixed Buttons */
+.loan-buttons-fixed {
+  padding: 10px 1px;
+  position: sticky;
+  margin-top: -20px;
+  z-index: 10;
+}
+
+/* Scrollable Table */
+.loans-table-scroll {
+  max-height: 400px;
+  overflow-y: auto;
+  box-shadow: 0px 0px 15px 0px rgb(154, 154, 154);
+  padding: 5px;
+  border-radius: 5px;
+  scrollbar-width: none;
+  width: 103%;
+  margin-left: -20px;
+}
+
+/* Hide scrollbar (for WebKit browsers) */
+.loan-table-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* Table Structure */
+.loan-table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+/* Table Header - fixed on scroll */
+.loan-table thead th {
+  position: sticky;
+  top: -7px;
+  z-index: 5;
+  padding: 5px;
+  border-bottom: 1px solid #000000;
+  font-size: 13px;
+}
+
+/* Table Cells */
+.loan-table td {
+  padding: 5px;        
+  font-weight: bold;
+  font-size: 12px;
+  border-bottom: 1px solid #00000040;           
+}
+
+
+/* Action Buttons */
+.action-button {
+    margin: 0 5px;
+    border: '0px';
+    padding: 5px;
+    cursor: pointer;
+}
+
+.delete-button {
+    background-color: #dc3545;
+    color: black;
+}
+
+/* Popup Modal Style */
+.popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.popup-box {
+    box-shadow: 0px 0px 20px 0px rgb(154, 154, 154);
+    background: #bbbbbb;
+    color: rgb(0, 0, 0);
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    width: 390px;
+    font-size: 18px;
+}
+
+.popup-box h3 {
+    margin-bottom: 15px;
+    font-size: 18px;
+    color: #000000;
+}
+
+.error-text {
+    color: rgb(0, 0, 0);
+    margin: 5px 0;
+    font-size: 18px;
+}
+
+.close-btn {
+    margin-top: 15px;
+    padding: 8px 15px;
+    background: #007bff;
+    color: rgb(0, 0, 0);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.close-btn:hover {
+    background: #0056b3;
+}
+
+
+
+/* Form Style */
+.form-input, .form-select {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.submit-btn {
+    padding: 10px 15px;
+    background-color: #4CAF50;
+    color: rgb(0, 0, 0);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.submit-btn:hover {
+    background-color: #45a049;
+}
+
+.filter-button {
+    display: block;
+    width: 100%;
+    padding: 8px 12px;
+    background: none;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.filter-button:hover {
+    background-color: #000000;
+}
+
+
+
+/* maker-name-list */
+
+.maker-name-list {
+    position: absolute;
+    background-color: white;
+    z-index: 1;
+    width: 200px;
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    display: flex;
+    gap: 5px;
+    flex-direction: column;
+    padding: 5px;
+    margin-top: 20px;
+
+}
+
+.maker-name-list button{
+    background-color: white;
+    color: black;
+}
+
+.maker-name-list button:hover{
+    background-color: #f1f1f1 !important;
+    color: black;
+}
+
+/* Co-makers Modal Styling */
+.makers-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.makers-modal .modal-content {
+  background: rgb(0, 0, 0);
+  color: #000000;
+  padding: 30px;
+  border-radius: 15px;
+  width: 550px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 10px 10px rgb(255, 255, 255);
+}
+
+.makers-modal .modal-header {
+  text-align: center;
+  margin-bottom: 25px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #00ff08;
+}
+
+.makers-modal .modal-header h2 {
+  font-size: 24px;
+  color: #ffffff;
+  margin: 0;
+  font-weight: 600;
+}
+
+.makers-modal .modal-body {
+  max-height: 400px;
+  overflow-y: auto;
+  padding: 0 10px;
+  /* Grid layout for 2 columns */
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.makers-modal .co-maker-card {
+  background: #ffffff;
+  padding: 15px 20px;
+  border-radius: 10px;
+  border-left: 4px solid #ff00d9;
+  transition: all 0.3s ease;
+  text-align: center;
+  margin-bottom: 0;
+  width: 200px;
+}
+
+.makers-modal .co-maker-card:last-child:nth-child(odd) {
+  grid-column: 1 / -1;
+  max-width: 240px;
+  justify-self: center;
+}
+
+.makers-modal .co-maker-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background: #ffffff;
+}
+
+.makers-modal .co-maker-name {
+  font-size: 16px;
+  font-weight: 500;
+  color: #000000;
+  margin: 0;
+  text-align: center;
+}
+
+.makers-modal .close-button {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #ffffff;
+  cursor: pointer;
+  padding: 5px 10px;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.makers-modal .close-button:hover {
+  color: #ffffff;
+  background: rgb(255, 0, 25);
+}
+
+.makers-modal .no-makers {
+  text-align: center;
+  color: #000000;
+  font-style: italic;
+  padding: 30px 20px;
+  background: #f8f9fa;
+  border-radius: 10px;
+  margin: 10px 0;
+  grid-column: 1 / -1;
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 600px) {
+  .makers-modal .modal-content {
+    width: 90%;
+    max-width: 450px;
+  }
+  
+  .makers-modal .modal-body {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+}
+
+.validation-popup {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 15px 25px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  min-width: 300px;
+  animation: slideIn 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.validation-popup.error {
+  border-left: 4px solid #f44336;
+}
+
+.validation-popup.success {
+  border-left: 4px solid #4caf50;
+}
+
+.validation-popup-icon {
+  font-size: 20px;
+}
+
+.validation-popup-content {
+  flex: 1;
+}
+
+.validation-popup-message {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* suzane */
+.form-control.input-error,
+input.input-error,
+select.input-error {
+    border: 2px solid #e53935 !important;
+    background-color: #fff5f5;
+    animation: shake 0.3s ease-in-out;
+}
+
+.form-control.input-error:focus,
+input.input-error:focus,
+select.input-error:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(229, 57, 53, 0.2);
+}
+
+/* Error message styling */
+.field-error {
+    color: #e53935;
+    font-size: 11px;
+    margin-top: 2px;
+    margin-bottom: 0;
+    padding: 0;
+    line-height: 1.3;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.field-error::before {
+    content: "⚠";
+    font-size: 10px;
+}
+
+/* Form group wrapper - ensures consistent spacing */
+.form-group {
+    position: relative;
+    margin-bottom: 12px;
+}
+
+.form-group.has-error {
+    margin-bottom: 4px;
+}
+
+/* Shake animation for error fields */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-4px); }
+    75% { transform: translateX(4px); }
+}
+
+/* General error banner (for top-level errors like reloan) */
+.error-banner {
+    background-color: #ffebee;
+    border: 1px solid #e53935;
+    border-left: 4px solid #e53935;
+    border-radius: 4px;
+    padding: 10px 14px;
+    margin-bottom: 16px;
+    color: #c62828;
+    font-size: 13px;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.error-banner::before {
+    content: "❌";
+    font-size: 14px;
+    flex-shrink: 0;
+}
+
+/* Comakers requirement error */
+.comakers-error {
+    background-color: #fff3e0;
+    border: 1px solid #ff9800;
+    border-left: 4px solid #ff9800;
+    border-radius: 4px;
+    padding: 8px 12px;
+    margin: 10px 0;
+    color: #e65100;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+/* Required field indicator (optional - add to labels) */
+.required-label::after {
+    content: " *";
+    color: #e53935;
+    font-weight: bold;
+}
+
+/* Empty field specific styling */
+.form-control.input-error:placeholder-shown {
+    background-color: #ffebee;
+}
+
+/* Pulse animation for multiple errors */
+@keyframes pulse-border {
+    0%, 100% { border-color: #e53935; }
+    50% { border-color: #ff8a80; }
+}
+
+.form-control.input-error {
+    animation: shake 0.3s ease-in-out, pulse-border 1.5s ease-in-out 0.3s;
+}
+
+/* Error summary banner (shown at top when multiple fields have errors) */
+.error-summary {
+    background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+    border: 1px solid #e53935;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.error-summary-icon {
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+.error-summary-text {
+    color: #c62828;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.error-summary-count {
+    background: #e53935;
+    color: white;
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-weight: bold;
+    margin-left: auto;
+}

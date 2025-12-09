@@ -1,0 +1,76 @@
+
+.adminDashboardContainer {
+  display: flex;
+  gap: 10px;
+  flex-wrap: nowrap; 
+  background-color: rgb(0, 0, 0);
+  height: 100vh; 
+  width:100vw;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  box-sizing: border-box;
+  overflow: hidden; 
+  position: fixed; /* Add this to prevent page movement */
+  top: 0;
+  left: 0;
+}
+.adminDashboardMain {
+  flex-grow: 1;
+  background-color: #f1ecc1;    
+  border-radius: 20px; 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  padding: 15px;
+  padding-top: 5px;
+  padding-bottom: 0px;
+  box-shadow: 25px 25px 25px 25px rgba(0, 0, 0, 0.2);
+  overflow-y: auto; /* Allow scrolling without scrollbar */
+  height: 98%; /* Full height relative to container */
+  width: 99%; /* Full width relative to container */
+  scrollbar-width: none; /* Hide scrollbar in Firefox */
+  position: relative; /* Change from sticky to relative */
+  overflow-y: auto; /* Enable vertical scrolling */
+  overflow-x: hidden;
+}
+
+.adminDashboardMain::-webkit-scrollbar {
+  display: none; 
+}
+
+.adminDashboardMain:hover {
+  transform: none; 
+}
+
+.dashboardImage {
+  width: 100%;
+  height: 400px;
+  display: block;
+  margin: 20px auto;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 991px) {
+  .adminDashboardMain {
+    flex-basis: 100%;
+    margin-bottom: 20px;
+  }
+}
+
+
+@media (max-width: 768px) {
+  .adminDashboardContainer {
+    flex-direction: column;
+    align-items: center;
+    height: auto; 
+  }
+
+  .adminDashboardMain {
+    padding: 20px;
+    gap: 30px;
+    height: auto; 
+    width: 100%; 
+  }
+}

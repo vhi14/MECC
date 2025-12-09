@@ -1,0 +1,817 @@
+/* ========== PAYMENTS CONTAINER ========== */
+.payments-container {
+  margin-top: 20px;
+  padding: 0 20px;
+  width: 97%;
+  max-width: 1300px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ========== PAGE TITLE ========== */
+.page-title {
+  width: 100%;
+  margin-top: -25px;
+  padding: 20px;
+  text-align: center;
+  color: black;
+  font-size: 30px;
+  font-weight: bold;
+}
+
+/* ========== SEARCH SECTION ========== */
+.search-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 30px;
+  margin-top: -10px;
+}
+
+.search-input {
+  padding: 10px 15px;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  width: 300px;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.search-input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+}
+
+/* ========== TABLE WRAPPER ========== */
+.table-wrapper {
+  max-height: 420px;
+  overflow-y: auto;
+  box-shadow: 0 0 15px rgba(154, 154, 154, 0.3);
+  margin-top: 10px;
+  padding: 5px;
+  border-radius: 5px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  width: 100%;
+  background-color: white;
+}
+
+.table-wrapper::-webkit-scrollbar {
+  display: none;
+}
+
+/* ========== ACCOUNT SUMMARY TABLE ========== */
+.account-summary-table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 14px;
+}
+
+.account-summary-table thead tr {
+  border-bottom: 2px solid black;
+  position: sticky;
+  top: 0;
+  background-color: black;
+  color: white;
+  z-index: 10;
+  font-size: 16px;
+}
+
+.account-summary-table th {
+  padding: 15px;
+  text-align: left;
+  font-weight: 600;
+}
+
+.account-summary-table tbody tr {
+  cursor: pointer;
+  border-bottom: 1px solid #e0e0e0;
+  transition: background-color 0.2s ease;
+}
+
+.account-summary-table tbody tr:hover {
+  background-color: #f5f5f5;
+}
+
+.account-summary-table td {
+  padding: 12px 15px;
+}
+
+.account-summary-table td.account-number {
+  color: #001eff;
+  font-weight: 500;
+}
+
+/* ========== NO DATA MESSAGE ========== */
+.no-data {
+  text-align: center;
+  font-size: 18px;
+  color: #666;
+  margin-top: 40px;
+  padding: 20px;
+}
+
+/* ========== SESSION EXPIRED MODAL ========== */
+.session-expired-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(5px);
+  z-index: 9998;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.session-expired-modal {
+  background-color: white;
+  padding: 30px;
+  border-radius: 8px;
+  text-align: center;
+  max-width: 650px;
+  z-index: 9999;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.session-expired-message {
+  margin-bottom: 20px;
+  font-size: 22px;
+  color: red;
+  line-height: 1.5;
+}
+
+.session-expired-button {
+  padding: 10px 30px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.session-expired-button:hover {
+  background-color: #0056b3;
+}
+
+/* ========== ACCOUNT DETAILS SECTION ========== */
+.account-details-section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.section-title {
+  color: black;
+  font-size: 20px;
+  margin-top: -50px;
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+
+.details-card {
+  padding: 20px;
+}
+
+.detail-row {
+  margin-bottom: 12px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.detail-row strong {
+  font-size: 16px;
+  min-width: 180px;
+}
+
+.detail-row span {
+  font-size: 14px;
+}
+
+.amount-paid {
+  font-weight: bold;
+  color: #26913f;
+  font-size: 16px !important;
+}
+
+.loan-info {
+  margin-top: 5px;
+  padding-top: 5px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.loan-info strong {
+  font-size: 16px;
+}
+
+.loan-info span {
+  font-size: 14px;
+  margin-right: 15px;
+}
+
+/* ========== ACTION BAR ========== */
+.action-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+  align-items: center;
+}
+
+.back-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 5px;
+  background-color: #3dbc4c;
+  color: rgb(0, 0, 0);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+  max-width: 90px;
+}
+
+.back-button:hover {
+  background-color: #00dc3b;
+}
+
+.loan-type-button {
+  background-color: transparent;
+  color: black;
+  cursor: pointer;
+  border: none;
+  padding: 8px 5px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  position: relative;
+  max-width: 200px;
+}
+
+.loan-type-button.active {
+  color: rgb(0, 0, 0);
+}
+
+.loan-type-button.active::after {
+  content: '';
+  position: absolute;
+  bottom: 5px;
+  left: 15px;
+  right: 15px;
+  height: 2px;
+  background-color: rgb(4, 202, 93);
+}
+
+.print-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 20px;
+  color: rgb(0, 0, 0);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-left: auto;
+  font-size: 18px;
+  transition: background-color 0.3s ease;
+  max-width: 60px;
+}
+
+/* ========== SCHEDULES CONTAINER ========== */
+.schedules-container {
+  max-height: 320px;
+  overflow-y: auto;
+  box-shadow: 0 0 15px rgba(154, 154, 154, 0.3);
+  padding: 10px 0;
+  background-color: transparent;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  scrollbar-width: none;
+}
+
+.schedules-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.schedules-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.schedules-container::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+.schedules-container::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* ========== YEAR GROUP ========== */
+.year-group {
+  margin-bottom: 20px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.year-header {
+  cursor: pointer;
+  padding: 15px 20px;
+  background: linear-gradient(135deg, #f9f9fb 0%, #d2c1e2 100%);
+  color: black;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  user-select: none;
+  transition: opacity 0.2s ease;
+}
+
+.year-header:hover {
+  opacity: 0.9;
+}
+
+.year-title {
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.year-toggle {
+  font-size: 18px;
+}
+
+.year-content {
+  background-color: #fafbfc;
+}
+
+/* ========== YEAR GROUP BOX - SEPARATE PER YEAR ========== */
+.year-group-box {
+  margin-bottom: 20px;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #f1ecc1; 
+  box-shadow: none;
+  border: none;
+}
+
+.year-header {
+  cursor: pointer;
+  padding: 10px 15px;
+  background: linear-gradient(135deg, #f9f9fb 0%, #d2c1e2 100%);
+  color: black;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  user-select: none;
+  transition: opacity 0.2s ease;
+  width: 150px;
+}
+
+.year-header:hover {
+  opacity: 0.9;
+}
+
+.year-title {
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.year-toggle {
+  font-size: 18px;
+}
+
+/* ========== YEAR TABLE WRAPPER - EACH YEAR INDEPENDENT ========== */
+.year-table-wrapper {
+  background-color: #fafbfc;
+  padding: 0;
+}
+
+.payment-tbody-scroll {
+  max-height: 250px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: block;
+  scrollbar-width: none;
+}
+
+.payment-tbody-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+
+.payment-tbody-scroll::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.payment-tbody-scroll::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+.payment-tbody-scroll::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.year-table-wrapper > .payment-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.year-table-wrapper > .payment-table thead {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+
+.payment-tbody-scroll table {
+  width: 100%;
+  display: table;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+
+/* ========== PAYMENT TABLE ========== */
+.payment-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: center;
+  font-size: 14px;
+}
+
+.payment-table thead tr {
+  background-color: #f8f9fa;
+  color: black;
+  border-bottom: 2px solid #dee2e6;
+}
+
+.payment-table th {
+  padding: 12px;
+  font-weight: 600;
+}
+
+.payment-table tbody tr {
+  border-bottom: 1px solid #dee2e6;
+  transition: background-color 0.2s ease;
+}
+
+.payment-table tbody tr:hover {
+  background-color: #f0f0f0;
+}
+
+.payment-table td {
+  padding: 12px;
+}
+
+/* Add after the .payment-table styles */
+.payment-table-body-wrapper {
+  max-height: 200px;
+  overflow-y: auto;
+  display: block;
+scrollbar-width: none;
+}
+
+.payment-table-body-wrapper::-webkit-scrollbar {
+  width: 8px;
+}
+
+.payment-table-body-wrapper::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.payment-table-body-wrapper::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+.payment-table-body-wrapper::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.payment-table-body-wrapper table {
+  width: 100%;
+  display: table;
+}
+
+.year-content > .payment-table {
+  width: 100%;
+}
+
+.year-content > .payment-table thead {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+
+/* ========== RECALCULATION SECTION ========== */
+.recalculation-container {
+  margin: 15px;
+  background-color: #fff3cd;
+  border-radius: 8px;
+  padding: 15px;
+  border: 1px solid #ffc107;
+}
+
+.recalculation-title {
+  margin: 0 0 10px 0;
+  color: #000000;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.recalculation-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid #dee2e6;
+}
+
+.recalculation-table thead tr {
+  background-color: #f8f9fa;
+}
+
+.recalculation-table th {
+  padding: 10px;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.recalculation-table td {
+  padding: 10px;
+  text-align: center;
+  font-size: 12px;
+  border-top: 1px solid #dee2e6;
+}
+
+/* ========== PRINT STYLES ========== */
+@media print {
+  .print-button,
+  .back-button,
+  .search-container {
+    display: none !important;
+  }
+
+  .payments-container {
+    margin: 0;
+    padding: 20px;
+  }
+
+  .schedules-container {
+    max-height: none;
+    overflow: visible;
+    box-shadow: none;
+  }
+
+  .year-group {
+    page-break-inside: avoid;
+  }
+
+  .details-card {
+    page-break-after: avoid;
+  }
+}
+
+/* ========== RESPONSIVE DESIGN ========== */
+@media screen and (max-width: 1200px) {
+  .schedules-container {
+    width: 100%;
+  }
+
+  .action-bar {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .print-button {
+    margin-left: 0;
+    margin-top: 10px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .page-title {
+    font-size: 24px;
+    padding: 15px;
+  }
+
+  .search-input {
+    width: 100%;
+  }
+
+  .search-container {
+    justify-content: center;
+  }
+
+  .table-wrapper {
+    overflow-x: auto;
+  }
+
+  .account-summary-table {
+    font-size: 12px;
+  }
+
+  .account-summary-table th,
+  .account-summary-table td {
+    padding: 8px;
+  }
+
+  .detail-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+
+  .detail-row strong {
+    min-width: auto;
+  }
+
+  .loan-info {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .action-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .back-button,
+  .loan-type-button,
+  .print-button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .print-button {
+    margin-left: 0;
+  }
+
+  .year-title {
+    font-size: 16px;
+  }
+
+  .payment-table,
+  .recalculation-table {
+    font-size: 12px;
+  }
+
+  .payment-table th,
+  .payment-table td,
+  .recalculation-table th,
+  .recalculation-table td {
+    padding: 8px 4px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .payments-container {
+    padding: 0 10px;
+  }
+
+  .page-title {
+    font-size: 20px;
+    margin-top: -15px;
+  }
+
+  .section-title {
+    font-size: 18px;
+    margin-top: -30px;
+  }
+
+  .details-card {
+    padding: 15px;
+  }
+
+  .detail-row strong,
+  .loan-info strong {
+    font-size: 14px;
+  }
+
+  .detail-row span,
+  .loan-info span {
+    font-size: 12px;
+  }
+
+  .payment-table,
+  .recalculation-table {
+    font-size: 10px;
+  }
+
+  .recalculation-table th {
+    font-size: 9px;
+    padding: 6px 2px;
+  }
+
+  .recalculation-table td {
+    font-size: 10px;
+    padding: 6px 2px;
+  }
+}
+
+/* ========== LOADING AND ERROR STATES ========== */
+.loading-message,
+.error-message {
+  text-align: center;
+  padding: 40px 20px;
+  font-size: 18px;
+}
+
+.error-message {
+  color: #dc3545;
+  font-weight: 500;
+}
+
+.loading-message {
+  color: #6c757d;
+}
+
+/* ========== UTILITIES ========== */
+.text-center {
+  text-align: center;
+}
+
+.text-bold {
+  font-weight: bold;
+}
+
+.text-muted {
+  color: #6c757d;
+}
+
+.mt-10 {
+  margin-top: 10px;
+}
+
+.mt-20 {
+  margin-top: 20px;
+}
+
+.mb-10 {
+  margin-bottom: 10px;
+}
+
+.mb-20 {
+  margin-bottom: 20px;
+}
+
+/* ========== ANIMATION ========== */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.year-content {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* ========== SMOOTH SCROLLING ========== */
+html {
+  scroll-behavior: smooth;
+}
+
+/* ========== FOCUS STYLES ========== */
+button:focus,
+input:focus {
+  outline: 2px solid #007bff;
+  outline-offset: 2px;
+}
+
+button:focus:not(:focus-visible),
+input:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* ========== ACCESSIBILITY ========== */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}

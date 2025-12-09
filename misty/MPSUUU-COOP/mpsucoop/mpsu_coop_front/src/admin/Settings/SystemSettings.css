@@ -1,0 +1,42 @@
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.nav-item {
+    margin: 0 15px;
+    cursor: pointer;
+}
+
+/* System Settings Page Styles */
+.system-settings {
+    padding: 10px;
+    font-size: 18px;
+}
+
+.error {
+    color: red;
+    margin-bottom: 20px;
+}
+
+.settings-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table-cell {
+    padding: 8px 20px;
+    border-bottom: 2px solid red;
+}
+
+.actions {
+    margin-top: 20px;
+}
+
+button {
+    color: black;
+    margin-right: 10px;
+    cursor: pointer;
+}

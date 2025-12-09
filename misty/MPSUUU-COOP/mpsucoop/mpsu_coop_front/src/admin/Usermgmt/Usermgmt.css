@@ -1,0 +1,450 @@
+
+.member-management-container {  
+    max-width: 1300px;
+    margin: 10px auto;
+    padding: 5px;  
+    border-radius: 20px;
+    box-shadow: 0px 8px 7px rgba(138, 137, 135, 0.992);
+    height: 470px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.member-management-container h2 {
+    border-radius: 15px;
+    margin-bottom: -40px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-size: 18px;
+}
+
+/* ===========================
+   Table Container & Styling
+   =========================== */
+.table-container {
+    border-radius: 15px;
+    padding: 30px;
+    overflow-x: auto;
+    animation: slideUp 0.5s ease-out;
+    width: auto;
+    overflow: hidden;
+}
+
+.table-wrapper {
+    overflow-y: auto;
+    overflow-x: auto;
+    max-height: 400px; 
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.table-wrapper::-webkit-scrollbar {
+    display: none;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.member-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.member-table thead {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.member-table thead th {
+    padding: 10px 10px;
+    text-align: left;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 13px;
+    letter-spacing: 1px;
+    border: none;
+}
+
+.member-table thead th:first-child {
+    border-top-left-radius: 10px;
+}
+
+.member-table thead th:last-child {
+    border-top-right-radius: 10px;
+}
+
+.member-table tbody tr {
+    transition: all 0.3s ease;
+    border-bottom: 1px solid #ff0000;
+}
+
+.member-table tbody tr:hover {
+    transform: scale(1.01);
+}
+
+.member-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.member-table tbody td {
+    padding: 10px 15px;
+    color: #000000;
+    font-size: 14px;
+    font-weight: 600;
+    vertical-align: middle;
+}
+
+.member-table tbody td:first-child {
+    font-weight: 600;
+    color: #000000;
+}
+
+.member-table tbody td {
+    padding: 10px 15px;
+    color: #000000;
+    font-size: 14px;
+    font-weight: 600;
+    vertical-align: middle;
+}
+
+.member-table tbody td:first-child {
+    font-weight: 600;
+    color: #000000;
+}
+
+/* ===========================
+   Action Buttons
+   =========================== */
+.member-table button {
+    padding: 10px 10px;
+    margin-right: 10px;
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0px 8px 5px rgba(138, 137, 135, 0.992);
+    
+}
+
+.member-table button:first-of-type {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: rgb(0, 0, 0);
+}
+
+.member-table button:first-of-type:hover {
+    background: linear-gradient(135deg, #5568d3 0%, #63408a 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.member-table button:last-of-type {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    color: rgb(0, 0, 0);
+}
+
+.member-table button:last-of-type:hover {
+    background: linear-gradient(135deg, #d87ce6 0%, #d94356 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(245, 87, 108, 0.4);
+}
+
+.member-table button:active {
+    transform: translateY(0);
+}
+
+/* ===========================
+   Modal Overlay (Blur Background)
+   =========================== */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(63, 56, 56, 0.6);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(10px);
+    z-index: 999;
+    animation: overlayFadeIn 0.3s ease-out;
+}
+
+@keyframes overlayFadeIn {
+    from {
+        opacity: 0;
+        backdrop-filter: blur(0px);
+        -webkit-backdrop-filter: blur(0px);
+    }
+    to {
+        opacity: 1;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+    }
+}
+
+/* ===========================
+   Edit Form Modal
+   =========================== */
+.edit-member-form {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgb(251, 251, 251);
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0px 8px 5px rgba(0, 0, 0, 0.992);
+    z-index: 1000;
+    min-width: 500px;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: modalFadeIn 0.3s ease-out;
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -48%);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+}
+
+.edit-member-form h3 {
+    margin-top: 0;
+    margin-bottom: 30px;
+    color: #000000;
+    font-size: 26px;
+    font-weight: 700;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.edit-member-form form > div {
+    margin-bottom: 25px;
+}
+
+.edit-member-form label {
+    display: block;
+    margin-bottom: 8px;
+    color: #000000;
+    font-weight: 600;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.edit-member-form input {
+    width: 100%;
+    padding: 10px 10px;
+    border: 2px solid #353535;
+    border-radius: 10px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+    font-family: inherit;
+}
+
+.edit-member-form input:focus {
+    outline: none;
+    border-color: #000000;
+    box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+    transform: translateY(-2px);
+}
+
+.edit-member-form input[readonly] {
+    background-color: #f5f5f5;
+    cursor: not-allowed;
+    color: #888;
+}
+
+.edit-member-form input::placeholder {
+    color: #aaa;
+    font-style: italic;
+}
+
+/* ===========================
+   Form Buttons
+   =========================== */
+.edit-member-form button {
+    padding: 10px 10px;
+    margin-right: 15px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0px 8px 5px rgba(138, 137, 135, 0.992);
+}
+
+.edit-member-form button[type="submit"] {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: rgb(0, 0, 0);
+}
+
+.edit-member-form button[type="submit"]:hover {
+    background: linear-gradient(135deg, #5568d3 0%, #63408a 100%);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+}
+
+.edit-member-form button[type="button"] {
+    background: linear-gradient(135deg, #bdc3c7 0%, #95a5a6 100%);
+    color: rgb(0, 0, 0);
+}
+
+.edit-member-form button[type="button"]:hover {
+    background: linear-gradient(135deg, #a8aeb2 0%, #7f8c8d 100%);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(149, 165, 166, 0.4);
+}
+
+.edit-member-form button:active {
+    transform: translateY(-1px);
+}
+
+/* ===========================
+   Responsive Design
+   =========================== */
+@media (max-width: 1024px) {
+    .member-management-container {
+        padding: 30px 15px;
+    }
+
+    .table-container {
+        padding: 20px;
+    }
+
+    .edit-member-form {
+        min-width: 90%;
+        max-width: 90%;
+        padding: 30px 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .member-table {
+        font-size: 12px;
+    }
+
+    .member-table thead th,
+    .member-table tbody td {
+        padding: 10px 10px;
+    }
+
+    .member-table button {
+        padding: 8px 15px;
+        font-size: 11px;
+        margin-bottom: 5px;
+        display: block;
+        width: 100%;
+        margin-right: 0;
+    }
+
+    .edit-member-form {
+        padding: 25px 15px;
+    }
+
+    .edit-member-form h3 {
+        font-size: 22px;
+    }
+
+    .edit-member-form button {
+        width: 100%;
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+}
+
+/* ===========================
+   Empty State
+   =========================== */
+.member-table tbody tr td[colspan] {
+    color: #999;
+    font-style: italic;
+    font-size: 16px;
+}
+
+/* ===========================
+   Loading Animation
+   =========================== */
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+.loading {
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+.success-message-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgb(239, 236, 236);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    min-width: 300px;
+    text-align: center;
+    font-size: 18px;
+    animation: modalFadeIn 0.3s ease-out;
+}
+
+.success-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    padding: 10px 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    animation: fadeIn 0.3s ease-in;
+}
+
+.success-content h3 {
+    margin: 0;
+    color: #28a745;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.success-content button {
+    padding: 8px 20px;
+    background-color: #28a745;
+    color: rgb(0, 0, 0);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.success-content button:hover {
+    background-color: #218838;
+}

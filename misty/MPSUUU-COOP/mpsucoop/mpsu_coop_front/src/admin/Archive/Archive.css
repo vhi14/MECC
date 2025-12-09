@@ -1,0 +1,191 @@
+
+
+/* Container for archived records */
+.archived-records {
+  padding: 20px;
+  color: black;
+  position: fixed;
+}
+.actionButtonView:hover {
+  background-color: DodgerBlue !important; 
+  color: rgb(0, 0, 0) !important;
+}
+
+button.actionButton.actionButtonView:hover {
+  background-color: DodgerBlue;
+  color: white;
+}
+
+.actionButtonView:hover {
+  background-color: DodgerBlue;
+}
+/* Title Styling */
+.title {
+  font-size: 2rem;
+  margin-bottom: 50px;
+  text-align: center;
+  margin-top: -50px;
+}
+
+/* Box styling for each section (members and loans) */
+.records-box {
+  max-height: 390px;
+  overflow-y: auto;
+  box-shadow: 0px 0px 15px 0px rgb(154, 154, 154);
+  margin-top: -10px;
+  padding: 5px;
+  border-radius: 5px;
+  scrollbar-width: none;
+  width: 100%;
+  margin-left: -5px;
+  font-size: 20px;
+  
+}
+
+/* Table Styling */
+.records-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  font-size: 16px; 
+}
+
+/* Table header style */
+.records-table thead th {
+  background-color: #969696;
+  text-align: left;
+  position: relative;
+  font-size: 18px;
+  margin-top: 50px;
+}
+
+.records-table tbody {
+  display: block;
+  height: 300px;
+  overflow-y: scroll; /* Ensures the scrollbar is present */
+  scrollbar-width: none; /* Hides the scrollbar in Firefox */
+  -ms-overflow-style: none; /* Hides the scrollbar in Internet Explorer and Edge */
+  -webkit-overflow-scrolling: touch; /* Enables smooth scrolling on mobile devices */
+  font-size: 16px;
+  
+}
+.scroll-container::-webkit-scrollbar {
+  display: none;
+}
+
+
+/* For Webkit browsers (Chrome, Safari) */
+.records-table tbody::-webkit-scrollbar {
+  width: 0px; /* Hides the scrollbar */
+  margin-top: 20px;
+}
+
+
+/* Keep the table header fixed */
+.records-table thead, .records-table tbody tr {
+  display: table;
+  width: 99%;
+  table-layout: fixed;
+}
+
+/* For better accessibility and readability */
+.records-table th, .records-table td {
+  text-align: left;
+  padding: 12px 8px;
+}
+
+/* Search Bar Styling */
+.search-bar {
+  margin-bottom: 1px;
+  display: flex;
+  align-items: center;
+  width: 15%;
+  position: fixed;
+  margin-left: 67%;
+  margin-top: 5px;
+}
+
+/* Input Field */
+.search-input {
+  width: 100%;
+  padding: 10px 15px;
+  font-size: 1rem;
+  border: 2px solid #000000;
+  border-radius: 5px;
+}
+
+/* Search Icon */
+.search-icon {
+  font-size: 1.5rem;
+  color: #007bff;
+  margin-left: 100px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 600px) {
+  .search-input {
+    padding: 8px 12px;
+    font-size: 0.9rem;
+  }
+
+  .search-icon {
+    font-size: 1.3rem;
+  }
+}
+
+.custom-notification,
+.custom-confirmation {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #ffffff;
+  color: #333;
+  border: 1px solid #999;
+  padding: 20px 30px;
+  border-radius: 8px;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.25);
+  z-index: 9999;
+  text-align: center;
+}
+
+.custom-notification button,
+.custom-confirmation button {
+  margin: 10px 5px 0;
+  padding: 6px 15px;
+  background-color: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.custom-notification button:hover,
+.custom-confirmation button:hover {
+  background-color: #125ea4;
+}
+/* Dropdown Container */
+.dropdown {
+  display: flex;
+  justify-content: left;
+  margin: 15px 0;
+}
+
+/* Styled <select> element */
+.dropdown-select {
+  padding: 5px 5px;
+  font-size: 16px;
+  border-radius: 8px;
+  background-color: #ffffff;
+  color: #0c0c0c;
+  outline: none;
+  width: 170px;
+  cursor: pointer;
+}
+
+@media (prefers-color-scheme: dark) {
+  .dropdown-select {
+    background-color: #000000;
+    color: #f1f1f1;
+  }
+}

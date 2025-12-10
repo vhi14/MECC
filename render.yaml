@@ -1,37 +1,3 @@
-# services:
-#   - type: web
-#     name: mpsucoop-backend
-#     env: python
-#     plan: free
-#     region: oregon
-#     buildCommand: |
-#       python --version;
-#       python -m pip install --upgrade pip;
-#       pip install -r misty/MPSUUU-COOP/mpsucoop/mcoop_db/mcoop_db/requirements.txt;
-#       python misty/MPSUUU-COOP/mpsucoop/mcoop_db/manage.py collectstatic --noinput
-#     startCommand: |
-#       cd misty/MPSUUU-COOP/mpsucoop/mcoop_db && python manage.py migrate --noinput && python manage.py shell -c "from django.contrib.auth import get_user_model; U=get_user_model(); u,_=U.objects.get_or_create(username='admin', defaults={'email':'admin@example.com'}); u.set_password('ChangeMeStrongPassword123!'); u.is_superuser=True; u.is_staff=True; u.save(); print('✓ Admin ready')" && cd /opt/render/project/src && gunicorn mcoop_db.wsgi:application --chdir misty/MPSUUU-COOP/mpsucoop/mcoop_db --bind 0.0.0.0:$PORT --log-level debug --access-logfile - --error-logfile -
-#     autoDeploy: true
-#     healthCheckPath: /health
-#     envVars:
-#       - key: SECRET_KEY
-#         generateValue: true
-#       - key: DEBUG
-#         value: "False"
-#       - key: ALLOWED_HOSTS
-#         value: mpsucoop-backend.onrender.com,localhost,127.0.0.1
-#       - key: CSRF_TRUSTED_ORIGINS
-#         value: https://mpsucoop-backend.onrender.com
-#       - key: CORS_ALLOWED_ORIGINS
-#         value: https://mpsucoop-backend.onrender.com,http://localhost:3000
-#       - key: DATABASE_URL
-#         fromDatabase:
-#           name: mpsucoop-db
-#           property: connectionString
-
-# databases:
-#   - name: mpsucoop-db
-#     plan: free
 services:
   - type: web
     name: mpsucoop-backend
@@ -44,7 +10,7 @@ services:
       pip install -r misty/MPSUUU-COOP/mpsucoop/mcoop_db/mcoop_db/requirements.txt;
       python misty/MPSUUU-COOP/mpsucoop/mcoop_db/manage.py collectstatic --noinput
     startCommand: |
-      cd misty/MPSUUU-COOP/mpsucoop/mcoop_db && python manage.py migrate --noinput && cd /opt/render/project/src && gunicorn mcoop_db.wsgi:application --chdir misty/MPSUUU-COOP/mpsucoop/mcoop_db --bind 0.0.0.0:$PORT --log-level debug --access-logfile - --error-logfile -
+      cd misty/MPSUUU-COOP/mpsucoop/mcoop_db && python manage.py migrate --noinput && python manage.py shell -c "from django.contrib.auth import get_user_model; U=get_user_model(); u,_=U.objects.get_or_create(username='admin', defaults={'email':'admin@example.com'}); u.set_password('ChangeMeStrongPassword123!'); u.is_superuser=True; u.is_staff=True; u.save(); print('✓ Admin ready')" && cd /opt/render/project/src && gunicorn mcoop_db.wsgi:application --chdir misty/MPSUUU-COOP/mpsucoop/mcoop_db --bind 0.0.0.0:$PORT --log-level debug --access-logfile - --error-logfile -
     autoDeploy: true
     healthCheckPath: /health
     envVars:
@@ -66,3 +32,37 @@ services:
 databases:
   - name: mpsucoop-db
     plan: free
+# services:
+#   - type: web
+#     name: mpsucoop-backend
+#     env: python
+#     plan: free
+#     region: oregon
+#     buildCommand: |
+#       python --version;
+#       python -m pip install --upgrade pip;
+#       pip install -r misty/MPSUUU-COOP/mpsucoop/mcoop_db/mcoop_db/requirements.txt;
+#       python misty/MPSUUU-COOP/mpsucoop/mcoop_db/manage.py collectstatic --noinput
+#     startCommand: |
+#       cd misty/MPSUUU-COOP/mpsucoop/mcoop_db && python manage.py migrate --noinput && cd /opt/render/project/src && gunicorn mcoop_db.wsgi:application --chdir misty/MPSUUU-COOP/mpsucoop/mcoop_db --bind 0.0.0.0:$PORT --log-level debug --access-logfile - --error-logfile -
+#     autoDeploy: true
+#     healthCheckPath: /health
+#     envVars:
+#       - key: SECRET_KEY
+#         generateValue: true
+#       - key: DEBUG
+#         value: "False"
+#       - key: ALLOWED_HOSTS
+#         value: mpsucoop-backend.onrender.com,localhost,127.0.0.1
+#       - key: CSRF_TRUSTED_ORIGINS
+#         value: https://mpsucoop-backend.onrender.com
+#       - key: CORS_ALLOWED_ORIGINS
+#         value: https://mpsucoop-backend.onrender.com,http://localhost:3000
+#       - key: DATABASE_URL
+#         fromDatabase:
+#           name: mpsucoop-db
+#           property: connectionString
+
+# databases:
+#   - name: mpsucoop-db
+#     plan: free

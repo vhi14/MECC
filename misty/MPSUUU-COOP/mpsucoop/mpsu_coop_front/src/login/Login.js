@@ -345,7 +345,7 @@ function Login() {
     const credentials = { username, password };
 
     try {
-      const response = await fetch("http://localhost:8000/login/", {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/login/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -360,6 +360,7 @@ function Login() {
       }
 
       const data = await response.json();
+      console.log("Login response:", data);
       localStorage.setItem("accessToken", data.access);
       localStorage.setItem("username", data.username);
       localStorage.setItem("userRole", data.role);
@@ -377,6 +378,7 @@ function Login() {
         navigate("/home");
       }
     } catch (err) {
+      console.error("Login error:", err);
       setError(err.message);
     } finally {
       setLoading(false);
@@ -390,7 +392,7 @@ function Login() {
     const signupData = { account_number, email, password };
 
     try {
-      const response = await fetch("http://localhost:8000/register/", {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/register/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -57,7 +57,7 @@ const usePaymentForm = (setSchedules) => {
     console.log(`Marking schedule ID ${id} as paid with total payment: ₱${totalPayment.toFixed(2)}`);
     try {
       const response = await axios.post(
-        `http://127.0.0.1:8000/payment-schedules/${id}/mark-paid/`,
+        `${process.env.REACT_APP_API_URL}/payment-schedules/${id}/mark-paid/`,
         { received_amount: totalPayment },  // Ensure you're passing the correct total payment
         {
           headers: {
@@ -220,7 +220,7 @@ export default PaymentModal;
 //     setLoading(true);
 //     setError('');
 //     try {
-//       const response = await axios.get('http://127.0.0.1:8000/payment-schedules/summaries/', {
+//       const response = await axios.get('${process.env.REACT_APP_API_URL}/payment-schedules/summaries/', {
 //         headers: {
 //           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
 //         },
@@ -242,7 +242,7 @@ export default PaymentModal;
 //       // Fetch account holder names for each account
 //       const accountNumbers = Object.keys(uniqueSummaries);
 //       const namePromises = accountNumbers.map((accountNumber) =>
-//         axios.get(`http://127.0.0.1:8000/members/?account_number=${accountNumber}`, {
+//         axios.get(`${process.env.REACT_APP_API_URL}/members/?account_number=${accountNumber}`, {
 //           headers: {
 //             Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
 //           },
@@ -280,7 +280,7 @@ export default PaymentModal;
 //     setError('');
 //     try {
 //       const response = await axios.get(
-//         `http://127.0.0.1:8000/payment-schedules/?account_number=${accountNumber}&loan_type=${loanType}`,
+//         `${process.env.REACT_APP_API_URL}/payment-schedules/?account_number=${accountNumber}&loan_type=${loanType}`,
 //         {
 //           headers: {
 //             Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
@@ -292,7 +292,7 @@ export default PaymentModal;
 
 //       // Fetch account details
 //       const memberResponse = await axios.get(
-//         `http://127.0.0.1:8000/members/?account_number=${accountNumber}`,
+//         `${process.env.REACT_APP_API_URL}/members/?account_number=${accountNumber}`,
 //         {
 //           headers: {
 //             Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
@@ -318,7 +318,7 @@ export default PaymentModal;
 //     setPaying(true);
 //     try {
 //       const response = await axios.post(
-//         `http://127.0.0.1:8000/payment-schedules/${id}/mark-paid/`,
+//         `${process.env.REACT_APP_API_URL}/payment-schedules/${id}/mark-paid/`,
 //         {},
 //         {
 //           headers: {
@@ -620,7 +620,7 @@ export default PaymentModal;
 //     const schedules_id = schedules.filter((e) => !e.is_paid).map((e) => e.id);
 
 //     try {
-//       const response = await axios.post('http://127.0.0.1:8000/update-breakdown/', {
+//       const response = await axios.post('${process.env.REACT_APP_API_URL}/update-breakdown/', {
 //         schedules_id: schedules_id, 
 //         new_amount: breakdownAmount, 
 //       });
@@ -654,7 +654,7 @@ export default PaymentModal;
 //       .map((e) => e.id);
 
 //     try {
-//       const response = await axios.post('http://127.0.0.1:8000/update-breakdown/', {
+//       const response = await axios.post('${process.env.REACT_APP_API_URL}/update-breakdown/', {
 //         schedules_id: schedules_id, 
 //         new_amount: breakdownAmount, 
 //       });
@@ -686,7 +686,7 @@ export default PaymentModal;
 //       .map((e) => e.id);
 
 //     try {
-//       const response = await axios.post('http://127.0.0.1:8000/update-breakdown/', {
+//       const response = await axios.post('${process.env.REACT_APP_API_URL}/update-breakdown/', {
 //         schedules_id: schedules_id, 
 //         new_amount: breakdownAmount, 
 //       });
@@ -719,7 +719,7 @@ export default PaymentModal;
 //           console.log("No unpaid schedules to update.");
 //           return;
 //         }
-//         const response = await axios.post('http://127.0.0.1:8000/update-breakdown/', {
+//         const response = await axios.post('${process.env.REACT_APP_API_URL}/update-breakdown/', {
 //           schedules_id: schedules_id, 
 //           new_amount: breakdownAmount, 
 //         });
@@ -765,7 +765,7 @@ export default PaymentModal;
     
   //       console.log("Sending update request with payload:", payload); // Debugging log
     
-  //       const response = await axios.post('http://127.0.0.1:8000/update-breakdown/', payload);
+  //       const response = await axios.post('${process.env.REACT_APP_API_URL}/update-breakdown/', payload);
   //       return response;
   //     } catch (error) {
   //       console.error("Error updating breakdown:", error.response?.data || error);
@@ -806,7 +806,7 @@ export default PaymentModal;
   //         console.log("No unpaid schedules to update.");
   //         return;
   //       }
-  //       const response = await axios.post('http://127.0.0.1:8000/update-breakdown/', {
+  //       const response = await axios.post('${process.env.REACT_APP_API_URL}/update-breakdown/', {
   //         schedules_id: schedules_id, 
   //         new_amount: breakdownAmount, 
   //       });

@@ -20,7 +20,7 @@ const AdminProfile = () => {
     }, []);
 
     const fetchAdminData = () => {
-        axios.get('${process.env.REACT_APP_API_URL}/api/admin-profile/', {
+        axios.get(`${process.env.REACT_APP_API_URL}/api/admin-profile/`, {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem('accessToken')}`
             }
@@ -87,7 +87,7 @@ const AdminProfile = () => {
             updateData.new_password = formData.new_password;
         }
 
-        axios.put('${process.env.REACT_APP_API_URL}/api/admin-profile/', updateData, {
+        axios.put(`${process.env.REACT_APP_API_URL}/api/admin-profile/`, updateData, {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem('accessToken')}`
             }

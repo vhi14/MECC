@@ -90,7 +90,7 @@ const Payments = () => {
         amount_curtailment: eventAmountCurtail || '0',
         notes: 'Admin composite payment via Payments view'
       };
-      const url = `http://127.0.0.1:8000/loans/${currentLoan.control_number}/payment-event/`;
+      const url = `${process.env.REACT_APP_API_URL}/loans/${currentLoan.control_number}/payment-event/`;
       const resp = await axios.post(url, payload, { headers: { Authorization: `Bearer ${token}`, 'Content-Type':'application/json' } });
       setEventResult(resp.data.payment_event);
       await fetchPaymentSchedules(selectedAccount, loanTypeFilter);
@@ -167,7 +167,7 @@ const Payments = () => {
     if (!token) return;
 
     try {
-      const response = await axios.get('http://127.0.0.1:8000/payment-schedules/summaries/', {
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/payment-schedules/summaries/`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
@@ -176,7 +176,7 @@ const Payments = () => {
       const summariesWithNames = await Promise.all(
         response.data.map(async (summary) => {
           const memberResponse = await axios.get(
-            `http://127.0.0.1:8000/members/?account_number=${summary.account_number}`,
+            `${process.env.REACT_APP_API_URL}/members/?account_number=${summary.account_number}`,
             { withCredentials: true }
           );
 
@@ -236,10 +236,10 @@ const Payments = () => {
       // ✅ Check which loan types have schedules (only on first load)
       if (!requestedLoanType) {
         const [regularCheck, emergencyCheck] = await Promise.all([
-          axios.get(`http://127.0.0.1:8000/payment-schedules/?account_number=${accountNumber}&loan_type=Regular`, {
+          axios.get(`${process.env.REACT_APP_API_URL}/payment-schedules/?account_number=${accountNumber}&loan_type=Regular`, {
             headers: { Authorization: `Bearer ${token}` }
           }).catch(() => ({ data: [] })),
-          axios.get(`http://127.0.0.1:8000/payment-schedules/?account_number=${accountNumber}&loan_type=Emergency`, {
+          axios.get(`${process.env.REACT_APP_API_URL}/payment-schedules/?account_number=${accountNumber}&loan_type=Emergency`, {
             headers: { Authorization: `Bearer ${token}` }
           }).catch(() => ({ data: [] }))
         ]);
@@ -260,10 +260,10 @@ const Payments = () => {
 
       // ✅ Fetch schedules for the requested type
       const [scheduleResponse, memberResponse] = await Promise.all([
-        axios.get(`http://127.0.0.1:8000/payment-schedules/?account_number=${accountNumber}&loan_type=${requestedLoanType}`, {
+        axios.get(`${process.env.REACT_APP_API_URL}/payment-schedules/?account_number=${accountNumber}&loan_type=${requestedLoanType}`, {
           headers: { Authorization: `Bearer ${token}` }
         }),
-        axios.get(`http://127.0.0.1:8000/members/?account_number=${accountNumber}`, {
+        axios.get(`${process.env.REACT_APP_API_URL}/members/?account_number=${accountNumber}`, {
           headers: { Authorization: `Bearer ${token}` }
         })
       ]);
@@ -367,7 +367,7 @@ const Payments = () => {
 
           try {
             const loanDetailResponse = await axios.get(
-              `http://127.0.0.1:8000/loans/${targetLoanId}/detailed_loan_info/`,
+              `${process.env.REACT_APP_API_URL}/loans/${targetLoanId}/detailed_loan_info/`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`,
@@ -411,7 +411,7 @@ const Payments = () => {
       try {
         const currentType = requestedLoanType;
         if (!newLoanDetails[currentType]) {
-          const loansResp = await axios.get(`http://127.0.0.1:8000/loans/`, { headers: { Authorization: `Bearer ${token}` } });
+          const loansResp = await axios.get(`${process.env.REACT_APP_API_URL}/loans/`, { headers: { Authorization: `Bearer ${token}` } });
           const allLoans = Array.isArray(loansResp.data) ? loansResp.data : [];
           const typeLoans = allLoans
             .filter(l => String(l.account || l.account_number || '').toString() === String(accountNumber))
@@ -422,7 +422,7 @@ const Payments = () => {
             // Fetch detailed info for this active loan to populate recalcs/events correctly
             try {
               const loanDetailResponse = await axios.get(
-                `http://127.0.0.1:8000/loans/${typeLoans[0].control_number}/detailed_loan_info/`,
+                `${process.env.REACT_APP_API_URL}/loans/${typeLoans[0].control_number}/detailed_loan_info/`,
                 { headers: { Authorization: `Bearer ${token}` } }
               );
               newLoanDetails[currentType] = loanDetailResponse.data;
@@ -443,7 +443,7 @@ const Payments = () => {
         const currentLoan = newLoanDetails[requestedLoanType];
         if (currentLoan && currentLoan.control_number) {
           const evResp = await axios.get(
-            `http://127.0.0.1:8000/loans/${currentLoan.control_number}/payment-event/`,
+            `${process.env.REACT_APP_API_URL}/loans/${currentLoan.control_number}/payment-event/`,
             { headers: { Authorization: `Bearer ${token}` } }
           );
           const events = evResp.data?.events || [];
@@ -461,7 +461,7 @@ const Payments = () => {
       try {
         const currCn = newLoanDetails[requestedLoanType]?.control_number;
         const archResp = await axios.get(
-          `http://127.0.0.1:8000/archived-payment-records/?account_number=${accountNumber}&loan_type=${requestedLoanType}${currCn ? `&loan_control_number=${currCn}` : ''}`,
+          `${process.env.REACT_APP_API_URL}/archived-payment-records/?account_number=${accountNumber}&loan_type=${requestedLoanType}${currCn ? `&loan_control_number=${currCn}` : ''}`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
         const filteredArchived = archResp.data || [];

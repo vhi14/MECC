@@ -24,8 +24,8 @@ function Members() {
     const fetchMembers = async () => {
       try {
         const [membersRes, archivesRes] = await Promise.all([
-          axios.get('${process.env.REACT_APP_API_URL}/members/'),
-          axios.get('${process.env.REACT_APP_API_URL}/archives/?archive_type=Member'),
+          axios.get(`${process.env.REACT_APP_API_URL}/members/`),
+          axios.get(`${process.env.REACT_APP_API_URL}/archives/?archive_type=Member`),
         ]);
 
         const archivedMemberIds = new Set(
@@ -363,7 +363,7 @@ const validateInput = (field, value) => {
     try {
       // recently lang
       const payload = { ...newMember, employment_status: newMember.employment_status || 'Outsider' };
-      const response = await axios.post('${process.env.REACT_APP_API_URL}/members/', payload);
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/members/`, payload);
       // const response = await axios.post('${process.env.REACT_APP_API_URL}/members/', newMember);
       // recently lang ends
       setMembers([...members, response.data]);

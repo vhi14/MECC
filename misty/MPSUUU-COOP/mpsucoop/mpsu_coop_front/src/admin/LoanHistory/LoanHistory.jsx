@@ -132,7 +132,7 @@ const LoanManager = () => {
         });
     };
 
-    const BASE_URL = '${process.env.REACT_APP_API_URL}';
+    const BASE_URL = `${process.env.REACT_APP_API_URL}`;
 
    
     const safeText = (value) => {
@@ -583,7 +583,7 @@ const LoanManager = () => {
     useEffect(() => {
         const fetchMembers = async () => {
             try {
-                const response = await fetch("http://127.0.0.1:8000/members/"); 
+                const response = await fetch(`${process.env.REACT_APP_API_URL}/members/`); 
                 const data = await response.json();
                 const formattedData = data.map(member => ({
                     name: `${member.first_name} ${member.middle_name || ''} ${member.last_name}`.trim().replace(/\s+/g, ' '),
@@ -777,7 +777,7 @@ const LoanManager = () => {
             if (String(mostRecentLoan.loan_type).toLowerCase() === 'regular' && String(requestedLoanType).toLowerCase() === 'regular') {
                 const token = localStorage.getItem('accessToken');
                 const detailResp = await axios.get(
-                    `http://127.0.0.1:8000/loans/${mostRecentLoan.control_number}/detailed_loan_info/`,
+                    `${process.env.REACT_APP_API_URL}/loans/${mostRecentLoan.control_number}/detailed_loan_info/`,
                     { headers: { Authorization: `Bearer ${token}` } }
                 );
                 const rel = detailResp?.data?.reloan_eligibility;
@@ -801,7 +801,7 @@ const LoanManager = () => {
                 const token2 = localStorage.getItem('accessToken');
                 const emergencyBaseLoanId = mostRecentLoan.control_number;
                 const detailResp2 = await axios.get(
-                    `http://127.0.0.1:8000/loans/${emergencyBaseLoanId}/detailed_loan_info/`,
+                    `${process.env.REACT_APP_API_URL}/loans/${emergencyBaseLoanId}/detailed_loan_info/`,
                     { headers: { Authorization: `Bearer ${token2}` } }
                 );
                 const rel2 = detailResp2?.data?.reloan_eligibility;
@@ -1532,7 +1532,7 @@ const LoanManager = () => {
     useEffect(() => {
         const fetchMembers = async () => {
             try {
-                const response = await axios.get("${process.env.REACT_APP_API_URL}/members/");
+                const response = await axios.get(`${process.env.REACT_APP_API_URL}/members/`);
                 setAccountList(response.data);
             } catch (error) {
                 console.error("Error fetching members:", error);

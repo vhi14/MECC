@@ -33,7 +33,7 @@ const MemberPayments = () => {
 
       // Fetch ALL schedules first to get OR numbers properly
       const response = await axios.get(
-        `http://127.0.0.1:8000/payment-schedules/?account_number=${accountNumber}`,
+        `${process.env.REACT_APP_API_URL}/payment-schedules/?account_number=${accountNumber}`,
         { withCredentials: true }
       );
 

@@ -50,7 +50,7 @@ const PaymentSchedule = () => {
 
     try {
       const response = await axios.get(
-        `http://127.0.0.1:8000/check-or-availability/${selectedAccount}/${orNum}/`,
+        `${process.env.REACT_APP_API_URL}/check-or-availability/${selectedAccount}/${orNum}/`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
@@ -119,7 +119,7 @@ const PaymentSchedule = () => {
       const isLastPayment = remainingUnpaid === 1;
 
       const markPaidResponse = await axios.post(
-        `http://127.0.0.1:8000/payment-schedules/${id}/mark-paid/`,
+        `${process.env.REACT_APP_API_URL}/payment-schedules/${id}/mark-paid/`,
         { 
           received_amnt: totalPayment, 
           account_number: selectedAccount,
@@ -150,7 +150,7 @@ const PaymentSchedule = () => {
         };
 
         await axios.post(
-          'http://127.0.0.1:8000/archive-payment-record/',
+          '${process.env.REACT_APP_API_URL}/archive-payment-record/',
           archivePayload,
           {
             headers: {
@@ -209,7 +209,7 @@ const PaymentSchedule = () => {
     }
 
     try {
-      const response = await axios.get('http://127.0.0.1:8000/payment-schedules/summaries/', {
+      const response = await axios.get('${process.env.REACT_APP_API_URL}/payment-schedules/summaries/', {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -227,7 +227,7 @@ const PaymentSchedule = () => {
 
       const accountNumbers = Object.keys(uniqueSummaries);
       const namePromises = accountNumbers.map((accountNumber) =>
-        axios.get(`http://127.0.0.1:8000/members/?account_number=${accountNumber}`, {
+        axios.get(`${process.env.REACT_APP_API_URL}/members/?account_number=${accountNumber}`, {
           headers: { Authorization: `Bearer ${token}` },
         })
       );
@@ -261,7 +261,7 @@ const PaymentSchedule = () => {
 
     try {
       const response = await axios.get(
-        `http://127.0.0.1:8000/payment-schedules/?account_number=${accountNumber}&loan_type=${loanType}`,
+        `${process.env.REACT_APP_API_URL}/payment-schedules/?account_number=${accountNumber}&loan_type=${loanType}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -270,7 +270,7 @@ const PaymentSchedule = () => {
       setSelectedAccount(accountNumber);
 
       const memberResponse = await axios.get(
-        `http://127.0.0.1:8000/members/?account_number=${accountNumber}`,
+        `${process.env.REACT_APP_API_URL}/members/?account_number=${accountNumber}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -279,7 +279,7 @@ const PaymentSchedule = () => {
 
       // Fetch loan details with yearly recalculations
       const loanListResponse = await axios.get(
-        `http://127.0.0.1:8000/loans/?account=${accountNumber}&loan_type=${loanType}`,
+        `${process.env.REACT_APP_API_URL}/loans/?account=${accountNumber}&loan_type=${loanType}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -290,7 +290,7 @@ const PaymentSchedule = () => {
         await new Promise(resolve => setTimeout(resolve, 500));
 
         const loanDetailResponse = await axios.get(
-          `http://127.0.0.1:8000/loans/${controlNumber}/detailed_loan_info/`,
+          `${process.env.REACT_APP_API_URL}/loans/${controlNumber}/detailed_loan_info/`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }

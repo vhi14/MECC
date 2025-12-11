@@ -177,7 +177,7 @@ const [processingAdvancePayment, setProcessingAdvancePayment] = useState(false);
         const isoDate = `${yyyy}-${mm}-${dd}`;
         try {
           const orResp = await axios.get(
-            `http://127.0.0.1:8000/check-or-number/?or_number=${orNumber}&account_number=${selectedAccount}&category=Loan&loan_type=${loanType}&date_paid=${isoDate}`,
+            `${process.env.REACT_APP_API_URL}/check-or-number/?or_number=${orNumber}&account_number=${selectedAccount}&category=Loan&loan_type=${loanType}&date_paid=${isoDate}`,
             { headers: { Authorization: `Bearer ${token}` } }
           );
           if (!orResp.data.available) {
@@ -211,7 +211,7 @@ const [processingAdvancePayment, setProcessingAdvancePayment] = useState(false);
         amount_curtailment: eventAmountCurtail || '0',
         notes: `Frontend composite payment (${eventMode})`
       };
-      const url = `http://127.0.0.1:8000/loans/${currentLoan.control_number}/payment-event/`;
+      const url = `${process.env.REACT_APP_API_URL}/loans/${currentLoan.control_number}/payment-event/`;
       const resp = await axios.post(url, payload, {
         headers: { Authorization: `Bearer ${token}`, 'Content-Type':'application/json' }
       });
@@ -247,7 +247,7 @@ const [processingAdvancePayment, setProcessingAdvancePayment] = useState(false);
           payment_type: paymentType
         };
         await axios.post(
-          'http://127.0.0.1:8000/archive-payment-record/',
+          `${process.env.REACT_APP_API_URL}/archive-payment-record/`,
           archivePayload,
           { headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' } }
         );
@@ -292,7 +292,7 @@ const handleAdvanceORChange = async (value) => {
         const isoDate = `${yyyy}-${mm}-${dd}`;
 
         const response = await axios.get(
-          `http://127.0.0.1:8000/check-or-number/?or_number=${cleaned}&account_number=${selectedAccount}&category=Loan&loan_type=${loanType}&date_paid=${isoDate}`,
+          `${process.env.REACT_APP_API_URL}/check-or-number/?or_number=${cleaned}&account_number=${selectedAccount}&category=Loan&loan_type=${loanType}&date_paid=${isoDate}`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
@@ -366,7 +366,7 @@ const processAdvancePaymentWithReconstruction = async () => {
     const isoDate = `${yyyy}-${mm}-${dd}`;
     try {
       const orResp = await axios.get(
-        `http://127.0.0.1:8000/check-or-number/?or_number=${advancePaymentOR}&account_number=${selectedAccount}&category=Loan&loan_type=${loanType}&date_paid=${isoDate}`,
+        `${process.env.REACT_APP_API_URL}/check-or-number/?or_number=${advancePaymentOR}&account_number=${selectedAccount}&category=Loan&loan_type=${loanType}&date_paid=${isoDate}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       if (orResp.data.is_used_global) {
@@ -395,7 +395,7 @@ const processAdvancePaymentWithReconstruction = async () => {
     }
 
     const response = await axios.post(
-      'http://127.0.0.1:8000/process-advance-payment-reconstruction/',
+      `${process.env.REACT_APP_API_URL}/process-advance-payment-reconstruction/`,
       {
         loan_control_number: loanDetails.control_number,
         advance_amount: advancePaymentAmount,
@@ -430,7 +430,7 @@ const processAdvancePaymentWithReconstruction = async () => {
           payment_type: 'Advance Payment'
         };
         await axios.post(
-          'http://127.0.0.1:8000/archive-payment-record/',
+          `${process.env.REACT_APP_API_URL}/archive-payment-record/`,
           archivePayload,
           { headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' } }
         );
@@ -590,7 +590,7 @@ const processAdvancePaymentWithReconstruction = async () => {
       };
 
       const response = await axios.post(
-        'http://127.0.0.1:8000/update-breakdown/',
+        `${process.env.REACT_APP_API_URL}/update-breakdown/`,
         payload,
         {
           headers: {
@@ -697,7 +697,7 @@ const processAdvancePaymentWithReconstruction = async () => {
 //       };
 //       try {
 //         response = await axios.post(
-//           'http://127.0.0.1:8000/update-breakdown/',
+//           '${process.env.REACT_APP_API_URL}/update-breakdown/',
 //           payload,
 //           {
 //             headers: {
@@ -710,7 +710,7 @@ const processAdvancePaymentWithReconstruction = async () => {
 //         // Fallback to legacy payload shape if server rejects new format
 //         console.warn('🔁 Falling back to legacy breakdown API payload (schedules_id).');
 //         response = await axios.post(
-//           'http://127.0.0.1:8000/update-breakdown/',
+//           '${process.env.REACT_APP_API_URL}/update-breakdown/',
 //           { schedules_id, new_amount: breakdownValue },
 //           {
 //             headers: {
@@ -723,7 +723,7 @@ const processAdvancePaymentWithReconstruction = async () => {
 //     } else {
 //       // If loan details missing, still try legacy payload to avoid blocking the action
 //       response = await axios.post(
-//         'http://127.0.0.1:8000/update-breakdown/',
+//         '${process.env.REACT_APP_API_URL}/update-breakdown/',
 //         { schedules_id, new_amount: breakdownValue },
 //         {
 //           headers: {
@@ -846,7 +846,7 @@ const processAdvancePaymentWithReconstruction = async () => {
     const currentLoan = loanDetails;
     if (!currentLoan || !currentLoan.control_number) return;
     try {
-      const url = `http://127.0.0.1:8000/loans/${currentLoan.control_number}/payment-event/`;
+      const url = `${process.env.REACT_APP_API_URL}/loans/${currentLoan.control_number}/payment-event/`;
       const resp = await axios.get(url, { headers: { Authorization: `Bearer ${token}` } });
       setPaymentEvents(resp.data?.events || []);
     } catch (e) {
@@ -931,7 +931,7 @@ const processAdvancePaymentWithReconstruction = async () => {
 
     try {
       const response = await axios.get(
-        `http://127.0.0.1:8000/check-or-availability/${selectedAccount}/${orNumber}/`,
+        `${process.env.REACT_APP_API_URL}/check-or-availability/${selectedAccount}/${orNumber}/`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
@@ -986,7 +986,7 @@ const processAdvancePaymentWithReconstruction = async () => {
           const dd = String(today.getDate()).padStart(2, '0');
           const isoDate = `${yyyy}-${mm}-${dd}`;
           const response = await axios.get(
-            `http://127.0.0.1:8000/check-or-number/?or_number=${cleaned}&account_number=${selectedAccount}&category=Loan&loan_type=${loanType}&date_paid=${isoDate}`,
+            `${process.env.REACT_APP_API_URL}/check-or-number/?or_number=${cleaned}&account_number=${selectedAccount}&category=Loan&loan_type=${loanType}&date_paid=${isoDate}`,
             {
               headers: {
                 Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
@@ -1049,7 +1049,7 @@ const processAdvancePaymentWithReconstruction = async () => {
     try {
       // First, check which loan types have schedules for this account
       const regularResponse = await axios.get(
-        `http://127.0.0.1:8000/payment-schedules/?account_number=${accountNumber}&loan_type=Regular`,
+        `${process.env.REACT_APP_API_URL}/payment-schedules/?account_number=${accountNumber}&loan_type=Regular`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -1064,7 +1064,7 @@ const processAdvancePaymentWithReconstruction = async () => {
       }
 
       const emergencyResponse = await axios.get(
-        `http://127.0.0.1:8000/payment-schedules/?account_number=${accountNumber}&loan_type=Emergency`,
+        `${process.env.REACT_APP_API_URL}/payment-schedules/?account_number=${accountNumber}&loan_type=Emergency`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -1126,11 +1126,11 @@ const processAdvancePaymentWithReconstruction = async () => {
 
     try {
       // ✅ Fetch summaries for BOTH loan types
-      const regularResponse = await axios.get('http://127.0.0.1:8000/payment-schedules/summaries/?loan_type=Regular', {
+      const regularResponse = await axios.get(`${process.env.REACT_APP_API_URL}/payment-schedules/summaries/?loan_type=Regular`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       
-      const emergencyResponse = await axios.get('http://127.0.0.1:8000/payment-schedules/summaries/?loan_type=Emergency', {
+      const emergencyResponse = await axios.get(`${process.env.REACT_APP_API_URL}/payment-schedules/summaries/?loan_type=Emergency`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -1156,7 +1156,7 @@ const processAdvancePaymentWithReconstruction = async () => {
       
       // Fetch member names
       const namePromises = accountNumbers.map((accountNumber) =>
-        axios.get(`http://127.0.0.1:8000/members/?account_number=${accountNumber}`, {
+        axios.get(`${process.env.REACT_APP_API_URL}/members/?account_number=${accountNumber}`, {
           headers: { Authorization: `Bearer ${token}` },
         })
       );
@@ -1236,7 +1236,7 @@ const handlePayYearlyFees = async (recalc, orNumber) => {
     console.log('📤 Sending payment request:', payload);
     
     const response = await axios.post(
-      `http://127.0.0.1:8000/api/yearly-fees/pay/`,
+      `${process.env.REACT_APP_API_URL}/api/yearly-fees/pay/`,
       payload,
       {
         headers: {
@@ -1276,7 +1276,7 @@ const handlePayYearlyFees = async (recalc, orNumber) => {
   //   if (!token) return;
 
   //   try {
-  //     const response = await axios.get('http://127.0.0.1:8000/payment-schedules/summaries/', {
+  //     const response = await axios.get('${process.env.REACT_APP_API_URL}/payment-schedules/summaries/', {
   //       headers: {
   //         Authorization: `Bearer ${token}`,
   //       },
@@ -1296,7 +1296,7 @@ const handlePayYearlyFees = async (recalc, orNumber) => {
 
   //     const accountNumbers = Object.keys(uniqueSummaries);
   //     const namePromises = accountNumbers.map((accountNumber) =>
-  //       axios.get(`http://127.0.0.1:8000/members/?account_number=${accountNumber}`, {
+  //       axios.get(`${process.env.REACT_APP_API_URL}/members/?account_number=${accountNumber}`, {
   //         headers: {
   //           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
   //         },
@@ -1358,7 +1358,7 @@ const fetchPaymentSchedules = async (accountNumber, loanType) => {
     
     // ✅ STEP 1: Fetch payment schedules FIRST
     const response = await axios.get(
-      `http://127.0.0.1:8000/payment-schedules/?account_number=${accountNumber}&loan_type=${loanType}`,
+      `${process.env.REACT_APP_API_URL}/payment-schedules/?account_number=${accountNumber}&loan_type=${loanType}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -1391,7 +1391,7 @@ const fetchPaymentSchedules = async (accountNumber, loanType) => {
 
     // ✅ STEP 2: Get member details
     const memberResponse = await axios.get(
-      `http://127.0.0.1:8000/members/?account_number=${accountNumber}`,
+      `${process.env.REACT_APP_API_URL}/members/?account_number=${accountNumber}`,
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
@@ -1410,7 +1410,7 @@ const fetchPaymentSchedules = async (accountNumber, loanType) => {
     // ✅ STEP 4: Verify this is the ACTIVE loan
     // If member has multiple loans, we need the one with unpaid schedules
     const allLoansResponse = await axios.get(
-      `http://127.0.0.1:8000/loans/?account=${accountNumber}&loan_type=${loanType}`,
+      `${process.env.REACT_APP_API_URL}/loans/?account=${accountNumber}&loan_type=${loanType}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -1440,7 +1440,7 @@ const fetchPaymentSchedules = async (accountNumber, loanType) => {
     await new Promise(resolve => setTimeout(resolve, 500));
 
     const loanDetailResponse = await axios.get(
-      `http://127.0.0.1:8000/loans/${scheduleLoanId}/detailed_loan_info/`,
+      `${process.env.REACT_APP_API_URL}/loans/${scheduleLoanId}/detailed_loan_info/`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -1517,7 +1517,7 @@ const fetchPaymentSchedules = async (accountNumber, loanType) => {
 
   //   try {
   //     const response = await axios.get(
-  //       `http://127.0.0.1:8000/payment-schedules/?account_number=${accountNumber}&loan_type=${loanType}`,
+  //       `${process.env.REACT_APP_API_URL}/payment-schedules/?account_number=${accountNumber}&loan_type=${loanType}`,
   //       {
   //         headers: {
   //           Authorization: `Bearer ${token}`,
@@ -1528,7 +1528,7 @@ const fetchPaymentSchedules = async (accountNumber, loanType) => {
   //     setSelectedAccount(accountNumber);
 
   //     const memberResponse = await axios.get(
-  //       `http://127.0.0.1:8000/members/?account_number=${accountNumber}`,
+  //       `${process.env.REACT_APP_API_URL}/members/?account_number=${accountNumber}`,
   //       {
   //         headers: {
   //           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
@@ -1538,7 +1538,7 @@ const fetchPaymentSchedules = async (accountNumber, loanType) => {
   //     setAccountDetails(memberResponse.data[0]);
 
   //     const loanListResponse = await axios.get(
-  //       `http://127.0.0.1:8000/loans/?account=${accountNumber}&loan_type=${loanType}`,
+  //       `${process.env.REACT_APP_API_URL}/loans/?account=${accountNumber}&loan_type=${loanType}`,
   //       {
   //         headers: {
   //           Authorization: `Bearer ${token}`,
@@ -1551,7 +1551,7 @@ const fetchPaymentSchedules = async (accountNumber, loanType) => {
   //       await new Promise(resolve => setTimeout(resolve, 1000)); 
 
   //       const loanDetailResponse = await axios.get(
-  //         `http://127.0.0.1:8000/loans/${controlNumber}/detailed_loan_info/`,
+  //         `${process.env.REACT_APP_API_URL}/loans/${controlNumber}/detailed_loan_info/`,
   //         {
   //           headers: {
   //             Authorization: `Bearer ${token}`,
@@ -1592,7 +1592,7 @@ const fetchPaymentSchedules = async (accountNumber, loanType) => {
       const isoDate = `${yyyy}-${mm}-${dd}`;
 
       const response = await axios.get(
-        `http://127.0.0.1:8000/check-or-number/?or_number=${orNumber}&account_number=${selectedAccount}&category=Loan&loan_type=${loanType}&date_paid=${isoDate}`,
+        `${process.env.REACT_APP_API_URL}/check-or-number/?or_number=${orNumber}&account_number=${selectedAccount}&category=Loan&loan_type=${loanType}&date_paid=${isoDate}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -1658,7 +1658,7 @@ const fetchPaymentSchedules = async (accountNumber, loanType) => {
       const currentSchedule = schedules.find(schedule => schedule.id === id);
 
       const markPaidResponse = await axios.post(
-        `http://127.0.0.1:8000/payment-schedules/${id}/mark-paid/`,
+        `${process.env.REACT_APP_API_URL}/payment-schedules/${id}/mark-paid/`,
         { 
           received_amount: totalPayment, 
           account_number: selectedAccount,
@@ -1717,7 +1717,7 @@ const fetchPaymentSchedules = async (accountNumber, loanType) => {
         };
 
         await axios.post(
-          'http://127.0.0.1:8000/archive-payment-record/',
+          `${process.env.REACT_APP_API_URL}/archive-payment-record/`,
           archivePayload,
           {
             headers: {

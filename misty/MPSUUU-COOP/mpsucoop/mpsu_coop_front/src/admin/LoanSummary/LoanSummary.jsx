@@ -49,14 +49,14 @@ const LoanSummary = () => {
     emergency: 0
   });
 
-  const BASE_URL = '${process.env.REACT_APP_API_URL}';
+  const BASE_URL = `${process.env.REACT_APP_API_URL}`;
 
   // chicha
   // Add this new useEffect to fetch current year data
   useEffect(() => {
     const fetchCurrentYearData = async () => {
       try {
-        const response = await axios.get('${process.env.REACT_APP_API_URL}/api/yearly-summary/current/');
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/yearly-summary/current/`);
         setYearlyData(response.data);
       } catch (err) {
         console.error("Error fetching current year data:", err);
@@ -70,7 +70,7 @@ const LoanSummary = () => {
   useEffect(() => {
     const fetchHistoricalYears = async () => {
       try {
-        const response = await axios.get('${process.env.REACT_APP_API_URL}/api/yearly-summary/all/');
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/yearly-summary/all/`);
         // Extract years from the response
         if (response.data.available_years) {
           setHistoricalYears(response.data.available_years);
@@ -124,8 +124,8 @@ const LoanSummary = () => {
     const fetchActiveMembers = async () => {
       try {
         const [membersRes, archivesRes] = await Promise.all([
-          axios.get('${process.env.REACT_APP_API_URL}/members/'),
-          axios.get('${process.env.REACT_APP_API_URL}/archives/?archive_type=Member'),
+          axios.get(`${process.env.REACT_APP_API_URL}/members/`),
+          axios.get(`${process.env.REACT_APP_API_URL}/archives/?archive_type=Member`),
         ]);
 
         const archivedMemberIds = new Set(
@@ -147,7 +147,7 @@ const LoanSummary = () => {
   }, []);
 
   useEffect(() => {
-    axios.get('${process.env.REACT_APP_API_URL}/api/total-penalties/')
+    axios.get(`${process.env.REACT_APP_API_URL}/api/total-penalties/`)
       .then(res => {
         setTotalPenalties(res.data.total_penalty);
       })
@@ -157,7 +157,7 @@ const LoanSummary = () => {
   }, []);
 
   useEffect(() => {
-    axios.get('${process.env.REACT_APP_API_URL}/api/total-fees-breakdown/')
+    axios.get(`${process.env.REACT_APP_API_URL}/api/total-fees-breakdown/`)
       .then(res => {
         setFeesBreakdown(res.data);
       })
@@ -199,7 +199,7 @@ const LoanSummary = () => {
   useEffect(() => {
     const fetchLoanSummary = async () => {
       try {
-        const response = await fetch("${process.env.REACT_APP_API_URL}/api/loan-summary/");
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/loan-summary/`);
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }

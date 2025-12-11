@@ -57,7 +57,7 @@ function Accounts() {
   }, []);
 
   useEffect(() => {
-    axios.get('${process.env.REACT_APP_API_URL}/archives/?archive_type=Account')
+    axios.get(`${process.env.REACT_APP_API_URL}/archives/?archive_type=Account`)
       .then(response => setArchivedAccounts(response.data || []))
       .catch(error => console.error('Error fetching archived accounts:', error));
   }, [refreshArchives]);
@@ -65,7 +65,7 @@ function Accounts() {
    // OR number
   const fetchAccounts = async () => {
     try {
-      const response = await axios.get('${process.env.REACT_APP_API_URL}/accounts/');
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/accounts/`);
       const apiAccounts = Array.isArray(response.data) ? response.data : [];
 
       setAccounts(prev => {
@@ -95,7 +95,7 @@ function Accounts() {
 
   const fetchLoans = async () => {
     try {
-      const response = await axios.get('${process.env.REACT_APP_API_URL}/loans/');
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/loans/`);
       setAccountLoans(response.data);
     } catch (err) {
       console.error('Error fetching loans:', err.response || err);
@@ -254,7 +254,7 @@ function Accounts() {
         account_number: account.account_number,
       };
 
-      const accountArchiveResponse = await axios.post('${process.env.REACT_APP_API_URL}/archives/', archivePayload);
+      const accountArchiveResponse = await axios.post(`${process.env.REACT_APP_API_URL}/archives/`, archivePayload);
       await axios.delete(`${process.env.REACT_APP_API_URL}/accounts/${account.account_number}/`);
       console.log(`✅ Account ${account.account_number} archived.`);
 
@@ -273,7 +273,7 @@ function Accounts() {
               archive_type: 'Member',
               archived_data: memberDetails.data,
             };
-            await axios.post('${process.env.REACT_APP_API_URL}/archives/', memberArchivePayload);
+            await axios.post(`${process.env.REACT_APP_API_URL}/archives/`, memberArchivePayload);
             console.log(`👤 Member ${memberId} archived.`);
           } catch (memberErr) {
             console.error(`❌ Failed to fetch/archive member ${memberId}:`, memberErr.response?.data || memberErr.message);

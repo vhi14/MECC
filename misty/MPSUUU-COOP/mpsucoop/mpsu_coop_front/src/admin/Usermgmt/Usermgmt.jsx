@@ -47,7 +47,7 @@ useEffect(() => {
     };
 
     const handle_update_password = (account_number, email, new_password, username) => {
-        return axios.put("${process.env.REACT_APP_API_URL}/update-user-password/", {
+        return axios.put(`${process.env.REACT_APP_API_URL}/update-user-password/`, {
             account_number: account_number,
             email: email,
             new_password: new_password,

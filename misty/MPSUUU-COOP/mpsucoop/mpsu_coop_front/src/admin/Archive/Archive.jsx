@@ -271,13 +271,13 @@ const handleConfigSave = () => {
       schedulePaymentsResponse,
       archivedPaymentRecordsResponse
     ] = await Promise.all([
-      axios.get('${process.env.REACT_APP_API_URL}/archives/?archive_type=Member', { headers: { Authorization: `Bearer ${token}` } }),
-      axios.get('${process.env.REACT_APP_API_URL}/archives/?archive_type=Loan', { headers: { Authorization: `Bearer ${token}` } }),
-      axios.get('${process.env.REACT_APP_API_URL}/archives/?archive_type=Account', { headers: { Authorization: `Bearer ${token}` } }),
-      axios.get('${process.env.REACT_APP_API_URL}/archives/?archive_type=Payment', { headers: { Authorization: `Bearer ${token}` } }),
-      axios.get('http://127.0.0.1:8000/archived-payments/', { headers: { Authorization: `Bearer ${token}` } }).catch(err => ({ data: [] })),
-      axios.get('http://127.0.0.1:8000/archived-schedules/', { headers: { Authorization: `Bearer ${token}` } }).catch(err => ({ data: [] })),
-      axios.get('http://127.0.0.1:8000/archived-payment-records/', { headers: { Authorization: `Bearer ${token}` } }).catch(err => ({ data: [] }))
+      axios.get(`${process.env.REACT_APP_API_URL}/archives/?archive_type=Member`, { headers: { Authorization: `Bearer ${token}` } }),
+      axios.get(`${process.env.REACT_APP_API_URL}/archives/?archive_type=Loan`, { headers: { Authorization: `Bearer ${token}` } }),
+      axios.get(`${process.env.REACT_APP_API_URL}/archives/?archive_type=Account`, { headers: { Authorization: `Bearer ${token}` } }),
+      axios.get(`${process.env.REACT_APP_API_URL}/archives/?archive_type=Payment`, { headers: { Authorization: `Bearer ${token}` } }),
+      axios.get(`${process.env.REACT_APP_API_URL}/archived-payments/`, { headers: { Authorization: `Bearer ${token}` } }).catch(err => ({ data: [] })),
+      axios.get(`${process.env.REACT_APP_API_URL}/archived-schedules/`, { headers: { Authorization: `Bearer ${token}` } }).catch(err => ({ data: [] })),
+      axios.get(`${process.env.REACT_APP_API_URL}/archived-payment-records/`, { headers: { Authorization: `Bearer ${token}` } }).catch(err => ({ data: [] }))
     ]);
 
     // Process loans to ensure control numbers are preserved
@@ -413,7 +413,7 @@ const handleManualAutoDelete = async () => {
   const fetchLoanData = async () => {
   try {
     const token = getAuthToken();
-    const response = await axios.get('${process.env.REACT_APP_API_URL}/loans/', {
+    const response = await axios.get(`${process.env.REACT_APP_API_URL}/loans/`, {
       headers: { Authorization: `Bearer ${token}` }
     });
     

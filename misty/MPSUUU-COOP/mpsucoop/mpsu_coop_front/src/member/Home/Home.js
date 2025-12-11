@@ -276,7 +276,7 @@ const Home = () => {
   const fetchLoanDetailsWithRecalculations = async (controlNumber, token) => {
     try {
       const response = await axios.get(
-        `http://127.0.0.1:8000/loans/${controlNumber}/detailed_loan_info/`,
+        `${process.env.REACT_APP_API_URL}/loans/${controlNumber}/detailed_loan_info/`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -294,8 +294,8 @@ const Home = () => {
   const fetchCompletePaymentHistory = async (accountNumber) => {
     try {
       const [archivedResponse, activeResponse] = await Promise.all([
-        axios.get(`http://127.0.0.1:8000/payment-history/${accountNumber}/`),
-        axios.get(`http://127.0.0.1:8000/payment-schedules/?account_number=${accountNumber}`)
+        axios.get(`${process.env.REACT_APP_API_URL}/payment-history/${accountNumber}/`),
+        axios.get(`${process.env.REACT_APP_API_URL}/payment-schedules/?account_number=${accountNumber}`)
       ]);
 
       const archivedPayments = archivedResponse.data || [];
@@ -870,7 +870,7 @@ const filteredEmergency = schedulesWithDetails.filter((schedule) => {
           return;
         }
 
-        const memberResponse = await axios.get('${process.env.REACT_APP_API_URL}/api/member/profile/', {
+        const memberResponse = await axios.get(`${process.env.REACT_APP_API_URL}/api/member/profile/`, {
           params: { account_number: acc_number },
           headers: { Authorization: `Bearer ${token}` },
         });

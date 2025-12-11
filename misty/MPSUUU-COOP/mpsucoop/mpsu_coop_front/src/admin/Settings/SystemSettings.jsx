@@ -26,7 +26,7 @@ const SystemSettings = () => {
     useEffect(() => {
         if (activeView === 'Settings') {
             axios
-                .get('http://127.0.0.1:8000/api/system-settings/')
+                .get(`${process.env.REACT_APP_API_URL}/api/system-settings/`)
                 .then(response => {
                     setSettings(response.data);
                 })
@@ -47,7 +47,7 @@ const SystemSettings = () => {
 
     const handleUpdate = () => {
         axios
-            .put('http://127.0.0.1:8000/api/system-settings/', settings)
+            .put(`${process.env.REACT_APP_API_URL}/api/system-settings/`, settings)
             .then(response => {
                 setSettings(response.data);
                 setIsEditing(false);

@@ -158,7 +158,7 @@ _cors_origins_env = os.getenv('CORS_ALLOWED_ORIGINS', 'http://localhost:3000')
 CORS_ALLOWED_ORIGINS = [o.strip() for o in _cors_origins_env.split(',') if o.strip()]
 
 # CSRF trusted origins (set frontend domains when deployed)
-_csrf_origins_env = os.getenv('CSRF_TRUSTED_ORIGINS', '')
+_csrf_origins_env = os.getenv('CSRF_TRUSTED_ORIGINS', 'http://localhost:3000')
 CSRF_TRUSTED_ORIGINS = [o.strip() for o in _csrf_origins_env.split(',') if o.strip()]
 
 

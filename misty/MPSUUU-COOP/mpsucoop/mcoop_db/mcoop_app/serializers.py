@@ -340,6 +340,128 @@ class LoanSerializer(serializers.ModelSerializer):
         recalcs = LoanYearlyRecalculation.objects.filter(loan=obj).order_by('year')
         
         return LoanYearlyRecalculationSerializer(recalcs, many=True).data
+
+    def get_reloan_eligibility(self, obj):
+        try:
+            schedules = list(obj.paymentschedule_set.all().order_by('due_date', 'id'))
+            current_total = len(schedules) if schedules else 0
+            original_total = int(getattr(obj, 'total_payments', 0) or 0)
+            # Try to recover original total from original_principal if total_payments looks reduced
+            try:
+                if (original_total <= 0) or (original_total <= current_total):
+                    # Find a schedule with a non-zero original_principal, else fallback to principal_amount
+                    orig_pp = None
+                    for s in schedules:
+                        v = getattr(s, 'original_principal', None)
+                        if v is not None and Decimal(v) > Decimal('0.00'):
+                            orig_pp = Decimal(v)
+                            break
+                    if orig_pp is None:
+                        for s in schedules:
+                            pv = getattr(s, 'principal_amount', None)
+                            if pv is not None and Decimal(pv) > Decimal('0.00'):
+                                orig_pp = Decimal(pv)
+                                break
+                    if orig_pp and (obj.loan_amount or Decimal('0.00')) > 0:
+                        # Derive total as loan_amount / original principal per payment
+                        derived = (Decimal(obj.loan_amount) / orig_pp)
+                        # Round to nearest integer sensibly
+                        derived_int = int(derived.to_integral_value(rounding=ROUND_HALF_UP))
+                        if derived_int > current_total:
+                            original_total = derived_int
+                if original_total <= 0:
+                    original_total = current_total
+            except Exception:
+                if original_total <= 0:
+                    original_total = current_total
+            if current_total == 0 and original_total == 0:
+                return {
+                    'eligible': False,
+                    'reason': 'No schedules',
+                    'paid_ratio': 0.0,
+                    'thresholds': {'paid_ratio': 0.5, 'remaining_principal_ratio': 0.5}
+                }
+
+            def is_counted_paid(s):
+                ap = getattr(s, 'advance_pay', Decimal('0.00')) or Decimal('0.00')
+                covered = bool(getattr(s, 'is_covered_by_advance', False)) or (getattr(s, 'advance_event_id', None) is not None) or (ap > Decimal('0.00'))
+                return bool(getattr(s, 'is_paid', False)) or covered
+
+            # Baseline by user's rule: original total vs updated unpaid count after advances/reconstruction
+            unpaid = [s for s in schedules if not getattr(s, 'is_paid', False)]
+            counted_paid_baseline = max(0, original_total - len(unpaid))
+
+            # Derive next-unpaid schedule values to translate advance amounts into "covered" units
+            first_unpaid = unpaid[0] if unpaid else (schedules[-1] if schedules else None)
+            principal_pp = (getattr(first_unpaid, 'principal_amount', None) or getattr(first_unpaid, 'original_principal', None) or Decimal('0.00')) if first_unpaid else Decimal('0.00')
+            amort_pp = (getattr(first_unpaid, 'payment_amount', None) or (principal_pp + (getattr(first_unpaid, 'interest_portion', None) or Decimal('0.00')))) if first_unpaid else Decimal('0.00')
+
+            # Count schedules already flagged as advance-covered to avoid double-counting
+            already_advance_count = sum(1 for s in schedules if (not getattr(s, 'is_paid', False)) and (bool(getattr(s, 'is_covered_by_advance', False)) or (getattr(s, 'advance_event_id', None) is not None)))
+
+            # Pull recent PaymentEvents to capture pure advances not yet mapped to schedules
+            try:
+                events = list(getattr(obj, 'payment_events', None).all())
+            except Exception:
+                events = []
+
+            ahead_total = sum([(e.amount_pay_ahead or Decimal('0.00')) for e in events if getattr(e, 'mode', '') in ['pay_ahead', 'hybrid']])
+            curtail_total = sum([(e.amount_curtailment or Decimal('0.00')) for e in events if getattr(e, 'mode', '') in ['curtail', 'hybrid']])
+
+            # Translate event amounts into equivalent covered counts (approximate):
+            # - Pay-ahead uses full amortization per schedule
+            # - Curtailment uses per-payment principal
+            counts_from_ahead = int((ahead_total / amort_pp).to_integral_value(rounding=ROUND_FLOOR)) if amort_pp and amort_pp > 0 else 0
+            counts_from_curtail = int((curtail_total / principal_pp).to_integral_value(rounding=ROUND_FLOOR)) if principal_pp and principal_pp > 0 else 0
+
+            # Avoid double-counting advance coverage already reflected on schedules
+            extra_advance_counts = max(0, (counts_from_ahead + counts_from_curtail) - already_advance_count)
+
+            counted_paid_effective = min(original_total, counted_paid_baseline + max(0, extra_advance_counts))
+            paid_ratio = float(counted_paid_effective) / float(original_total) if original_total > 0 else 0.0
+
+            # Remaining principal threshold
+            # Denominator: prefer loan_amount, else fallback to sum of original principals
+            original_amount = (obj.loan_amount or Decimal('0.00'))
+            if original_amount <= 0:
+                try:
+                    original_amount = sum([(getattr(s, 'original_principal', None) or getattr(s, 'principal_amount', Decimal('0.00')) or Decimal('0.00')) for s in schedules]) or Decimal('0.00')
+                except Exception:
+                    original_amount = Decimal('0.00')
+            base_remaining = (getattr(obj, 'remaining_principal', None) or obj.outstanding_balance or Decimal('0.00'))
+
+            # Approximate additional principal effect from events not yet reflected in remaining principal
+            principal_from_ahead = (counts_from_ahead * principal_pp) if principal_pp > 0 else Decimal('0.00')
+            principal_from_curtail = curtail_total
+            extra_principal_effect = principal_from_ahead + principal_from_curtail
+            effective_remaining = base_remaining - extra_principal_effect
+            if effective_remaining < Decimal('0.00'):
+                effective_remaining = Decimal('0.00')
+
+            rem_ratio = float(effective_remaining / original_amount) if original_amount > 0 else 1.0
+
+            eligible = (paid_ratio >= 0.5) or (rem_ratio <= 0.5)
+            return {
+                'eligible': bool(eligible and (obj.loan_type != 'Emergency')),
+                'paid_ratio': round(paid_ratio, 4),
+                'remaining_principal_ratio': round(rem_ratio, 4),
+                'counts': {
+                    'original_total': original_total,
+                    'current_total': current_total,
+                    'current_unpaid': len(unpaid),
+                    'counted_paid_baseline': counted_paid_baseline,
+                    'counted_paid_effective': counted_paid_effective,
+                    'extra_advance_counts': max(0, extra_advance_counts)
+                },
+                'effective_remaining_principal': str(effective_remaining.quantize(Decimal('0.01'))),
+                'thresholds': {'paid_ratio': 0.5, 'remaining_principal_ratio': 0.5},
+                'notes': 'Emergency loans are not reloanable.' if obj.loan_type == 'Emergency' else None
+            }
+        except Exception as e:
+            return {
+                'eligible': False,
+                'error': str(e)
+            }
                 # verified_recalcs = []
                 # for r in recalcs:
                 #     if r.loan.control_number == obj.control_number:

@@ -1,0 +1,30 @@
+/* Ledger responsive helpers */
+.ledger-container {
+	padding: 20px;
+}
+
+@media (max-width: 480px) {
+	.ledger-container { padding: 12px; }
+	table { font-size: 12px; }
+	table th, table td { padding: 6px; }
+}
+
+@media (min-width: 481px) and (max-width: 1024px) {
+	.ledger-container { padding: 16px; }
+	table { font-size: 14px; }
+}
+
+@media (min-width: 1025px) and (max-width: 1920px) {
+	.ledger-container { padding: 20px; }
+}
+
+@media (min-width: 1921px) {
+	.ledger-container { padding: 32px; }
+	table { font-size: 16px; }
+}
+
+/* Forced device modes */
+html.device-phone .ledger-container { padding: 12px; }
+html.device-tablet .ledger-container { padding: 16px; }
+html.device-desktop .ledger-container { padding: 20px; }
+html.device-tv .ledger-container { padding: 32px; }

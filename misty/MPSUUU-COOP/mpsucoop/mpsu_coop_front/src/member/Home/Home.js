@@ -4,6 +4,7 @@ import Topbar from '../Topbar/Topbar';
 import axios from 'axios';
 import { Eye } from 'lucide-react';
 import { BsFillPrinterFill } from "react-icons/bs";
+import './Home.css';
 
 const Home = () => {
   const [memberData, setMemberData] = useState(null);
@@ -442,6 +443,44 @@ const filteredEmergency = schedulesWithDetails.filter((schedule) => {
     .filter(payment => payment.loan_type === 'Emergency')
     .sort((a, b) => new Date(a.payment_date) - new Date(b.payment_date));
 
+  // NEW: Normalize history data to mirror tables and include archived advances
+  const normalizeHistoryForTable = (historyList, loanType) => {
+    const base = (historyList || [])
+      .filter(p => String(p.loan_type || '').toLowerCase() === String(loanType).toLowerCase())
+      .map(p => {
+        const orNumber = p.OR || p.or_number || p.orNumber || p.or_num || p.receipt_number || p.receipt_no || p.official_receipt || p.or_id || 'N/A';
+        return {
+          id: p.id || `${p.control_number || p.loan_control_number || 'cn'}-${orNumber}`,
+          loan_type: p.loan_type || loanType,
+          payment_amount: p.payment_amount || 0,
+          payment_date: p.payment_date || p.date_paid || p.due_date || null,
+          date_paid: p.date_paid || p.payment_date || null,
+          or_number: orNumber,
+          status: p.status || 'Paid'
+        };
+      });
+
+    // Merge archived advances for the same loan type
+    const adv = (archivedPayments || [])
+      .filter(ap => String(ap.loan_type || '').toLowerCase() === String(loanType).toLowerCase())
+      .map(ap => {
+        const orNumber = ap.OR || ap.or_number || ap.orNumber || ap.or_num || ap.receipt_number || ap.receipt_no || ap.official_receipt || ap.or_id || 'N/A';
+        return {
+          id: ap.id || `${ap.loan_control_number || ap.control_number || 'adv'}-${orNumber}`,
+          loan_type: ap.loan_type || loanType,
+          payment_amount: ap.payment_amount || 0,
+          payment_date: ap.payment_date || ap.date_paid || null,
+          date_paid: ap.date_paid || ap.payment_date || null,
+          or_number: orNumber,
+          status: 'Advance'
+        };
+      });
+
+    const merged = [...base, ...adv];
+    // Sort by payment_date desc to mirror typical history
+    return merged.sort((a, b) => new Date(b.payment_date || b.date_paid || 0) - new Date(a.payment_date || a.date_paid || 0));
+  };
+
   // Calculate paid balance for regular loans
   const calculatePaidBalance = () => {
     if (!nearestRegularLoan) return 0;
@@ -725,6 +764,99 @@ const filteredEmergency = schedulesWithDetails.filter((schedule) => {
       }
     });
     
+    return rows;
+  };
+
+  // NEW: Render Payment History mirroring tables with OR grouping and Advance inclusion
+  const renderHistoryWithORGrouping = (historyItems, loanType) => {
+    const groupedByOR = (historyItems || []).reduce((acc, item) => {
+      const key = item.or_number || 'N/A';
+      if (!acc[key]) acc[key] = [];
+      acc[key].push(item);
+      return acc;
+    }, {});
+
+    const rows = [];
+    Object.entries(groupedByOR).forEach(([orNumber, items]) => {
+      const isOpen = openORGroups[`${loanType}-HIST-${orNumber}`];
+      const hasMultiple = items.length > 1;
+      const first = items[0];
+
+      rows.push(
+        <tr key={`hist-${loanType}-${orNumber}-main`}>
+          <td style={{ padding: '10px 8px', borderRight: '1px solid #9b9b9bff', borderBottom: '1px solid #9b9b9bff' }}>
+            <span style={{ padding: '4px 8px', borderRadius: '12px', backgroundColor: loanType === 'Regular' ? '#28a745' : '#dc3545', color: '#fff', fontSize: '11px', fontWeight: '600' }}>
+              {loanType}
+            </span>
+          </td>
+          <td style={{ padding: '10px 8px', fontWeight: '600', borderRight: '1px solid #9b9b9bff', borderBottom: '1px solid #9b9b9bff' }}>
+            ₱{formatNumber(parseFloat(first.payment_amount || 0).toFixed(2))}
+          </td>
+          <td style={{ padding: '10px 8px', borderRight: '1px solid #9b9b9bff', borderBottom: '1px solid #9b9b9bff' }}>
+            {(() => {
+              const datePaid = first.date_paid || first.payment_date;
+              if (datePaid) return formatISODate(String(datePaid).slice(0,10));
+              return <span style={{ color: '#6c757d', fontSize: '12px' }}>—</span>;
+            })()}
+          </td>
+          <td style={{ padding: '10px 8px', fontWeight: '600', borderRight: '1px solid #9b9b9bff', borderBottom: '1px solid #9b9b9bff' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              {hasMultiple && (
+                <span
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setOpenORGroups(prev => ({ ...prev, [`${loanType}-HIST-${orNumber}`]: !prev[`${loanType}-HIST-${orNumber}`] }));
+                  }}
+                  style={{ cursor: 'pointer', userSelect: 'none', fontSize: '16px', color: '#0b26f7ff', fontWeight: 'bold' }}
+                >
+                  {isOpen ? '▼' : '►'}
+                </span>
+              )}
+              <span>{first.or_number}</span>
+              {hasMultiple && (
+                <span style={{ fontSize: '12px', color: '#000000ff' }}>({items.length})</span>
+              )}
+            </div>
+          </td>
+          <td style={{ padding: '10px 8px', borderBottom: '1px solid #9b9b9bff' }}>
+            <span style={{ padding: '4px 8px', borderRadius: '12px', backgroundColor: first.status === 'Advance' ? '#0d6efd' : '#28a745', color: 'white', fontSize: '11px', fontWeight: '600' }}>
+              {first.status === 'Advance' ? '✓ Advance' : '✓ Settled'}
+            </span>
+          </td>
+        </tr>
+      );
+
+      if (hasMultiple && isOpen) {
+        items.slice(1).forEach((it, idx) => {
+          rows.push(
+            <tr key={`hist-${loanType}-${orNumber}-${idx}`} style={{ backgroundColor: '#f9f9f9' }}>
+              <td style={{ padding: '10px 8px', paddingLeft: '20px', borderRight: '1px solid #9b9b9bff', borderBottom: '1px solid #9b9b9bff' }}>
+                <span style={{ padding: '4px 8px', borderRadius: '12px', backgroundColor: loanType === 'Regular' ? '#28a745' : '#dc3545', color: '#fff', fontSize: '11px', fontWeight: '600' }}>{loanType}</span>
+              </td>
+              <td style={{ padding: '10px 8px', paddingLeft: '20px', fontWeight: '600', borderRight: '1px solid #9b9b9bff', borderBottom: '1px solid #9b9b9bff' }}>
+                ₱{formatNumber(parseFloat(it.payment_amount || 0).toFixed(2))}
+              </td>
+              <td style={{ padding: '10px 8px', borderRight: '1px solid #9b9b9bff', borderBottom: '1px solid #9b9b9bff' }}>
+                {(() => {
+                  const datePaid = it.date_paid || it.payment_date;
+                  if (datePaid) return formatISODate(String(datePaid).slice(0,10));
+                  return <span style={{ color: '#6c757d', fontSize: '12px' }}>—</span>;
+                })()}
+              </td>
+              <td style={{ padding: '10px 8px', paddingLeft: '30px', fontWeight: '600', borderRight: '1px solid #9b9b9bff', borderBottom: '1px solid #9b9b9bff' }}>
+                {it.or_number}
+              </td>
+              <td style={{ padding: '10px 8px', borderBottom: '1px solid #9b9b9bff' }}>
+                <span style={{ padding: '4px 8px', borderRadius: '12px', backgroundColor: it.status === 'Advance' ? '#0d6efd' : '#28a745', color: 'white', fontSize: '11px', fontWeight: '600' }}>
+                  {it.status === 'Advance' ? '✓ Advance' : '✓ Settled'}
+                </span>
+              </td>
+            </tr>
+          );
+        });
+      }
+    });
+
     return rows;
   };
 
@@ -1366,7 +1498,7 @@ const filteredEmergency = schedulesWithDetails.filter((schedule) => {
                       fontWeight: '600',
                       cursor: 'pointer',
                       transition: 'all 0.3s ease',
-                      display: 'flex',
+                      display: 'flex',  
                       alignItems: 'center',
                       justifyContent: 'center',
                       gap: '8px',
@@ -1477,7 +1609,7 @@ const filteredEmergency = schedulesWithDetails.filter((schedule) => {
                       border: 'none',
                       padding: '10px 20px',
                       borderRadius: '12px',
-                      fontSize: '14px',
+                      fontSize: '12px',
                       fontWeight: '600',
                       cursor: 'pointer',
                       transition: 'all 0.3s ease',
@@ -1497,7 +1629,7 @@ const filteredEmergency = schedulesWithDetails.filter((schedule) => {
                       e.target.style.boxShadow = 'none';
                     }}
                   >
-                    CLICK TO VIEW
+                    CLICK TO VIEW PAYMENTS HISTORY
                   </button>
                   <button
                     onClick={() => setShowEmergencyAdvanceOnly(true)}
@@ -1624,38 +1756,20 @@ const filteredEmergency = schedulesWithDetails.filter((schedule) => {
                       </tr>
                     </thead>
                     <tbody>
-                      {regularPaymentHistory.length > 0 ? (
-                        regularPaymentHistory.map((payment, index) => (
-                          <tr key={index}>
-                            <td style={{ padding: '10px', borderRight: '1px solid #9b9b9bff', borderBottom: '1px solid #9b9b9bff' }}>
-                              <span style={{ padding: '4px 8px', borderRadius: '12px', backgroundColor: '#28a745', color: 'white', fontSize: '11px', fontWeight: '600' }}>
-                                {payment.loan_type}
-                              </span>
-                            </td>
-                            <td style={{ padding: '10px', fontWeight: '600', borderRight: '1px solid #9b9b9bff', borderBottom: '1px solid #9b9b9bff' }}>
-                              ₱{formatNumber(parseFloat(payment.payment_amount || 0).toFixed(2))}
-                            </td>
-                            <td style={{ padding: '10px', borderRight: '1px solid #9b9b9bff', borderBottom: '1px solid #9b9b9bff' }}>
-                              {formatDate(payment.payment_date)}
-                            </td>
-                            <td style={{ padding: '10px', fontWeight: '600', borderRight: '1px solid #9b9b9bff', borderBottom: '1px solid #9b9b9bff' }}>
-                              {payment.or_number}
-                            </td>
-                            <td style={{ padding: '10px', borderBottom: '1px solid #9b9b9bff' }}>
-                              <span style={{ padding: '4px 8px', borderRadius: '12px', backgroundColor: '#28a745', color: 'white', fontSize: '11px', fontWeight: '600' }}>
-                                ✓ Settled
-                              </span>
-                            </td>
-                          </tr>
-                        ))
-                      ) : (
-                        <tr>
-                          <td colSpan="5" style={{ textAlign: 'center', padding: '40px', color: '#6c757d' }}>
-                            <div style={{ fontSize: '48px', opacity: '0.5' }}>📭</div>
-                            <div>No payment history found for regular loans</div>
-                          </td>
-                        </tr>
-                      )}
+                      {(() => {
+                        const normalized = normalizeHistoryForTable(regularPaymentHistory, 'Regular');
+                        if (normalized.length === 0) {
+                          return (
+                            <tr>
+                              <td colSpan="5" style={{ textAlign: 'center', padding: '40px', color: '#6c757d' }}>
+                                <div style={{ fontSize: '48px', opacity: '0.5' }}>📭</div>
+                                <div>No payment history found for regular loans</div>
+                              </td>
+                            </tr>
+                          );
+                        }
+                        return renderHistoryWithORGrouping(normalized, 'Regular');
+                      })()}
                     </tbody>
                   </table>
                 </div>
@@ -1705,38 +1819,20 @@ const filteredEmergency = schedulesWithDetails.filter((schedule) => {
                       </tr>
                     </thead>
                     <tbody>
-                      {emergencyPaymentHistory.length > 0 ? (
-                        emergencyPaymentHistory.map((payment, index) => (
-                          <tr key={index}>
-                            <td style={{ padding: '10px', borderRight: '1px solid #9b9b9bff', borderBottom: '1px solid #9b9b9bff' }}>
-                              <span style={{ padding: '4px 8px', borderRadius: '12px', backgroundColor: '#dc3545', color: 'white', fontSize: '11px', fontWeight: '600' }}>
-                                {payment.loan_type}
-                              </span>
-                            </td>
-                            <td style={{ padding: '10px', fontWeight: '600', borderRight: '1px solid #9b9b9bff', borderBottom: '1px solid #9b9b9bff' }}>
-                              ₱{formatNumber(parseFloat(payment.payment_amount || 0).toFixed(2))}
-                            </td>
-                            <td style={{ padding: '10px', borderRight: '1px solid #9b9b9bff', borderBottom: '1px solid #9b9b9bff' }}>
-                              {formatDate(payment.payment_date)}
-                            </td>
-                            <td style={{ padding: '10px', fontWeight: '600', borderRight: '1px solid #9b9b9bff', borderBottom: '1px solid #9b9b9bff' }}>
-                              {payment.or_number}
-                            </td>
-                            <td style={{ padding: '10px', borderBottom: '1px solid #9b9b9bff' }}>
-                              <span style={{ padding: '4px 8px', borderRadius: '12px', backgroundColor: '#28a745', color: 'white', fontSize: '11px', fontWeight: '600' }}>
-                                ✓ Settled
-                              </span>
-                            </td>
-                          </tr>
-                        ))
-                      ) : (
-                        <tr>
-                          <td colSpan="5" style={{ textAlign: 'center', padding: '40px', color: '#6c757d' }}>
-                            <div style={{ fontSize: '48px', opacity: '0.5' }}>📭</div>
-                            <div>No payment history found for emergency loans</div>
-                          </td>
-                        </tr>
-                      )}
+                      {(() => {
+                        const normalized = normalizeHistoryForTable(emergencyPaymentHistory, 'Emergency');
+                        if (normalized.length === 0) {
+                          return (
+                            <tr>
+                              <td colSpan="5" style={{ textAlign: 'center', padding: '40px', color: '#6c757d' }}>
+                                <div style={{ fontSize: '48px', opacity: '0.5' }}>📭</div>
+                                <div>No payment history found for emergency loans</div>
+                              </td>
+                            </tr>
+                          );
+                        }
+                        return renderHistoryWithORGrouping(normalized, 'Emergency');
+                      })()}
                     </tbody>
                   </table>
                 </div>

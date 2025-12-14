@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from decimal import Decimal
 from django.contrib.auth import authenticate
 import jwt
-from django.http import JsonResponse
+from django.http import JsonResponse 
 import uuid
 from django.db.models import Sum, Min, F, OuterRef, Subquery, Count
 from rest_framework.decorators import api_view
@@ -559,11 +559,42 @@ class AccountViewSet(viewsets.ModelViewSet):
 
         or_number = request.data.get('or_number')
         board_resolution = request.data.get('board_resolution')
-
+        # Server-side OR reuse validation (enforce same rules as check_or_number)
         try:
+            member = account.account_holder
+            today = timezone.now().date()
+
+            if or_number:
+                # Basic OR format check
+                if len(str(or_number).strip()) != 4:
+                    return Response({'error': 'Valid 4-digit OR number is required'}, status=status.HTTP_400_BAD_REQUEST)
+
+                # Block if used by other members anywhere
+                used_by_other_schedule = PaymentSchedule.objects.filter(or_number=or_number, is_paid=True).exclude(loan__account=account).exists()
+                used_in_tracker_by_other = ORNumberTracker.objects.filter(or_number=or_number).exclude(member=member).exists()
+                used_in_fees_any = LoanYearlyRecalculation.objects.filter(fees_or_number=or_number, fees_paid=True).exclude(loan__account=account).exists()
+                if used_by_other_schedule or used_in_tracker_by_other or used_in_fees_any:
+                    return Response({'error': f'OR {or_number} is already used by another member and cannot be reused'}, status=status.HTTP_400_BAD_REQUEST)
+
+                # Block if same member used this OR previously on a different day
+                tracker = ORNumberTracker.objects.filter(member=member, or_number=or_number).first()
+                if tracker and tracker.first_used_date.date() != today:
+                    return Response({'error': f'OR {or_number} was previously used on a different day and cannot be reused'}, status=status.HTTP_400_BAD_REQUEST)
+
+                # Block if same member used this OR on a previous day in payment schedules
+                same_member_prev_day_schedule = PaymentSchedule.objects.filter(
+                    or_number=or_number,
+                    is_paid=True,
+                    loan__account=account
+                ).exclude(date_paid=today).exists()
+                if same_member_prev_day_schedule:
+                    return Response({'error': f'OR {or_number} was used on a different day and cannot be reused'}, status=status.HTTP_400_BAD_REQUEST)
+
+            # If validation passed, proceed with withdrawal
             account.withdraw(amount, or_number=or_number, board_resolution=board_resolution)
             serializer = self.get_serializer(account)
             return Response(serializer.data, status=status.HTTP_200_OK)
+
         except ValidationError as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
@@ -1132,23 +1163,33 @@ def check_or_availability(request, account_number, or_number):
         member = account.account_holder
 
         from .models import LoanYearlyRecalculation
-        # Global usage checks
-        used_in_tracker = ORNumberTracker.objects.filter(or_number=or_number).exists()
-        used_in_schedules = PaymentSchedule.objects.filter(or_number=or_number, is_paid=True).exists()
-        used_in_fees = LoanYearlyRecalculation.objects.filter(fees_or_number=or_number, fees_paid=True).exists()
-        is_used_global = used_in_tracker or used_in_schedules or used_in_fees
+        today = timezone.now().date()
 
-        if is_used_global:
+        # Block if used by other members anywhere
+        used_by_other_schedule = PaymentSchedule.objects.filter(or_number=or_number, is_paid=True).exclude(loan__account=account).exists()
+        used_in_tracker_by_other = ORNumberTracker.objects.filter(or_number=or_number).exclude(member=member).exists()
+        used_in_fees_by_other = LoanYearlyRecalculation.objects.filter(fees_or_number=or_number, fees_paid=True).exclude(loan__account=account).exists()
+        if used_by_other_schedule or used_in_tracker_by_other or used_in_fees_by_other:
             return Response({
                 'available': False,
-                'reason': f'OR {or_number} is already used and cannot be reused',
+                'reason': f'OR {or_number} is already used by another member and cannot be reused',
                 'reuse': False
             })
 
+        # If used by same member previously on a different day -> block
+        tracker = ORNumberTracker.objects.filter(member=member, or_number=or_number).first()
+        if tracker and tracker.first_used_date.date() != today:
+            return Response({
+                'available': False,
+                'reason': f'OR {or_number} was previously used on a different day and cannot be reused',
+                'reuse': False
+            })
+
+        # Otherwise allow reuse for same member on the same day (front-end will still check same-loan-type reuse)
         return Response({
             'available': True,
-            'reason': 'OR number is available',
-            'reuse': False
+            'reason': 'OR number is available for use by this member today',
+            'reuse': True
         })
         
     except Account.DoesNotExist:
@@ -1705,7 +1746,8 @@ class PaymentEventView(APIView):
             # Used by other member anywhere? -> BLOCK
             used_by_other_schedule = PaymentSchedule.objects.filter(or_number=or_number, is_paid=True).exclude(loan__account=account).exists()
             used_by_other_tracker = ORNumberTracker.objects.filter(or_number=or_number).exclude(member=member).exists()
-            used_in_fees_any = LoanYearlyRecalculation.objects.filter(fees_or_number=or_number, fees_paid=True).exists()
+            # Treat fees usage similar to schedule usage: ignore uses by the same account
+            used_in_fees_any = LoanYearlyRecalculation.objects.filter(fees_or_number=or_number, fees_paid=True).exclude(loan__account=account).exists()
             if used_by_other_schedule or used_by_other_tracker or used_in_fees_any:
                 return Response({'error': f'OR {or_number} is already in use and cannot be reused'}, status=400)
 
@@ -1716,17 +1758,25 @@ class PaymentEventView(APIView):
             if tracker_diff_day or same_member_prev_day_schedule:
                 return Response({'error': 'OR was used on a different day and cannot be reused'}, status=400)
 
-            # Same member, same day, same loan type? -> BLOCK
-            same_day_same_type = PaymentSchedule.objects.filter(
-                loan__account=account,
-                loan__loan_type=loan.loan_type,
-                or_number=or_number,
-                is_paid=True,
-                date_paid=today
-            ).exists()
-            used_fees_same_day = LoanYearlyRecalculation.objects.filter(fees_or_number=or_number, fees_paid=True, fees_paid_date=today).exists()
-            if same_day_same_type or used_fees_same_day:
-                return Response({'error': 'OR cannot be reused today for the same loan type or category'}, status=400)
+            # If the same member already used this OR today (recorded in tracker), allow reuse
+            # across Regular, Emergency, Advance, Withdrawal, and Yearly Fees for that same date.
+            # Only enforce same-day same-type / fees blocking when the OR has NOT been used
+            # today by this same member.
+            tracker_same_day = bool(tracker) and (tracker.first_used_date.date() == today)
+            if not tracker_same_day:
+                # Same member, same day, same loan type? -> BLOCK except for advance/pay_ahead mode
+                same_day_same_type = PaymentSchedule.objects.filter(
+                    loan__account=account,
+                    loan__loan_type=loan.loan_type,
+                    or_number=or_number,
+                    is_paid=True,
+                    date_paid=today
+                ).exists()
+                used_fees_same_day = LoanYearlyRecalculation.objects.filter(fees_or_number=or_number, fees_paid=True, fees_paid_date=today).exists()
+                # DEBUG: log decision factors for OR reuse (dev-only)
+                logger.debug(f"OR reuse check: or={or_number} mode={mode} same_day_same_type={same_day_same_type} used_fees_same_day={used_fees_same_day} tracker_same_day={tracker_same_day}")
+                if (same_day_same_type and mode not in ('pay_ahead','hybrid')) or used_fees_same_day:
+                    return Response({'error': 'OR cannot be reused today for the same loan type or category'}, status=400)
 
         covered_ids = []
         target_schedule = None
@@ -1735,7 +1785,7 @@ class PaymentEventView(APIView):
             if not target_schedule:
                 return Response({'error': 'schedule_id not found for this loan'}, status=404)
 
-        from django.utils import timezone
+        # timezone is imported at module level; do not re-import here (would shadow module variable)
         today = timezone.now().date()
 
         try:
@@ -1909,6 +1959,21 @@ class PaymentEventView(APIView):
                     due_date=event_due_date,
                     created_by=request.user if request.user and request.user.is_authenticated else None
                 )
+
+                # Track OR usage for this member (advance/combined payments)
+                try:
+                    if or_number:
+                        ORNumberTracker.objects.get_or_create(
+                            member=loan.account.account_holder,
+                            or_number=or_number,
+                            defaults={
+                                'loan_type': 'Advance' if amt_ahead > 0 else (loan.loan_type or 'Regular'),
+                                'loan': loan,
+                                'is_active': True
+                            }
+                        )
+                except Exception:
+                    logger.exception(f"Failed to create OR tracker for payment event OR {or_number}")
 
                 # Link advance_event for covered schedules
                 if covered_ids and amt_ahead > 0:
@@ -3879,14 +3944,27 @@ class WithdrawView(APIView):
             if not amount or float(amount) <= 0:
                 return Response({'message': 'Invalid amount'}, status=status.HTTP_400_BAD_REQUEST)
 
-            # ✅ OR policy: Global uniqueness — once used anywhere, never reused
+            # ✅ OR policy: Block reuse by other members or reuse on different day
             if or_number:
                 from .models import LoanYearlyRecalculation
-                used_in_tracker = ORNumberTracker.objects.filter(or_number=or_number).exists()
-                used_in_schedules = PaymentSchedule.objects.filter(or_number=or_number, is_paid=True).exists()
-                used_in_fees = LoanYearlyRecalculation.objects.filter(fees_or_number=or_number, fees_paid=True).exists()
-                if used_in_tracker or used_in_schedules or used_in_fees:
-                    return Response({'message': f'OR {or_number} is already used and cannot be reused'}, status=status.HTTP_400_BAD_REQUEST)
+                member = account.account_holder
+                today = None
+                try:
+                    today = timezone.datetime.strptime(date_str, '%Y-%m-%d').date() if date_str else timezone.now().date()
+                except Exception:
+                    today = timezone.now().date()
+
+                # Block if used by other members anywhere
+                used_by_other_schedule = PaymentSchedule.objects.filter(or_number=or_number, is_paid=True).exclude(loan__account=account).exists()
+                used_in_tracker_by_other = ORNumberTracker.objects.filter(or_number=or_number).exclude(member=member).exists()
+                used_in_fees_by_other = LoanYearlyRecalculation.objects.filter(fees_or_number=or_number, fees_paid=True).exclude(loan__account=account).exists()
+                if used_by_other_schedule or used_in_tracker_by_other or used_in_fees_by_other:
+                    return Response({'message': f'OR {or_number} is already used by another member and cannot be reused'}, status=status.HTTP_400_BAD_REQUEST)
+
+                # Block if same member used on a different day
+                tracker = ORNumberTracker.objects.filter(member=member, or_number=or_number).first()
+                if tracker and tracker.first_used_date.date() != today:
+                    return Response({'message': f'OR {or_number} was previously used on a different day and cannot be reused'}, status=status.HTTP_400_BAD_REQUEST)
 
             account.withdraw(amount, or_number=or_number)
             return Response({'message': 'Withdrawal successful', 'account': str(account)}, status=status.HTTP_200_OK)
@@ -4481,23 +4559,30 @@ def check_or_number(request):
                 date_paid=check_date
             ).exists()
 
-        # --- Cross-category reuse is blocked ---
-        used_today_other_category = False
-        if category != 'Loan':
-            # For non-loan categories, block if used anywhere today by same member
-            used_today_other_category = PaymentSchedule.objects.filter(
-                loan__account__account_number=account_number,
-                or_number=or_number,
-                is_paid=True,
-                date_paid=check_date
-            ).exists() or LoanYearlyRecalculation.objects.filter(fees_or_number=or_number, fees_paid=True).exists()
+        # --- Cross-category reuse: allow for same member on same day across Loan / Advance / Withdrawal / Fees
+        # We only block cross-category reuse when the OR was used by the same member on a different day
+        # or when it's already used today for the same loan type (can't use same OR twice for one loan type)
+        used_today_by_same_member = PaymentSchedule.objects.filter(
+            loan__account__account_number=account_number,
+            or_number=or_number,
+            is_paid=True,
+            date_paid=check_date
+        ).exists() or LoanYearlyRecalculation.objects.filter(fees_or_number=or_number, fees_paid=True, fees_paid_date=check_date).exists()
 
-        # Final availability according to rules
+        # Allow special override for advance checks: front-end can pass is_advance=1 to indicate
+        # the OR is being used for an advance payment. In that case, we do NOT block
+        # reuse merely because the same loan_type was used today (advance is a separate category).
+        is_advance_flag = str(request.query_params.get('is_advance') or '').lower() in ('1','true','yes')
+
+        # Final availability according to rules:
+        # - Block if used by other members anywhere
+        # - Block if used by same member on different day
+        # - Block if used by same member today for the same loan type (unless this is an advance check)
+        # Otherwise allow (this permits same-member reuse across categories on the same day)
         available = not (
             is_used_by_others or
             is_used_same_member_different_day or
-            is_used_same_member_same_loan_type_today or
-            used_today_other_category
+            (is_used_same_member_same_loan_type_today and not is_advance_flag)
         )
 
         return Response({
@@ -4505,6 +4590,7 @@ def check_or_number(request):
             'is_used_by_other_member': is_used_by_others,
             'is_used_same_member_different_day': is_used_same_member_different_day,
             'is_used_same_member_same_loan_type_today': is_used_same_member_same_loan_type_today,
+            'is_advance_flag': is_advance_flag,
             'or_number': or_number,
             'current_account': account_number,
             'message': (
@@ -4891,76 +4977,204 @@ def get_yearly_loans_breakdown(request, year):
 from .models import LoanYearlyRecalculation  
 @api_view(['POST'])
 def pay_yearly_fees(request):
-    """Pay yearly recalculation fees"""
+    """Pay yearly recalculation fees with proper error handling"""
     try:
+        # ✅ Enhanced logging
+        print("\n" + "="*70)
+        print("📥 YEARLY FEES PAYMENT REQUEST")
+        print("="*70)
+        print(f"Request data: {request.data}")
+        print(f"User authenticated: {request.user.is_authenticated}")
+        print(f"User: {request.user}")
+        
         loan_control_number = request.data.get('loan_control_number')
         year = request.data.get('year')
         or_number = request.data.get('or_number')
         amount = request.data.get('amount')
         
+        # ✅ Validate all required fields
         if not all([loan_control_number, year, or_number, amount]):
+            missing = []
+            if not loan_control_number: missing.append('loan_control_number')
+            if not year: missing.append('year')
+            if not or_number: missing.append('or_number')
+            if not amount: missing.append('amount')
+            
+            error_msg = f'Missing required fields: {", ".join(missing)}'
+            print(f"❌ {error_msg}")
+            return Response({'error': error_msg}, status=400)
+        
+        print(f"✅ Validation passed")
+        print(f"   Loan: {loan_control_number}")
+        print(f"   Year: {year}")
+        print(f"   OR: {or_number}")
+        print(f"   Amount: {amount}")
+        
+        # ✅ Get recalculation with error handling
+        try:
+            from .models import LoanYearlyRecalculation
+            recalc = LoanYearlyRecalculation.objects.get(
+                loan__control_number=loan_control_number,
+                year=year
+            )
+            print(f"✅ Found recalculation: Year {recalc.year}")
+            print(f"   Current status: fees_paid={recalc.fees_paid}")
+            print(f"   Loan control: {recalc.loan.control_number}")
+            
+        except LoanYearlyRecalculation.DoesNotExist:
+            # ✅ Debug: Show available years
+            all_years = LoanYearlyRecalculation.objects.filter(
+                loan__control_number=loan_control_number
+            ).values_list('year', flat=True)
+            
+            error_msg = f'Recalculation not found for loan {loan_control_number}, year {year}'
+            print(f"❌ {error_msg}")
+            print(f"   Available years: {list(all_years)}")
+            
             return Response({
-                'error': 'Missing required fields'
-            }, status=status.HTTP_400_BAD_REQUEST)
+                'error': error_msg,
+                'available_years': list(all_years)
+            }, status=404)
         
-        # Get the recalculation record
-        recalc = LoanYearlyRecalculation.objects.get(
-            loan__control_number=loan_control_number,
-            year=year
-        )
+        # ✅ Check if already paid
+        if recalc.fees_paid:
+            print(f"⚠️ Already paid")
+            return Response({
+                'error': f'Year {year} fees already paid',
+                'fees_paid_date': recalc.fees_paid_date.isoformat() if recalc.fees_paid_date else None
+            }, status=400)
         
-        # Validate OR number - global uniqueness
+        # ✅ Validate OR number format
+        or_str = str(or_number).strip()
+        if len(or_str) != 4 or not or_str.isdigit():
+            print(f"❌ Invalid OR format: '{or_str}'")
+            return Response({'error': 'OR must be 4 digits'}, status=400)
+        
+        # ✅ OR reuse validation
         loan = recalc.loan
         member = loan.account.account_holder
-        from .models import LoanYearlyRecalculation
-        used_in_tracker = ORNumberTracker.objects.filter(or_number=or_number).exists()
-        used_in_schedules = PaymentSchedule.objects.filter(or_number=or_number, is_paid=True).exists()
-        used_in_fees = LoanYearlyRecalculation.objects.filter(fees_or_number=or_number, fees_paid=True).exists()
-        if used_in_tracker or used_in_schedules or used_in_fees:
-            return Response({
-                'error': f'OR {or_number} is already used and cannot be reused'
-            }, status=status.HTTP_400_BAD_REQUEST)
+        today = timezone.now().date()
         
-        # Mark fees as paid
-        recalc.mark_fees_as_paid(or_number)
+        print(f"✅ Validating OR reuse for member {member.memId}")
         
-        # Create OR tracker
-        ORNumberTracker.objects.get_or_create(
-            member=member,
-            or_number=or_number,
-            defaults={
-                'loan_type': loan.loan_type,
-                'loan': loan,
-                'is_active': True
-            }
-        )
+        # Check if used by other members
+        from .models import ORNumberTracker
+        used_by_other = ORNumberTracker.objects.filter(
+            or_number=or_str
+        ).exclude(member=member).exists()
         
-        # Archive the payment
-        account = loan.account
-        ArchivedPayment.objects.create(
-            account_number=account.account_number,
-            account_holder=f"{member.first_name} {member.middle_name or ''} {member.last_name}".strip(),
-            payment_amount=amount,
-            loan_type=loan.loan_type,
-            date_paid=timezone.now(),
-            or_number=or_number,
-            payment_type=f'Year {year} Recalculation Fees',
-            archived_by=request.user
-        )
+        if used_by_other:
+            error_msg = f'OR {or_str} already used by another member'
+            print(f"❌ {error_msg}")
+            return Response({'error': error_msg}, status=400)
+        
+        # Check if same member used on different day
+        tracker = ORNumberTracker.objects.filter(
+            member=member, 
+            or_number=or_str
+        ).first()
+        
+        if tracker and tracker.first_used_date.date() != today:
+            error_msg = f'OR {or_str} was used on different day'
+            print(f"❌ {error_msg}")
+            return Response({'error': error_msg}, status=400)
+        
+        print(f"✅ OR validation passed")
+        
+        # ✅ Mark fees as paid
+        try:
+            print(f"💾 Marking fees as paid...")
+            recalc.mark_fees_as_paid(or_str)
+            
+            # ✅ Verify save
+            recalc.refresh_from_db()
+            print(f"✅ Saved: fees_paid={recalc.fees_paid}, OR={recalc.fees_or_number}")
+            
+        except Exception as e:
+            print(f"❌ Failed to mark as paid: {e}")
+            import traceback
+            traceback.print_exc()
+            return Response({'error': f'Save failed: {str(e)}'}, status=500)
+        
+        # ✅ Create OR tracker
+        try:
+            ORNumberTracker.objects.get_or_create(
+                member=member,
+                or_number=or_str,
+                defaults={
+                    'loan_type': 'Fees',
+                    'loan': loan,
+                    'is_active': True
+                }
+            )
+            print(f"✅ OR tracker created")
+        except Exception as e:
+            print(f"⚠️ OR tracker failed: {e}")
+        
+        # ✅ Archive payment - FIX: Handle missing archived_by properly
+        try:
+            account = loan.account
+            
+            # ✅ CRITICAL FIX: Get a valid user for archived_by
+            archived_by_user = None
+            if request.user and request.user.is_authenticated:
+                archived_by_user = request.user
+            else:
+                # Fallback: Use the member's linked user, or create/get a system user
+                if hasattr(member, 'user') and member.user:
+                    archived_by_user = member.user
+                else:
+                    # Last resort: Get or create a system user
+                    from django.contrib.auth.models import User
+                    archived_by_user, _ = User.objects.get_or_create(
+                        username='system',
+                        defaults={'email': 'system@system.com'}
+                    )
+            
+            print(f"✅ Using archived_by: {archived_by_user.username}")
+            
+            ArchivedPayment.objects.create(
+                account_number=account.account_number,
+                account_holder=f"{member.first_name} {member.middle_name or ''} {member.last_name}".strip(),
+                payment_amount=amount,
+                loan_type=loan.loan_type,
+                loan_control_number=str(loan.control_number),
+                date_paid=timezone.now(),
+                or_number=or_str,
+                payment_type=f'Year {year} Recalculation Fees',
+                archived_by=archived_by_user  # ✅ Now guaranteed to be valid
+            )
+            print(f"✅ Payment archived")
+            
+        except Exception as e:
+            print(f"⚠️ Archive failed: {e}")
+            import traceback
+            traceback.print_exc()
+            # Don't fail the request
+        
+        print(f"="*70)
+        print(f"✅ PAYMENT SUCCESSFUL")
+        print(f"="*70 + "\n")
         
         return Response({
             'success': True,
-            'message': f'Year {year} fees payment successful'
-        }, status=status.HTTP_200_OK)
+            'message': f'Year {year} fees paid successfully',
+            'year': year,
+            'or_number': or_str,
+            'fees_paid_date': recalc.fees_paid_date.isoformat()
+        }, status=200)
         
-    except LoanYearlyRecalculation.DoesNotExist:
-        return Response({
-            'error': 'Recalculation record not found'
-        }, status=status.HTTP_404_NOT_FOUND)
     except Exception as e:
+        print(f"\n❌ CRITICAL ERROR:")
+        print(f"   Type: {type(e).__name__}")
+        print(f"   Message: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        print()
+        
         return Response({
-            'error': str(e)
-        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            'error': f'Server error: {str(e)}'
+        }, status=500)
 @api_view(['POST'])
 def process_reloan(request):
     """

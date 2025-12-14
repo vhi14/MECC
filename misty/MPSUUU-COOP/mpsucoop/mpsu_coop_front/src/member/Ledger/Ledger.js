@@ -25,7 +25,7 @@ const Ledger = () => {
         }
 
         const response = await axios.get(
-          `${process.env.REACT_APP_API_URL}/api/account/${accountNumber}/transactions/`,
+          `${process.env.REACT_APP_API_URL}t/${accountNumber}/transactions/`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -136,7 +136,8 @@ const Ledger = () => {
   }
 
   return (
-    <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
+    <div className="member-page">
+      <div className="member-page__content" style={{ fontFamily: 'Arial, sans-serif' }}>
       <h1 style={{ textAlign: 'center', marginBottom: '8px' }}>
         {isAdmin ? 'All Transactions' : 'Your Transactions'}
       </h1>
@@ -228,6 +229,7 @@ const Ledger = () => {
           })}
         </tbody>
       </table>
+      </div>
     </div>
   );
 };

@@ -51,7 +51,7 @@ function Accounts() {
     }).format(number);
   };
 
-  useEffect(() => {
+  useEffect(() => { 
     fetchAccounts();
     fetchLoans();
   }, []);

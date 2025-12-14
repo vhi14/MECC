@@ -11,7 +11,7 @@ import uuid
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from .models import Archive
 from rest_framework import serializers 
-from datetime import date, datetime
+from datetime import date, datetime 
 from typing import Union
 from rest_framework import serializers
 from datetime import date, datetime
@@ -378,6 +378,23 @@ class LoanSerializer(serializers.ModelSerializer):
         instance.calculate_cisp()
         instance.save()
         return instance
+
+
+class LoanDetailedSerializer(serializers.ModelSerializer):
+    """Minimal detailed serializer used by the frontend test script.
+    Exposes `control_number`, `payment_schedules` (list), and `yearly_recalculations`.
+    """
+    payment_schedules = PaymentScheduleSerializer(source='paymentschedule_set', many=True, read_only=True)
+    yearly_recalculations = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Loan
+        fields = ['control_number', 'payment_schedules', 'yearly_recalculations']
+
+    def get_yearly_recalculations(self, obj):
+        from .models import LoanYearlyRecalculation
+        recalcs = LoanYearlyRecalculation.objects.filter(loan=obj).order_by('year')
+        return LoanYearlyRecalculationSerializer(recalcs, many=True).data
 
     def get_reloan_eligibility(self, obj):
         try:

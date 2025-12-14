@@ -5,7 +5,7 @@ import './PaymentSchedule.css';
 
 axios.defaults.withCredentials = false;
 
-const PaymentSchedule = () => {
+const PaymentSchedule = () => { 
   const [accountSummaries, setAccountSummaries] = useState([]);
   const [selectedAccount, setSelectedAccount] = useState(null);
   const [schedules, setSchedules] = useState([]);
@@ -1477,6 +1477,13 @@ const fetchPaymentSchedules = async (accountNumber, loanType) => {
         );
       
       const filteredCount = loanDetailResponse.data.yearly_recalculations.length;
+
+      if (filteredCount > 0) {
+        console.log('✅ Verifying fees_paid status for each recalculation:');
+        loanDetailResponse.data.yearly_recalculations.forEach(r => {
+          console.log(`   Year ${r.year}: fees_paid=${r.fees_paid}, OR=${r.fees_or_number || 'N/A'}`);
+        });
+      }
       
       if (originalCount !== filteredCount) {
         console.error(`❌ MISMATCH DETECTED!`);

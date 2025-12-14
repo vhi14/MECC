@@ -133,8 +133,8 @@ const MemberPayments = () => {
     try {
       // Get both archived and active history
       const [archivedResponse, activeResponse] = await Promise.all([
-        axios.get(`${process.env.REACT_APP_API_URL}/payment-history/${accountNumber}/`),
-        axios.get(`${process.env.REACT_APP_API_URL}/payment-schedules/?account_number=${accountNumber}`)
+        axios.get(`${process.env.REACT_APP_API_URL}story/${accountNumber}/`),
+        axios.get(`http://127.${process.env.REACT_APP_API_URL}count_number=${accountNumber}`)
       ]);
 
       const archivedPayments = archivedResponse.data || [];
@@ -186,7 +186,7 @@ const MemberPayments = () => {
 
       // STEP 2: Fetch current active payment schedules
       const response = await axios.get(
-        `${process.env.REACT_APP_API_URL}/payment-schedules/?account_number=${accountNumber}`,
+        `${process.env.REACT_APP_API_URL}/${process.env.REACT_APP_API_URL}r=${accountNumber}`,
         { withCredentials: true }
       );
 

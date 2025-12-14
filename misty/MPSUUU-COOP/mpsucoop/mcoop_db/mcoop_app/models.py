@@ -106,6 +106,8 @@ class LoanYearlyRecalculation(models.Model):
         self.fees_or_number = or_number
         self.save(update_fields=['fees_paid', 'fees_paid_date', 'fees_or_number'])
         
+        print(f"✅ Year {self.year} fees marked as paid: {self.fees_paid}")
+        
         return True
 class PasswordResetToken(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -449,6 +451,22 @@ class Account(models.Model):
                 )
 
                 logger.info(f"Account.withdraw SUCCESS for {self.account_number}: new_balance={self.shareCapital}")
+                # Track OR usage for this member for later validation
+                try:
+                    if or_number:
+                        # Create or get an OR tracker entry for this member
+                        ORNumberTracker.objects.get_or_create(
+                            member=self.account_holder,
+                            or_number=or_number,
+                            defaults={
+                                'loan_type': 'Withdrawal',
+                                'loan': None,
+                                'is_active': True
+                            }
+                        )
+                except Exception:
+                    # Don't fail the withdrawal if tracker creation fails; just log
+                    logger.exception(f"Failed to create OR tracker for account {self.account_number} and OR {or_number}")
             else:
                 logger.error(f"Withdrawal failed: Insufficient funds in account {self.account_number}.")
                 raise ValueError("Insufficient funds.")
@@ -1339,11 +1357,22 @@ class Loan(models.Model):
         return f"Loan {self.control_number} for {self.account} ({self.status})"
 # Thursday new model
 class ORNumberTracker(models.Model):
-    """Track OR numbers used by each member across all their loans"""
+    """Track OR numbers used by each member across all their loans and transactions"""
     member = models.ForeignKey(Member, on_delete=models.CASCADE, related_name='or_numbers')
     or_number = models.CharField(max_length=4)
-    loan_type = models.CharField(max_length=20, choices=[('Regular', 'Regular'), ('Emergency', 'Emergency')])
-    loan = models.ForeignKey('Loan', on_delete=models.CASCADE, related_name='or_trackers')
+    # Expand loan_type to cover non-loan categories as well (Withdrawal, Advance, Fees)
+    loan_type = models.CharField(
+        max_length=20,
+        choices=[
+            ('Regular', 'Regular'),
+            ('Emergency', 'Emergency'),
+            ('Withdrawal', 'Withdrawal'),
+            ('Advance', 'Advance'),
+            ('Fees', 'Fees')
+        ],
+        default='Regular'
+    )
+    loan = models.ForeignKey('Loan', on_delete=models.CASCADE, related_name='or_trackers', null=True, blank=True)
     first_used_date = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=True)  # False when loan is fully paid
     

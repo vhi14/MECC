@@ -1,4 +1,5 @@
 from rest_framework import generics, status, viewsets, filters
+from rest_framework.pagination import PageNumberPagination
 from datetime import timedelta
 from decimal import Decimal, ROUND_HALF_UP, InvalidOperation
 from rest_framework.views import APIView
@@ -17,7 +18,7 @@ from rest_framework.exceptions import ValidationError
 from django.db import transaction
 from .models import Member, Account, Loan, PaymentSchedule, Payment, Ledger, YearlyFinancialSummary, PaymentEvent
 from .serializers import (
-    MemberSerializer, AccountSerializer, LoanSerializer, UpdatePasswordSerializer,
+    MemberSerializer, AccountSerializer, LoanSerializer, LoanListSerializer, UpdatePasswordSerializer,
     PaymentScheduleSerializer, PaymentSerializer,LedgerSerializer, MemberTokenSerializer,RegisterMemberSerializer,PaymentHistorySerializer,YearlyFinancialSummarySerializer, PaymentEventSerializer
 )
 from .models import ORNumberTracker
@@ -46,6 +47,13 @@ import logging
 from django.http import JsonResponse
 
 logger = logging.getLogger(__name__)
+
+# Pagination for list views
+class StandardPagination(PageNumberPagination):
+    page_size = 20
+    page_size_query_param = 'page_size'
+    max_page_size = 100
+
 def health(request):
     return JsonResponse({"status": "ok"})
 def settle_loan_if_zero(loan):
@@ -467,15 +475,16 @@ class MemberFilter(django_filters.FilterSet):
         fields = ['account_number']  
 
 class MemberViewSet(viewsets.ModelViewSet):
-    queryset = Member.objects.all()
     serializer_class = MemberSerializer
     permission_classes = [AllowAny]
+    pagination_class = StandardPagination
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     filterset_class = MemberFilter  
-    search_fields = ['accountN__account_number']  
+    search_fields = ['accountN__account_number', 'first_name', 'last_name']
     
     def get_queryset(self):
-        queryset = super().get_queryset()
+        """Optimize with select_related for account."""
+        queryset = Member.objects.select_related('accountN', 'user').all()
         
         # Add filter for registered users only
         registered_only = self.request.query_params.get('registered_only', None)
@@ -612,9 +621,22 @@ def get_account_sharecapital(request, account_number):
 
 
 class LoanViewSet(viewsets.ModelViewSet):
-    queryset = Loan.objects.all()
     serializer_class = LoanSerializer
     permission_classes = [AllowAny]
+    pagination_class = StandardPagination
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    filterset_fields = ['loan_type', 'status']
+    search_fields = ['control_number', 'account__account_number']
+    
+    def get_queryset(self):
+        """Optimize queries with select_related and prefetch_related."""
+        return Loan.objects.select_related('account', 'account__account_holder').prefetch_related('paymentschedule_set', 'loanannualrecalculation_set').all()
+    
+    def get_serializer_class(self):
+        """Use lightweight serializer for list views, full serializer for detail."""
+        if self.action == 'list':
+            return LoanListSerializer
+        return LoanSerializer
     
     def create(self, request, *args, **kwargs):
         """
@@ -2275,21 +2297,26 @@ def mark_as_paid(request, id):
             print(f"❌ OR {or_number} used on a different day for this member")
             return JsonResponse({'error': f'OR number {or_number} was used on a different day. Reuse across days is not allowed.'}, status=400)
 
-        # Same member, same day, same loan type? -> BLOCK
-        same_day_same_type = PaymentSchedule.objects.filter(
-            loan__account=account,
-            loan__loan_type=schedule.loan.loan_type,
-            or_number=or_number,
-            is_paid=True,
-            date_paid=check_date
-        ).exclude(id=schedule.id).exists()
+        # If the same member already used this OR today, allow reuse across all categories
+        # (Regular, Emergency, Advance, Withdrawal, Yearly Fees) on the same date.
+        # Only enforce same-day same-type blocking if OR has NOT been used today.
+        tracker_same_day = bool(tracker) and (tracker.first_used_date.date() == check_date)
+        if not tracker_same_day:
+            # Same member, same day, same loan type? -> BLOCK
+            same_day_same_type = PaymentSchedule.objects.filter(
+                loan__account=account,
+                loan__loan_type=schedule.loan.loan_type,
+                or_number=or_number,
+                is_paid=True,
+                date_paid=check_date
+            ).exclude(id=schedule.id).exists()
 
-        # Cross-category reuse (e.g., yearly fees) on same day? -> BLOCK
-        used_fees_same_day = LoanYearlyRecalculation.objects.filter(fees_or_number=or_number, fees_paid=True, fees_paid_date=check_date).exists()
+            # Cross-category reuse (e.g., yearly fees) on same day? -> BLOCK
+            used_fees_same_day = LoanYearlyRecalculation.objects.filter(fees_or_number=or_number, fees_paid=True, fees_paid_date=check_date).exists()
 
-        if same_day_same_type or used_fees_same_day:
-            print(f"❌ OR {or_number} already used today for same loan type or fees")
-            return JsonResponse({'error': f'OR number {or_number} cannot be reused for the same loan type or category on the same day.'}, status=400)
+            if same_day_same_type or used_fees_same_day:
+                print(f"❌ OR {or_number} already used today for same loan type or fees")
+                return JsonResponse({'error': f'OR number {or_number} cannot be reused for the same loan type or category on the same day.'}, status=400)
         
         print(f"✅ All validations passed")
         

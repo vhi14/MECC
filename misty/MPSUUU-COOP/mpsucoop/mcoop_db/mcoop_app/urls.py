@@ -24,9 +24,9 @@ from .views import UnifiedLoginView
 
 logger = logging.getLogger(__name__)
 router = DefaultRouter()
-router.register(r'members', MemberViewSet )  
+router.register(r'members', MemberViewSet, basename='member')
 router.register(r'accounts', AccountViewSet)
-router.register(r'loans', LoanViewSet) 
+router.register(r'loans', LoanViewSet, basename='loan') 
 router.register(r'payment-schedules', PaymentScheduleViewSet, basename='payment-schedules')
 router.register(r'payments', PaymentViewSet, basename='payment')
 router.register(r'archives', ArchiveViewSet, basename='archived-records')

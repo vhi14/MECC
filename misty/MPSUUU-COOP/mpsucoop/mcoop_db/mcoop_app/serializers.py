@@ -250,6 +250,23 @@ class PaymentEventSerializer(serializers.ModelSerializer):
             'amount_curtailment','covered_schedule_ids','notes','is_paid'
         ]
 
+class LoanListSerializer(serializers.ModelSerializer):
+    """Lightweight serializer for loan list views (no expensive computations)."""
+    account_holder = serializers.SerializerMethodField()
+    
+    class Meta:
+        model = Loan
+        fields = [
+            'control_number', 'account', 'loan_amount', 'loan_type', 'status',
+            'loan_date', 'due_date', 'outstanding_balance', 'account_holder'
+        ]
+    
+    def get_account_holder(self, obj):
+        if obj.account and obj.account.account_holder:
+            member = obj.account.account_holder
+            return f"{member.first_name} {member.last_name}".strip()
+        return "N/A"
+
 class LoanSerializer(serializers.ModelSerializer):
     yearly_recalculations = serializers.SerializerMethodField()
     payment_schedule = PaymentScheduleSerializer(

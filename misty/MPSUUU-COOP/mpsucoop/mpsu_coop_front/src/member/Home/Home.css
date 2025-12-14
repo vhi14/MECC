@@ -1,4 +1,4 @@
-/* Main Container */
+/* Main Container
 .home-container {
   min-height: 100vh;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -14,7 +14,7 @@
   margin: 0 auto;
 }
 
-/* Grid Layouts */
+  Grid Layouts  
 .main-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -34,7 +34,7 @@
   gap: 5px;
 }
 
-/* Left Panel */
+  Left Panel  
 .left-panel {
   padding: 4px;
 }
@@ -47,7 +47,7 @@
   margin-top: 50px;
 }
 
-/* Member Info Card */
+  Member Info Card  
 .member-info-card {
   box-shadow: 0px 8px 5px rgba(161, 161, 161, 0.99);
   padding: 5px;
@@ -95,7 +95,7 @@
   color: black;
 }
 
-/* Loan Fees Cards */
+  Loan Fees Cards  
 .loan-fees-container {
   display: flex;
   flex-direction: column;
@@ -131,7 +131,7 @@
   color: black;
 }
 
-/* Loan Buttons */
+  Loan Buttons  
 .loan-buttons-container {
   display: flex;
   flex-direction: column;
@@ -167,12 +167,12 @@
   transform: translateY(-3px);
 }
 
-/* Right Panel */
+  Right Panel  
 .right-panel {
   padding: 4px;
 }
 
-/* Loan Details Cards */
+  Loan Details Cards  
 .loan-details-card {
   box-shadow: 0px 8px 5px rgba(161, 161, 161, 0.99);
   border-radius: 15px;
@@ -293,7 +293,7 @@
   color: white;
 }
 
-/* Payment Tables Section */
+  Payment Tables Section  
 .payment-tables-section {
   margin-top: 80px;
 }
@@ -311,7 +311,7 @@
   margin-right: 300px;
 }
 
-/* Table Buttons */
+  Table Buttons  
 .table-buttons-container {
   display: flex;
   gap: 8px;
@@ -383,7 +383,7 @@
   box-shadow: 0 5px 15px rgba(220, 53, 69, 0.3);
 }
 
-/* Payment Tables */
+  Payment Tables  
 .payment-table-wrapper {
   background: white;
   box-shadow: 0px 8px 8px rgba(59, 59, 59, 0.99);
@@ -432,7 +432,7 @@
   display: none;
 }
 
-/* Table Styles */
+  Table Styles  
 .payment-table {
   width: 100%;
   border-collapse: collapse;
@@ -511,7 +511,7 @@
   padding-left: 30px;
 }
 
-/* Table Badges */
+  Table Badges  
 .loan-type-badge {
   padding: 4px 8px;
   border-radius: 12px;
@@ -544,7 +544,7 @@
   background-color: #0d6efd;
 }
 
-/* OR Group Toggle */
+  OR Group Toggle  
 .or-group-container {
   display: flex;
   align-items: center;
@@ -564,7 +564,7 @@
   color: #000000ff;
 }
 
-/* Empty State */
+  Empty State  
 .empty-state {
   padding: 40px;
   text-align: center;
@@ -581,7 +581,7 @@
   font-size: 12px;
 }
 
-/* Modal Styles */
+  Modal Styles  
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -667,7 +667,7 @@
   display: none;
 }
 
-/* Error State */
+  Error State  
 .error-container {
   min-height: 100vh;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -726,7 +726,7 @@
   transform: translateY(-2px);
 }
 
-/* Loading State */
+  Loading State  
 .loading-container {
   display: flex;
   align-items: center;
@@ -757,7 +757,7 @@
   font-size: 14px;
 }
 
-/* Animations */
+  Animations  
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
@@ -779,7 +779,31 @@
   100% { transform: rotate(360deg); }
 }
 
-/* Hide Scrollbar Utility */
+  Hide Scrollbar Utility  
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
+} */
+ /* Mobile First (Default - < 768px) */
+/* All base styles */
+
+/* Tablet (≥ 768px) */
+@media screen and (min-width: 768px) {
+  /* 2-column layouts start here */
+}
+
+/* Desktop (≥ 1024px) */
+@media screen and (min-width: 1024px) {
+  /* Sidebar + main content */
+  /* 3-column grids */
+}
+
+/* Large Desktop (≥ 1440px) */
+@media screen and (min-width: 1440px) {
+  /* 5-column grids */
+  /* Original desktop experience */
+}
+
+/* Extra Small (≤ 320px) */
+@media screen and (max-width: 320px) {
+  /* Optimized for very small screens */
 }

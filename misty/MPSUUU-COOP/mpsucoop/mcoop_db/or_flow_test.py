@@ -128,16 +128,42 @@ resp = mark_schedule_paid(sched_a_reg.id, OR)
 print('Regular payment A:', resp.status_code, resp.content)
 
 # 3) Mark emergency schedule as paid for member A with OR
+print('\n--- Step 3: Emergency schedule payment ---')
+print('Emergency loan type:', loan_a_emg.loan_type)
 resp = mark_schedule_paid(sched_a_emg.id, OR)
-print('Emergency payment A:', resp.status_code, resp.content)
+print('Emergency schedule payment A:', resp.status_code)
+if resp.status_code != 200:
+    print('  ERROR:', resp.content)
+else:
+    print('  SUCCESS')
 
-# 4) Advance payment (PaymentEvent) for member A using OR
-print('\n-- OR tracker entries BEFORE advance attempt:')
+# 4) Advance payment (PaymentEvent) for Regular loan with OR
+print('\n--- Step 4: Regular loan advance payment ---')
+print('Regular loan type:', loan_a_reg.loan_type)
+print('OR tracker entries BEFORE regular advance attempt:')
 for t in ORNumberTracker.objects.filter(or_number=OR):
-    print(' tracker:', t.member.email if t.member else None, t.or_number, t.first_used_date, t.loan_type)
+    print('  tracker:', t.member.email if t.member else None, t.or_number, t.first_used_date, t.loan_type)
 payload = {'mode':'pay_ahead','amount_regular':'0','amount_pay_ahead':'1200.00','amount_curtailment':'0','or_number':OR}
 resp = post_payment_event(loan_a_reg.control_number, payload)
-print('Advance payment A:', resp.status_code, resp.content)
+print('Regular advance payment A:', resp.status_code)
+if resp.status_code not in (200, 201):
+    print('  ERROR:', resp.content)
+else:
+    print('  SUCCESS')
+
+# 4b) Advance payment for Emergency loan with OR
+print('\n--- Step 4b: Emergency loan advance payment ---')
+print('Emergency loan type:', loan_a_emg.loan_type)
+print('OR tracker entries BEFORE emergency advance attempt:')
+for t in ORNumberTracker.objects.filter(or_number=OR):
+    print('  tracker:', t.member.email if t.member else None, t.or_number, t.first_used_date, t.loan_type)
+payload = {'mode':'pay_ahead','amount_regular':'0','amount_pay_ahead':'1200.00','amount_curtailment':'0','or_number':OR}
+resp = post_payment_event(loan_a_emg.control_number, payload)
+print('Emergency advance payment A:', resp.status_code)
+if resp.status_code not in (200, 201):
+    print('  ERROR:', resp.content)
+else:
+    print('  SUCCESS')
 
 # 5) Pay yearly fees - create a simple LoanYearlyRecalculation for loan_a_reg
 recalc, _ = LoanYearlyRecalculation.objects.get_or_create(loan=loan_a_reg, year=1, defaults={'previous_balance':Decimal('10000.00'),'service_fee':Decimal('100.00'),'interest_amount':Decimal('200.00'),'admincost':Decimal('50.00'),'notarial':Decimal('100.00'),'cisp':Decimal('50.00'),'total_fees_due':Decimal('500.00')})

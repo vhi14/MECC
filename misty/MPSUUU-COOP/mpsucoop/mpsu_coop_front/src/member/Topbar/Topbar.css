@@ -4,7 +4,7 @@
 
 /* Base Topbar Styles */
 .Topbar {
-  width: 1545px;
+  width: 100%;
   position: fixed;
   top: 0;
   left: 0;
@@ -225,10 +225,12 @@
   bottom: 0;
   left: 0;
   right: 0;
+  width: 100%;
   height: 60px;
   background-color: #0D5D24;
   border-top: 2px solid goldenrod;
   z-index: 999;
+  box-sizing: border-box;
 }
 
 .mobile-nav-bar ul {

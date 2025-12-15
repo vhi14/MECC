@@ -7,6 +7,7 @@
 .home-content {
   padding: 20px;
   margin-top: 60px;
+  padding-bottom: 0;
 }
 
 .home-wrapper {
@@ -19,7 +20,15 @@
 /* Mobile adjustments for bottom navigation */
 @media (max-width: 767px) {
   .home-content {
-    padding-bottom: 90px;
+    padding-bottom: 80px;
+    margin-top: 55px;
+  }
+}
+
+/* Tablet and above */
+@media (min-width: 768px) {
+  .home-content {
+    padding-bottom: 0;
   }
 }
 

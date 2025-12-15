@@ -444,42 +444,53 @@ const filteredEmergency = schedulesWithDetails.filter((schedule) => {
     .sort((a, b) => new Date(a.payment_date) - new Date(b.payment_date));
 
   // NEW: Normalize history data to mirror tables and include archived advances
-  const normalizeHistoryForTable = (historyList, loanType) => {
-    const base = (historyList || [])
-      .filter(p => String(p.loan_type || '').toLowerCase() === String(loanType).toLowerCase())
-      .map(p => {
-        const orNumber = p.OR || p.or_number || p.orNumber || p.or_num || p.receipt_number || p.receipt_no || p.official_receipt || p.or_id || 'N/A';
-        return {
-          id: p.id || `${p.control_number || p.loan_control_number || 'cn'}-${orNumber}`,
-          loan_type: p.loan_type || loanType,
-          payment_amount: p.payment_amount || 0,
-          payment_date: p.payment_date || p.date_paid || p.due_date || null,
-          date_paid: p.date_paid || p.payment_date || null,
-          or_number: orNumber,
-          status: p.status || 'Paid'
-        };
-      });
+// NEW: Normalize history data to mirror tables and include archived advances
+const normalizeHistoryForTable = (historyList, loanType) => {
+  const base = (historyList || [])
+    .filter(p => String(p.loan_type || '').toLowerCase() === String(loanType).toLowerCase())
+    .map(p => {
+      const orNumber = p.OR || p.or_number || p.orNumber || p.or_num || p.receipt_number || p.receipt_no || p.official_receipt || p.or_id || 'N/A';
+      
+      // Check if this is an advance payment by checking payment_type field or status
+      const isAdvance = (p.payment_type && String(p.payment_type).toLowerCase().includes('advance')) || 
+                        (p.status && String(p.status).toLowerCase() === 'advance');
+      
+      return {
+        id: p.id || `${p.control_number || p.loan_control_number || 'cn'}-${orNumber}`,
+        loan_type: p.loan_type || loanType,
+        payment_amount: p.payment_amount || 0,
+        payment_date: p.payment_date || p.date_paid || p.due_date || null,
+        date_paid: p.date_paid || p.payment_date || null,
+        or_number: orNumber,
+        status: isAdvance ? 'Advance' : 'Settled'
+      };
+    });
 
-    // Merge archived advances for the same loan type
-    const adv = (archivedPayments || [])
-      .filter(ap => String(ap.loan_type || '').toLowerCase() === String(loanType).toLowerCase())
-      .map(ap => {
-        const orNumber = ap.OR || ap.or_number || ap.orNumber || ap.or_num || ap.receipt_number || ap.receipt_no || ap.official_receipt || ap.or_id || 'N/A';
-        return {
-          id: ap.id || `${ap.loan_control_number || ap.control_number || 'adv'}-${orNumber}`,
-          loan_type: ap.loan_type || loanType,
-          payment_amount: ap.payment_amount || 0,
-          payment_date: ap.payment_date || ap.date_paid || null,
-          date_paid: ap.date_paid || ap.payment_date || null,
-          or_number: orNumber,
-          status: 'Advance'
-        };
-      });
+  // Merge archived advances for the same loan type (if not already included in base)
+  const existingORs = new Set(base.map(b => b.or_number));
+  const adv = (archivedPayments || [])
+    .filter(ap => String(ap.loan_type || '').toLowerCase() === String(loanType).toLowerCase())
+    .filter(ap => {
+      const orNumber = ap.OR || ap.or_number || ap.orNumber || ap.or_num || ap.receipt_number || ap.receipt_no || ap.official_receipt || ap.or_id || 'N/A';
+      return !existingORs.has(orNumber); // Don't duplicate if already in base
+    })
+    .map(ap => {
+      const orNumber = ap.OR || ap.or_number || ap.orNumber || ap.or_num || ap.receipt_number || ap.receipt_no || ap.official_receipt || ap.or_id || 'N/A';
+      return {
+        id: ap.id || `${ap.loan_control_number || ap.control_number || 'adv'}-${orNumber}`,
+        loan_type: ap.loan_type || loanType,
+        payment_amount: ap.payment_amount || 0,
+        payment_date: ap.payment_date || ap.date_paid || null,
+        date_paid: ap.date_paid || ap.payment_date || null,
+        or_number: orNumber,
+        status: 'Advance'
+      };
+    });
 
-    const merged = [...base, ...adv];
-    // Sort by payment_date desc to mirror typical history
-    return merged.sort((a, b) => new Date(b.payment_date || b.date_paid || 0) - new Date(a.payment_date || a.date_paid || 0));
-  };
+  const merged = [...base, ...adv];
+  // Sort by payment_date desc to mirror typical history
+  return merged.sort((a, b) => new Date(b.payment_date || b.date_paid || 0) - new Date(a.payment_date || a.date_paid || 0));
+};
 
   // Calculate paid balance for regular loans
   const calculatePaidBalance = () => {
@@ -768,97 +779,112 @@ const filteredEmergency = schedulesWithDetails.filter((schedule) => {
   };
 
   // NEW: Render Payment History mirroring tables with OR grouping and Advance inclusion
-  const renderHistoryWithORGrouping = (historyItems, loanType) => {
-    const groupedByOR = (historyItems || []).reduce((acc, item) => {
-      const key = item.or_number || 'N/A';
-      if (!acc[key]) acc[key] = [];
-      acc[key].push(item);
-      return acc;
-    }, {});
+// NEW: Render Payment History mirroring tables with OR grouping and Advance inclusion
+const renderHistoryWithORGrouping = (historyItems, loanType) => {
+  const groupedByOR = (historyItems || []).reduce((acc, item) => {
+    const key = item.or_number || 'N/A';
+    if (!acc[key]) acc[key] = [];
+    acc[key].push(item);
+    return acc;
+  }, {});
 
-    const rows = [];
-    Object.entries(groupedByOR).forEach(([orNumber, items]) => {
-      const isOpen = openORGroups[`${loanType}-HIST-${orNumber}`];
-      const hasMultiple = items.length > 1;
-      const first = items[0];
+  const rows = [];
+  Object.entries(groupedByOR).forEach(([orNumber, items]) => {
+    const isOpen = openORGroups[`${loanType}-HIST-${orNumber}`];
+    const hasMultiple = items.length > 1;
+    const first = items[0];
 
-      rows.push(
-        <tr key={`hist-${loanType}-${orNumber}-main`}>
-          <td style={{ padding: '10px 8px', borderRight: '1px solid #9b9b9bff', borderBottom: '1px solid #9b9b9bff' }}>
-            <span style={{ padding: '4px 8px', borderRadius: '12px', backgroundColor: loanType === 'Regular' ? '#28a745' : '#dc3545', color: '#fff', fontSize: '11px', fontWeight: '600' }}>
-              {loanType}
-            </span>
-          </td>
-          <td style={{ padding: '10px 8px', fontWeight: '600', borderRight: '1px solid #9b9b9bff', borderBottom: '1px solid #9b9b9bff' }}>
-            ₱{formatNumber(parseFloat(first.payment_amount || 0).toFixed(2))}
-          </td>
-          <td style={{ padding: '10px 8px', borderRight: '1px solid #9b9b9bff', borderBottom: '1px solid #9b9b9bff' }}>
-            {(() => {
-              const datePaid = first.date_paid || first.payment_date;
-              if (datePaid) return formatISODate(String(datePaid).slice(0,10));
-              return <span style={{ color: '#6c757d', fontSize: '12px' }}>—</span>;
-            })()}
-          </td>
-          <td style={{ padding: '10px 8px', fontWeight: '600', borderRight: '1px solid #9b9b9bff', borderBottom: '1px solid #9b9b9bff' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              {hasMultiple && (
-                <span
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setOpenORGroups(prev => ({ ...prev, [`${loanType}-HIST-${orNumber}`]: !prev[`${loanType}-HIST-${orNumber}`] }));
-                  }}
-                  style={{ cursor: 'pointer', userSelect: 'none', fontSize: '16px', color: '#0b26f7ff', fontWeight: 'bold' }}
-                >
-                  {isOpen ? '▼' : '►'}
-                </span>
-              )}
-              <span>{first.or_number}</span>
-              {hasMultiple && (
-                <span style={{ fontSize: '12px', color: '#000000ff' }}>({items.length})</span>
-              )}
-            </div>
-          </td>
-          <td style={{ padding: '10px 8px', borderBottom: '1px solid #9b9b9bff' }}>
-            <span style={{ padding: '4px 8px', borderRadius: '12px', backgroundColor: first.status === 'Advance' ? '#0d6efd' : '#28a745', color: 'white', fontSize: '11px', fontWeight: '600' }}>
-              {first.status === 'Advance' ? '✓ Advance' : '✓ Settled'}
-            </span>
-          </td>
-        </tr>
-      );
+    rows.push(
+      <tr key={`hist-${loanType}-${orNumber}-main`}>
+        <td style={{ padding: '10px 8px', borderRight: '1px solid #9b9b9bff', borderBottom: '1px solid #9b9b9bff' }}>
+          <span style={{ padding: '4px 8px', borderRadius: '12px', backgroundColor: loanType === 'Regular' ? '#28a745' : '#dc3545', color: '#fff', fontSize: '11px', fontWeight: '600' }}>
+            {loanType}
+          </span>
+        </td>
+        <td style={{ padding: '10px 8px', fontWeight: '600', borderRight: '1px solid #9b9b9bff', borderBottom: '1px solid #9b9b9bff' }}>
+          ₱{formatNumber(parseFloat(first.payment_amount || 0).toFixed(2))}
+        </td>
+        <td style={{ padding: '10px 8px', borderRight: '1px solid #9b9b9bff', borderBottom: '1px solid #9b9b9bff' }}>
+          {(() => {
+            const datePaid = first.date_paid || first.payment_date;
+            if (datePaid) return formatISODate(String(datePaid).slice(0,10));
+            return <span style={{ color: '#6c757d', fontSize: '12px' }}>—</span>;
+          })()}
+        </td>
+        <td style={{ padding: '10px 8px', fontWeight: '600', borderRight: '1px solid #9b9b9bff', borderBottom: '1px solid #9b9b9bff' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            {hasMultiple && (
+              <span
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setOpenORGroups(prev => ({ ...prev, [`${loanType}-HIST-${orNumber}`]: !prev[`${loanType}-HIST-${orNumber}`] }));
+                }}
+                style={{ cursor: 'pointer', userSelect: 'none', fontSize: '16px', color: '#0b26f7ff', fontWeight: 'bold' }}
+              >
+                {isOpen ? '▼' : '►'}
+              </span>
+            )}
+            <span>{first.or_number}</span>
+            {hasMultiple && (
+              <span style={{ fontSize: '12px', color: '#000000ff' }}>({items.length})</span>
+            )}
+          </div>
+        </td>
+        {/* <td style={{ padding: '10px 8px', borderBottom: '1px solid #9b9b9bff' }}>
+          <span style={{ 
+            padding: '4px 8px', 
+            borderRadius: '12px', 
+            backgroundColor: (first.status && String(first.status).toLowerCase() === 'advance') ? '#0d6efd' : '#28a745', 
+            color: 'white', 
+            fontSize: '11px', 
+            fontWeight: '600' 
+          }}>
+            {(first.status && String(first.status).toLowerCase() === 'advance') ? '✓ Advance' : '✓ Settled'}
+          </span>
+        </td> */}
+      </tr>
+    );
 
-      if (hasMultiple && isOpen) {
-        items.slice(1).forEach((it, idx) => {
-          rows.push(
-            <tr key={`hist-${loanType}-${orNumber}-${idx}`} style={{ backgroundColor: '#f9f9f9' }}>
-              <td style={{ padding: '10px 8px', paddingLeft: '20px', borderRight: '1px solid #9b9b9bff', borderBottom: '1px solid #9b9b9bff' }}>
-                <span style={{ padding: '4px 8px', borderRadius: '12px', backgroundColor: loanType === 'Regular' ? '#28a745' : '#dc3545', color: '#fff', fontSize: '11px', fontWeight: '600' }}>{loanType}</span>
-              </td>
-              <td style={{ padding: '10px 8px', paddingLeft: '20px', fontWeight: '600', borderRight: '1px solid #9b9b9bff', borderBottom: '1px solid #9b9b9bff' }}>
-                ₱{formatNumber(parseFloat(it.payment_amount || 0).toFixed(2))}
-              </td>
-              <td style={{ padding: '10px 8px', borderRight: '1px solid #9b9b9bff', borderBottom: '1px solid #9b9b9bff' }}>
-                {(() => {
-                  const datePaid = it.date_paid || it.payment_date;
-                  if (datePaid) return formatISODate(String(datePaid).slice(0,10));
-                  return <span style={{ color: '#6c757d', fontSize: '12px' }}>—</span>;
-                })()}
-              </td>
-              <td style={{ padding: '10px 8px', paddingLeft: '30px', fontWeight: '600', borderRight: '1px solid #9b9b9bff', borderBottom: '1px solid #9b9b9bff' }}>
-                {it.or_number}
-              </td>
-              <td style={{ padding: '10px 8px', borderBottom: '1px solid #9b9b9bff' }}>
-                <span style={{ padding: '4px 8px', borderRadius: '12px', backgroundColor: it.status === 'Advance' ? '#0d6efd' : '#28a745', color: 'white', fontSize: '11px', fontWeight: '600' }}>
-                  {it.status === 'Advance' ? '✓ Advance' : '✓ Settled'}
-                </span>
-              </td>
-            </tr>
-          );
-        });
-      }
-    });
+    if (hasMultiple && isOpen) {
+      items.slice(1).forEach((it, idx) => {
+        rows.push(
+          <tr key={`hist-${loanType}-${orNumber}-${idx}`} style={{ backgroundColor: '#f9f9f9' }}>
+            <td style={{ padding: '10px 8px', paddingLeft: '20px', borderRight: '1px solid #9b9b9bff', borderBottom: '1px solid #9b9b9bff' }}>
+              <span style={{ padding: '4px 8px', borderRadius: '12px', backgroundColor: loanType === 'Regular' ? '#28a745' : '#dc3545', color: '#fff', fontSize: '11px', fontWeight: '600' }}>{loanType}</span>
+            </td>
+            <td style={{ padding: '10px 8px', paddingLeft: '20px', fontWeight: '600', borderRight: '1px solid #9b9b9bff', borderBottom: '1px solid #9b9b9bff' }}>
+              ₱{formatNumber(parseFloat(it.payment_amount || 0).toFixed(2))}
+            </td>
+            <td style={{ padding: '10px 8px', borderRight: '1px solid #9b9b9bff', borderBottom: '1px solid #9b9b9bff' }}>
+              {(() => {
+                const datePaid = it.date_paid || it.payment_date;
+                if (datePaid) return formatISODate(String(datePaid).slice(0,10));
+                return <span style={{ color: '#6c757d', fontSize: '12px' }}>—</span>;
+              })()}
+            </td>
+            <td style={{ padding: '10px 8px', paddingLeft: '30px', fontWeight: '600', borderRight: '1px solid #9b9b9bff', borderBottom: '1px solid #9b9b9bff' }}>
+              {it.or_number}
+            </td>
+            <td style={{ padding: '10px 8px', borderBottom: '1px solid #9b9b9bff' }}>
+              <span style={{ 
+                padding: '4px 8px', 
+                borderRadius: '12px', 
+                backgroundColor: (it.status && String(it.status).toLowerCase() === 'advance') ? '#0d6efd' : '#28a745', 
+                color: 'white', 
+                fontSize: '11px', 
+                fontWeight: '600' 
+              }}>
+                {(it.status && String(it.status).toLowerCase() === 'advance') ? '✓ Advance' : '✓ Settled'}
+              </span>
+            </td>
+          </tr>
+        );
+      });
+    }
+  });
 
-    return rows;
-  };
+  return rows;
+};
 
   // NEW EFFECT: Fetch loan fees based on current year and recalculations
   useEffect(() => {
@@ -1516,7 +1542,7 @@ const filteredEmergency = schedulesWithDetails.filter((schedule) => {
                   >
                     CLICK TO VIEW PAYMENTS HISTORY
                   </button>
-                  <button
+                  {/* <button
                     onClick={() => setShowRegularAdvanceOnly(true)}
                     style={{
                       background: showRegularAdvanceOnly ? '#28a745' : '#f0f7ff',
@@ -1545,7 +1571,7 @@ const filteredEmergency = schedulesWithDetails.filter((schedule) => {
                     }}
                   >
                     ADVANCE PAYMENT
-                  </button>
+                  </button> */}
                 </div>
                 {/* Regular Loan Payment Table */}
                 <div style={{ background: 'white', boxShadow: '0px 8px 8px rgba(59, 59, 59, 0.99)', borderRadius: '15px', overflow: 'hidden', height: '310px', marginLeft: '20px', width: '550px' }}>
@@ -1631,7 +1657,7 @@ const filteredEmergency = schedulesWithDetails.filter((schedule) => {
                   >
                     CLICK TO VIEW PAYMENTS HISTORY
                   </button>
-                  <button
+                  {/* <button
                     onClick={() => setShowEmergencyAdvanceOnly(true)}
                     style={{
                       background: showEmergencyAdvanceOnly ? '#dc3545' : '#fbe9ef',
@@ -1659,8 +1685,8 @@ const filteredEmergency = schedulesWithDetails.filter((schedule) => {
                       e.target.style.boxShadow = 'none';
                     }}
                   >
-                    ADVANCE PAYMENT
-                  </button>
+                    {/* ADVANCE PAYMENT
+                  </button> */}
                 </div>
                 {/* Emergency Loan Payment Table */}
                 <div style={{ background: 'white', boxShadow: '0px 8px 8px rgba(59, 59, 59, 0.99)', borderRadius: '15px', overflow: 'hidden', height: '310px', marginLeft: '50px', width: '550px' }}>

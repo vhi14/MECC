@@ -1,1171 +1,491 @@
-/* Main Container */
-.home-container {
-  min-height: 100vh;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
+/* ========================================
+   MOBILE-RESPONSIVE STYLES FOR HOME.JS
+   Add these to your existing Home.css
+   ======================================== */
 
-.home-content {
-  padding: 20px;
-  margin-top: 60px;
-  padding-bottom: 0;
-}
-
-.home-wrapper {
-  width: 100%;
-  max-width: 1500px;
-  margin: 0 auto;
-  padding: 0 10px;
-}
-
-/* Mobile adjustments for bottom navigation */
-@media (max-width: 767px) {
-  .home-content {
-    padding-bottom: 80px;
-    margin-top: 55px;
+/* Mobile Phones (up to 600px) */
+@media (max-width: 600px) {
+  
+  /* ====================
+     HEADER ADJUSTMENTS
+     ==================== */
+  
+  /* Top header navigation - show Home, Profile, Menu */
+  .Topbar .nav-container {
+    display: flex !important;
   }
-}
-
-/* Tablet and above */
-@media (min-width: 768px) {
-  .home-content {
-    padding-bottom: 0;
+  
+  .Topbar .nav-Topbar {
+    display: flex !important;
+    gap: 8px;
   }
-}
-
-/* Grid Layouts */
-.main-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 20px;
-}
-
-.loan-details-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 15px;
-  margin-top: 5px;
-}
-
-.payment-tables-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 15px;
-}
-
-/* Left Panel */
-.left-panel {
-  padding: 0;
-}
-
-.member-profile-section {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 15px;
-  margin-top: 20px;
-}
-
-/* Hide member info and fees on mobile */
-@media (max-width: 767px) {
+  
+  .Topbar .nav-Topbar .nav-item {
+    display: block !important;
+  }
+  
+  .Topbar .nav-link p {
+    display: none; /* Hide text, keep icons only */
+  }
+  
+  /* ====================
+     HIDE DESKTOP ELEMENTS ON HOME VIEW
+     ==================== */
+  
+  /* Hide member info card on mobile home view */
   .member-info-card {
-    display: none;
+    display: none !important;
   }
-
+  
+  /* Hide loan fees cards on mobile home view */
   .loan-fees-container {
-    display: none;
+    display: none !important;
   }
-
+  
+  /* Hide loan action buttons on mobile home view */
   .loan-buttons-container {
-    display: none;
+    display: none !important;
   }
-
-  .loan-details-card {
-    display: none;
+  
+  /* ====================
+     MOBILE HOME VIEW - LOAN DETAILS ONLY
+     ==================== */
+  
+  .home-content {
+    padding: 10px;
+    margin-top: 65px;
+    padding-bottom: 80px; /* Space for bottom nav */
   }
-
-  #payment-section {
-    margin-top: 20px !important;
-    order: 1;
-  }
-
+  
   .main-grid {
+    display: block;
     grid-template-columns: 1fr;
   }
+  
+  /* Left panel should be hidden */
+  .left-panel {
+    display: none;
   }
-
-
-/* Member Info Card */
-.member-info-card {
-  box-shadow: 0px 4px 8px rgba(161, 161, 161, 0.5);
-  padding: 15px;
-  border-radius: 12px;
-  margin-bottom: 10px;
-  color: black;
-  text-align: center;
-  width: 100%;
-  max-width: 350px;
-  height: auto;
-  margin-top: 0;
-}
-
-.member-name {
-  font-size: 16px;
-  font-weight: 700;
-  margin: 10px 0;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-bottom: 10px;
-}
-
-.account-badge {
-  background: rgba(51, 49, 49, 0.2);
-  padding: 5px 12px;
-  border-radius: 25px;
-  display: inline-block;
-  font-size: 12px;
-  font-weight: 700;
-  color: black;
-  margin-top: 5px;
-}
-
-.capital-share-container {
-  display: flex;
-  gap: 10px;
-  margin-top: 15px;
-  flex-wrap: wrap;
-  margin-bottom: 10px;
-  justify-content: center;
-}
-
-.capital-share-item {
-  font-size: 13px;
-  font-weight: 600;
-  color: black;
-}
-
-/* Loan Fees Cards */
-.loan-fees-container {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-top: 15px;
-  width: 100%;
-  max-width: 350px;
-}
-
-.loan-fees-card {
-  box-shadow: 0px 4px 8px rgba(161, 161, 161, 0.5);
-  padding: 10px;
-  border-radius: 12px;
-  color: black;
-  text-align: center;
-  margin-bottom: 10px;
-}
-
-.loan-fees-card.emergency {
-  color: #000000ff;
-  margin-top: 5px;
-}
-
-.loan-fees-title {
-  font-size: 13px;
-  font-weight: 600;
-  margin-bottom: 8px;
-}
-
-.loan-fees-item {
-  margin: 0 0 5px 0;
-  font-size: 12px;
-  font-weight: 600;
-  color: black;
-}
-
-/* Loan Buttons */
-.loan-buttons-container {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-top: 10px;
-  width: 100%;
-  max-width: 350px;
-}
-
-.loan-button {
-  border: none;
-  padding: 10px 12px;
-  border-radius: 10px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: transform 0.3s ease;
-  position: relative;
-  z-index: 1;
-  box-shadow: 0px 4px 8px rgba(161, 161, 161, 0.5);
-  color: white;
-  font-size: 12px;
-}
-
-.loan-button.share-capital {
-  background: #28a745;
-}
-
-.loan-button.bi-monthly {
-  background: #007bff;
-}
-
-.loan-button:hover {
-  transform: translateY(-2px);
-}
-
-/* Right Panel */
-.right-panel {
-  padding: 0;
-}
-
-/* Loan Details Cards */
-.loan-details-card {
-  box-shadow: 0px 4px 8px rgba(161, 161, 161, 0.5);
-  border-radius: 12px;
-  padding: 12px;
-  color: black;
-  margin-top: 0;
-  width: 100%;
-}
-
-.loan-details-card.regular {
-  height: auto;
-  margin-left: 0;
-  margin-right: 0;
-}
-
-.loan-details-card.emergency {
-  height: auto;
-  margin-left: 0;
-  margin-right: 0;
-}
-
-.loan-details-title {
-  font-size: 13px;
-  font-weight: 700;
-  margin: 0 0 10px 0;
-  text-align: center;
-  border-bottom: 2px solid rgba(0, 0, 0, 1);
-  padding-bottom: 5px;
-}
-
-.loan-details-content {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.loan-details-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-}
-
-.loan-details-row.balance {
-  grid-template-columns: 1fr;
-}
-
-.loan-detail-item {
-  box-shadow: 0px 4px 6px rgba(161, 161, 161, 0.4);
-  padding: 8px;
-  border-radius: 8px;
-  text-align: center;
-}
-
-.loan-detail-item.balance {
-  padding: 10px;
-}
-
-.loan-detail-label {
-  margin: 0 0 8px 0;
-  font-size: 11px;
-  color: black;
-  font-weight: 500;
-}
-
-.loan-detail-label.small {
-  margin: 0 0 4px 0;
-  font-size: 10px;
-}
-
-.loan-detail-value {
-  margin: 0;
-  font-size: 12px;
-  font-weight: 700;
-}
-
-.loan-detail-value.regular {
-  color: #28a745;
-}
-
-.loan-detail-value.emergency {
-  color: #dc3545;
-}
-
-.loan-detail-value.medium {
-  font-size: 12px;
-  color: #000000;
-}
-
-.loan-detail-value.large {
-  font-size: 13px;
-  color: #000000;
-}
-
-.loan-detail-value.control {
-  color: #0004ffff;
-  cursor: pointer;
-  text-decoration: underline;
-}
-
-.loan-detail-value.settled {
-  color: #28a745;
-}
-
-.no-loan-message {
-  padding: 15px;
-  border-radius: 8px;
-  text-align: center;
-  box-shadow: 0px 4px 8px rgba(161, 161, 161, 0.5);
-}
-
-.no-loan-message.regular {
-  background: #28a745;
-}
-
-.no-loan-text {
-  margin: 0;
-  font-size: 12px;
-  opacity: 0.9;
-  color: white;
-}
-
-/* Payment Tables Section */
-.payment-tables-section {
-  margin-top: 30px;
-}
-
-.payment-table-container {
-  width: 100%;
-  margin-top: 0;
-}
-
-.payment-table-container.regular {
-  margin-left: 0;
-}
-
-.payment-table-container.emergency {
-  margin-right: 0;
-}
-
-/* Table Buttons */
-.table-buttons-container {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 10px;
-  flex-wrap: wrap;
-}
-
-.table-buttons-container.regular {
-  margin-left: 0;
-}
-
-.table-buttons-container.emergency {
-  margin-left: 0;
-}
-
-.table-button {
-  border: none;
-  padding: 8px 12px;
-  border-radius: 10px;
-  font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  flex: 1;
-  min-width: 100px;
-}
-
-.table-button.history {
-  background: #005fccff;
-  color: #fff;
-  font-size: 11px;
-}
-
-.table-button.advance {
-  background: #f0f7ff;
-  color: #000;
-}
-
-.table-button.advance.active {
-  background: #28a745;
-  color: white;
-}
-
-.table-button.advance.emergency.active {
-  background: #dc3545;
-  color: white;
-}
-
-.table-button.history.emergency {
-  background: #fbe9ef;
-  color: #000;
-}
-
-.table-button:hover {
-  transform: translateY(-2px);
-}
-
-.table-button.history:hover {
-  box-shadow: 0 3px 10px rgba(40, 167, 69, 0.3);
-}
-
-.table-button.advance:hover {
-  box-shadow: 0 3px 10px rgba(13, 110, 253, 0.2);
-}
-
-/* Payment Tables */
-.payment-table-wrapper {
-  background: white;
-  box-shadow: 0px 4px 8px rgba(59, 59, 59, 0.5);
-  border-radius: 12px;
-  overflow: hidden;
-  height: auto;
-  max-height: 400px;
-  width: 100%;
-}
-
-.payment-table-wrapper.regular {
-  margin-left: 0;
-}
-
-.payment-table-wrapper.emergency {
-  margin-left: 0;
-}
-
-.payment-table-header {
-  padding: 12px;
-  color: white;
-}
-
-.payment-table-header.regular {
-  background: #28a745;
-}
-
-.payment-table-header.emergency {
-  background: #dc3545;
-}
-
-.payment-table-title {
-  font-size: 14px;
-  font-weight: 700;
-  margin: 0;
-  color: white;
-}
-
-.payment-table-scroll {
-  height: auto;
-  max-height: 350px;
-  overflow-y: auto;
-  overflow-x: auto;
-  scrollbar-width: thin;
-  -ms-overflow-style: auto;
-}
-
-/* Mobile table adjustments */
-@media (max-width: 767px) {
+  
+  /* Right panel takes full width - LOAN DETAILS ONLY */
+  .right-panel {
+    width: 100%;
+    padding: 0;
+  }
+  
+  /* Loan Details Cards - Stack Vertically */
+  .loan-details-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 0;
+  }
+  
+  .loan-details-card {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 12px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+  
+  .loan-details-card.regular,
+  .loan-details-card.emergency {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    height: auto;
+  }
+  
+  /* Loan Details Title */
+  .loan-details-title {
+    font-size: 12px;
+    padding-bottom: 8px;
+    margin-bottom: 10px;
+  }
+  
+  /* Loan Details Row - Responsive Grid */
+  .loan-details-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  
+  /* Balance row - full width */
+  .loan-details-row.balance {
+    grid-template-columns: 1fr;
+  }
+  
+  .loan-detail-item {
+    padding: 8px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .loan-detail-label {
+    font-size: 9px;
+    margin-bottom: 4px;
+  }
+  
+  .loan-detail-value {
+    font-size: 11px;
+  }
+  
+  .loan-detail-value.medium {
+    font-size: 11px;
+  }
+  
+  .loan-detail-value.large {
+    font-size: 12px;
+  }
+  
+  /* No loan message */
+  .no-loan-message {
+    padding: 20px 15px;
+  }
+  
+  .no-loan-text {
+    font-size: 11px;
+  }
+  
+  /* ====================
+     HIDE PAYMENT TABLES ON HOME VIEW
+     ==================== */
+  
+  #payment-section {
+    display: none !important;
+  }
+  
+  /* When payments nav is active, show payment section */
+  body.show-payments #payment-section {
+    display: block !important;
+    margin-top: 20px;
+  }
+  
+  /* When payments nav is active, hide loan details */
+  body.show-payments .loan-details-grid {
+    display: none !important;
+  }
+  
+  /* ====================
+     MOBILE BOTTOM NAVIGATION
+     ==================== */
+  
+  .mobile-nav-bar {
+    display: flex !important;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: #0D5D24;
+    border-top: 2px solid goldenrod;
+    z-index: 999;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+  }
+  
+  .mobile-nav-bar ul {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 100%;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+  }
+  
+  .mobile-nav-bar li {
+    display: flex;
+    flex: 1;
+    height: 100%;
+  }
+  
+  .mobile-nav-bar a,
+  .mobile-nav-bar button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-decoration: none;
+    gap: 4px;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .mobile-nav-bar a:active,
+  .mobile-nav-bar button:active {
+    background: #03b86d;
+  }
+  
+  .mobile-nav-bar a.active,
+  .mobile-nav-bar button.active {
+    background: #03b86d;
+    border-top: 3px solid goldenrod;
+  }
+  
+  .mobile-nav-bar svg {
+    font-size: 20px;
+    color: goldenrod;
+  }
+  
+  .mobile-nav-bar span {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: white;
+  }
+  
+  /* ====================
+     PAYMENT TABLES - MOBILE VIEW
+     ==================== */
+  
+  body.show-payments .payment-tables-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .payment-table-container {
+    width: 100% !important;
+    margin: 0 !important;
+  }
+  
   .payment-table-wrapper {
+    width: 100% !important;
     max-height: 300px;
+    margin: 0 !important;
   }
-
+  
+  .payment-table-header {
+    padding: 10px;
+    font-size: 13px;
+  }
+  
+  .payment-table-title {
+    font-size: 13px;
+  }
+  
   .payment-table-scroll {
     max-height: 250px;
   }
-
-  .payment-table {
-    font-size: 11px;
+  
+  /* Table Buttons Container */
+  .table-buttons-container {
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 10px;
   }
-
-  .payment-table th {
+  
+  .table-buttons-container.regular,
+  .table-buttons-container.emergency {
+    margin-left: 0 !important;
+  }
+  
+  .table-button {
+    width: 100%;
+    min-width: auto;
+    padding: 10px;
     font-size: 10px;
-    padding: 6px 4px;
   }
-
+  
+  /* Payment Table Styles */
+  .payment-table {
+    font-size: 10px;
+  }
+  
+  .payment-table th {
+    padding: 8px 4px;
+    font-size: 9px;
+  }
+  
   .payment-table td {
-    padding: 6px 4px;
-    font-size: 11px;
+    padding: 8px 4px;
   }
-
-  .payment-table-title {
+  
+  /* Hide TYPE column on mobile to save space */
+  .payment-table th:nth-child(1),
+  .payment-table td:nth-child(1) {
+    display: none;
+  }
+  
+  /* Badges */
+  .loan-type-badge,
+  .status-badge {
+    padding: 3px 6px;
+    font-size: 8px;
+  }
+  
+  /* OR Group Toggle */
+  .or-toggle-icon {
     font-size: 12px;
   }
-}
-
-.payment-table-scroll::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-
-.payment-table-scroll::-webkit-scrollbar-track {
-  background: #f1f1f1;
-}
-
-.payment-table-scroll::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 3px;
-}
-
-/* Table Styles */
-.payment-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 12px;
-}
-
-.payment-table thead {
-  position: sticky;
-  top: 0;
-  z-index: 10;
-}
-
-.payment-table thead tr {
-  background: #f8f9fa;
-}
-
-.payment-table thead tr.regular {
-  border-bottom: 2px solid #28a745;
-}
-
-.payment-table thead tr.emergency {
-  border-bottom: 2px solid #dc3545;
-}
-
-.payment-table thead tr.advance {
-  border-bottom: 2px solid #0d6efd;
-}
-
-.payment-table th {
-  padding: 8px 6px;
-  text-align: left;
-  font-weight: 700;
-  font-size: 11px;
-  border-right: 1px solid #9b9b9bff;
-}
-
-.payment-table th:last-child {
-  border-right: none;
-}
-
-.payment-table td {
-  padding: 8px 6px;
-  border-right: 1px solid #9b9b9bff;
-  border-bottom: 1px solid #9b9b9bff;
-}
-
-.payment-table td:last-child {
-  border-right: none;
-}
-
-.payment-table td.font-weight-600 {
-  font-weight: 600;
-}
-
-.payment-table td.font-weight-700 {
-  font-weight: 700;
-}
-
-.payment-table td.color-regular {
-  color: #1e7e34;
-}
-
-.payment-table td.color-emergency {
-  color: #dc3545;
-}
-
-.payment-table tbody tr.expanded {
-  background-color: #f9f9f9;
-}
-
-.payment-table tbody tr.expanded td {
-  padding-left: 15px;
-}
-
-.payment-table tbody tr.expanded td.or-column {
-  padding-left: 20px;
-}
-
-/* Table Badges */
-.loan-type-badge {
-  padding: 3px 6px;
-  border-radius: 10px;
-  color: #fff;
-  font-size: 10px;
-  font-weight: 600;
-}
-
-.loan-type-badge.regular {
-  background-color: #28a745;
-}
-
-.loan-type-badge.emergency {
-  background-color: #dc3545;
-}
-
-.status-badge {
-  padding: 3px 6px;
-  border-radius: 10px;
-  color: white;
-  font-size: 10px;
-  font-weight: 600;
-}
-
-.status-badge.settled {
-  background-color: #28a745;
-}
-
-.status-badge.advance {
-  background-color: #0d6efd;
-}
-
-/* OR Group Toggle */
-.or-group-container {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.or-toggle-icon {
-  cursor: pointer;
-  user-select: none;
-  font-size: 14px;
-  color: #0b26f7ff;
-  font-weight: bold;
-}
-
-.or-count {
-  font-size: 11px;
-  color: #000000ff;
-}
-
-/* Empty State */
-.empty-state {
-  padding: 30px;
-  text-align: center;
-  color: #6c757d;
-}
-
-.empty-state-icon {
-  font-size: 36px;
-  opacity: 0.5;
-}
-
-.date-not-recorded {
-  color: #6c757d;
-  font-size: 11px;
-}
-
-/* Modal Styles */
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(5px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  animation: fadeIn 0.3s ease-out;
-  padding: 10px;
-}
-
-.modal-content {
-  background: white;
-  border-radius: 15px;
-  max-width: 95%;
-  max-height: 85vh;
-  width: 100%;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-  overflow: hidden;
-  animation: slideUp 0.3s ease-out;
-}
-
-.modal-header {
-  padding: 15px 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.modal-header.regular {
-  background: #28a745;
-}
-
-.modal-header.emergency {
-  background: #dc3545;
-}
-
-.modal-title {
-  margin: 0;
-  color: white;
-  font-size: 18px;
-  font-weight: 700;
-}
-
-.modal-buttons {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.modal-button {
-  border: none;
-  padding: 6px 12px;
-  border-radius: 8px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 12px;
-}
-
-.modal-button.print {
-  background: white;
-  color: #000;
-}
-
-.modal-button.close {
-  background: rgba(94, 94, 94, 1);
-  color: white;
-  padding: 6px 15px;
-}
-
-.modal-scroll {
-  max-height: 70vh;
-  overflow-y: auto;
-  overflow-x: auto;
-  scrollbar-width: thin;
-  -ms-overflow-style: auto;
-}
-
-.modal-scroll::-webkit-scrollbar {
-  width: 6px;
-}
-
-.modal-scroll::-webkit-scrollbar-track {
-  background: #f1f1f1;
-}
-
-.modal-scroll::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 3px;
-}
-
-/* Error State */
-.error-container {
-  min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  padding: 20px;
-}
-
-.error-content {
-  background: white;
-  padding: 30px;
-  border-radius: 15px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-  text-align: center;
-  max-width: 90%;
-  width: 100%;
-}
-
-.error-icon {
-  width: 60px;
-  height: 60px;
-  background: linear-gradient(45deg, #ff6b6b, #ee5a24);
-  border-radius: 50%;
-  margin: 0 auto 15px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 30px;
-  color: white;
-}
-
-.error-title {
-  color: #2c3e50;
-  margin-bottom: 10px;
-  font-size: 20px;
-}
-
-.error-message {
-  color: #7f8c8d;
-  margin-bottom: 20px;
-  font-size: 14px;
-}
-
-.error-button {
-  display: inline-block;
-  background: linear-gradient(45deg, #667eea, #764ba2);
-  color: white;
-  padding: 10px 20px;
-  text-decoration: none;
-  border-radius: 20px;
-  font-weight: 600;
-  transition: transform 0.3s ease;
-  box-shadow: 0 3px 10px rgba(102, 126, 234, 0.3);
-  font-size: 14px;
-}
-
-.error-button:hover {
-  transform: translateY(-2px);
-}
-
-/* Loading State */
-.loading-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  padding: 20px;
-}
-
-.loading-content {
-  padding: 30px;
-  border-radius: 15px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-  text-align: center;
-}
-
-.loading-spinner {
-  width: 40px;
-  height: 40px;
-  border: 4px solid #667eea;
-  border-top: 4px solid transparent;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin: 0 auto 15px;
-}
-
-.loading-text {
-  color: #0b78e6ff;
-  font-size: 13px;
-}
-
-/* Animations */
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
+  
+  .or-count {
+    font-size: 9px;
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+  
+  /* Empty State */
+  .empty-state {
+    padding: 30px 15px;
   }
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-/* Hide Scrollbar Utility */
-.hide-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-
-/* Tablet Devices (768px and up) */
-@media (min-width: 768px) {
-  .home-content {
-    padding: 30px;
-    margin-top: 80px;
+  
+  .empty-state-icon {
+    font-size: 36px;
   }
-
-  .home-wrapper {
-    padding: 0 20px;
+  
+  .empty-text {
+    font-size: 12px;
   }
-
-  .main-grid {
-    grid-template-columns: 1fr 1fr;
-    gap: 25px;
+  
+  .empty-subtext {
+    font-size: 11px;
   }
-
-  .loan-details-grid {
-    grid-template-columns: 1fr;
-    gap: 15px;
+  
+  /* ====================
+     MODAL ADJUSTMENTS
+     ==================== */
+  
+  .modal-content {
+    width: 95% !important;
+    max-width: 100%;
+    border-radius: 12px;
   }
-
-  .payment-tables-grid {
-    grid-template-columns: 1fr;
-    gap: 15px;
+  
+  .modal-header {
+    padding: 12px 15px;
+    flex-wrap: wrap;
   }
-
-  .member-profile-section {
-    flex-direction: row;
-    align-items: flex-start;
-    margin-top: 30px;
+  
+  .modal-title {
+    font-size: 14px;
   }
-
-  .member-info-card {
-    max-width: 320px;
-  }
-
-  .loan-fees-container {
-    max-width: 320px;
-  }
-
-  .loan-buttons-container {
-    max-width: 320px;
-  }
-
-  .loan-details-card {
+  
+  .modal-buttons {
     width: 100%;
+    margin-top: 8px;
+    justify-content: flex-end;
   }
-
-  .loan-details-row {
-    grid-template-columns: repeat(3, 1fr);
+  
+  .modal-button {
+    padding: 6px 12px;
+    font-size: 11px;
   }
+  
+  .modal-scroll {
+    max-height: 60vh;
+  }
+  
+  /* ====================
+     SHARE CAPITAL & AMORTIZATION BUTTONS
+     ==================== */
+  
+  /* These appear in bottom nav, so hide original buttons */
+  body.show-payments .loan-button {
+    display: none;
+  }
+}
 
-  .loan-details-row.balance {
+/* ====================
+   TABLET ADJUSTMENTS (601px - 768px)
+   ==================== */
+
+@media (min-width: 601px) and (max-width: 768px) {
+  
+  .home-content {
+    padding: 15px;
+    margin-top: 85px;
+  }
+  
+  /* Show member info on tablet */
+  .member-info-card {
+    display: block !important;
+    max-width: 100%;
+  }
+  
+  /* Loan details side by side on tablet */
+  .loan-details-grid {
+    display: grid;
     grid-template-columns: 1fr 1fr;
+    gap: 15px;
   }
-
+  
+  .loan-details-card {
+    width: 100% !important;
+    margin: 0 !important;
+  }
+  
+  /* Keep payment tables stacked */
+  body.show-payments .payment-tables-grid {
+    display: flex;
+    flex-direction: column;
+  }
+  
   .payment-table-wrapper {
     max-height: 350px;
   }
-
-  .modal-content {
-    width: 90%;
-    max-width: 900px;
-  }
-
-  .modal-title {
-    font-size: 20px;
-  }
 }
 
-/* Desktop Devices (1024px and up) */
-@media (min-width: 1024px) {
+/* ====================
+   LANDSCAPE MODE (max-height: 500px)
+   ==================== */
+
+@media (max-height: 500px) and (orientation: landscape) {
+  
   .home-content {
-    padding: 35px;
-    margin-top: 100px;
+    margin-top: 60px;
   }
-
-  .home-wrapper {
-    padding: 0 30px;
-  }
-
-  .main-grid {
-    grid-template-columns: 1fr 1fr;
-    gap: 30px;
-  }
-
-  .loan-details-grid {
-    grid-template-columns: 1fr;
-    gap: 20px;
-  }
-
-  .payment-tables-grid {
-    grid-template-columns: 1fr;
-    gap: 20px;
-  }
-
-  .member-info-card {
-    max-width: 350px;
-  }
-
-  .loan-fees-container {
-    max-width: 350px;
-  }
-
-  .loan-buttons-container {
-    max-width: 350px;
-  }
-
-  .loan-details-row {
-    grid-template-columns: repeat(4, 1fr);
-  }
-
-  .payment-table-wrapper {
-    max-height: 400px;
-  }
-
-  .payment-table {
-    font-size: 13px;
-  }
-
-  .payment-table th {
-    font-size: 12px;
-  }
-
-  .modal-content {
-    width: 95%;
-    max-width: 1200px;
-  }
-
-  .modal-title {
-    font-size: 24px;
-  }
-}
-
-/* Large Desktop (1400px and up) */
-@media (min-width: 1400px) {
-  .home-wrapper {
-    max-width: 1500px;
-  }
-
-  .loan-details-row {
-    grid-template-columns: repeat(5, 1fr);
-  }
-
-  .member-info-card {
-    max-width: 400px;
-  }
-
-  .loan-fees-container {
-    max-width: 400px;
-  }
-
-  .loan-buttons-container {
-    max-width: 400px;
-  }
-
-  .payment-table {
-    font-size: 14px;
-  }
-}
-
-/* Mobile Payment View Optimization (600px and below) */
-@media (max-width: 600px) {
-  .payment-table-wrapper {
-    width: 100%;
-    margin: 0;
-    padding: 0;
-    background: transparent;
-    max-height: none;
-  }
-
-  .payment-table-container {
-    width: 100%;
-    margin-bottom: 16px;
-    padding: 12px;
-    border-radius: 8px;
-    background: #f8f8f8;
-    border-left: 4px solid #DAA520;
-  }
-
-  .payment-table-container h3 {
-    font-size: 13px;
-    font-weight: 600;
-    margin: 0 0 12px 0;
-    color: #0D5D24;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-
-  .payment-table-container table {
-    width: 100%;
-    font-size: 10px;
-    border-collapse: collapse;
-  }
-
-  .payment-table-container th {
-    padding: 8px 4px;
-    text-align: left;
-    font-weight: 600;
-    color: #555;
-    border-bottom: 2px solid #DAA520;
-    background: transparent;
-    font-size: 9px;
-    text-transform: uppercase;
-  }
-
-  .payment-table-container td {
-    padding: 8px 4px;
-    border-bottom: 1px solid #eee;
-    color: #333;
-    word-break: break-word;
-  }
-
-  .payment-table-container tr:hover {
-    background: #f0f0f0;
-  }
-
-  /* Loan type indicators */
-  .loan-type-regular::before {
-    content: '🟢 ';
-    margin-right: 4px;
-  }
-
-  .loan-type-emergency::before {
-    content: '🔴 ';
-    margin-right: 4px;
-  }
-
-  /* Advance payment section */
-  .advance-payment-section {
-    padding: 12px;
-    margin: 16px 0;
-    background: #f9f9f9;
-    border-radius: 8px;
-    border-left: 4px solid #03b86d;
-  }
-
-  .advance-payment-section h3 {
-    font-size: 13px;
-    font-weight: 600;
-    color: #0D5D24;
-    margin: 0 0 10px 0;
-  }
-
-  .advance-payment-section p {
-    font-size: 11px;
-    color: #666;
-    margin: 0;
-  }
-
-  /* Payment history prompt */
-  .payment-history-prompt {
-    text-align: center;
-    padding: 12px;
-    color: #666;
-    font-size: 11px;
-    background: #fafafa;
-    border-radius: 6px;
-    margin-bottom: 16px;
-    border: 1px dashed #DAA520;
-  }
-
-  .payment-history-prompt strong {
-    color: #0D5D24;
-    font-weight: 600;
-    display: block;
-    margin-bottom: 4px;
-  }
-
-  /* Hide loan details on mobile payment view */
+  
   .loan-details-card {
-    display: none;
+    padding: 8px;
   }
+  
+  .loan-detail-item {
+    padding: 6px;
+  }
+  
+  .payment-table-wrapper {
+    max-height: 200px;
+  }
+}
+
+/* ====================
+   UTILITY CLASSES
+   ==================== */
+
+/* Hide on mobile */
+.hide-on-mobile {
+  display: inherit;
+}
+
+@media (max-width: 600px) {
+  .hide-on-mobile {
+    display: none !important;
+  }
+}
+
+/* Show only on mobile */
+.show-on-mobile {
+  display: none;
+}
+
+@media (max-width: 600px) {
+  .show-on-mobile {
+    display: inherit !important;
+  }
+}
+
+/* Prevent text selection on interactive elements */
+.mobile-nav-bar a,
+.mobile-nav-bar button,
+.table-button,
+.or-toggle-icon {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
 }

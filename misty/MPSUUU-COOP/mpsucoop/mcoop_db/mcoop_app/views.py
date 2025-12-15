@@ -736,13 +736,6 @@ class LoanViewSet(viewsets.ModelViewSet):
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
-    def get(self, request):
-        loans = Loan.objects.all()  # Fetch all loans from the database
-        serializer = LoanSerializer(loans, many=True)  # Serialize the data
-        loan_data = serializer.data  # Get the serialized data
-        print("Serialized Loan Data:", loan_data)  # Print to the terminal
-        return Response(loan_data) 
-#2dago
     # @action(detail=True, methods=['post'])
     # def mark_as_paid(self, request, pk=None):
     #     loan = self.get_object()

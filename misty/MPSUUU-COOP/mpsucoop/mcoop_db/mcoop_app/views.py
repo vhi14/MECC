@@ -681,7 +681,7 @@ class LoanViewSet(viewsets.ModelViewSet):
     
     def get_queryset(self):
         """Optimize queries with select_related and prefetch_related, handle control_number filtering."""
-        queryset = Loan.objects.select_related('account', 'account__account_holder').prefetch_related('paymentschedule_set', 'loanannualrecalculation_set').all()
+        queryset = Loan.objects.select_related('account', 'account__account_holder').prefetch_related('paymentschedule_set', 'yearly_recalculations').all()
         
         # Filter by control_number if provided
         control_number = self.request.query_params.get('control_number', None)

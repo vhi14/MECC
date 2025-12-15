@@ -1,491 +1,130 @@
-/* ========================================
-   MOBILE-RESPONSIVE STYLES FOR HOME.JS
-   Add these to your existing Home.css
-   ======================================== */
-
-/* Mobile Phones (up to 600px) */
-@media (max-width: 600px) {
-  
-  /* ====================
-     HEADER ADJUSTMENTS
-     ==================== */
-  
-  /* Top header navigation - show Home, Profile, Menu */
-  .Topbar .nav-container {
-    display: flex !important;
-  }
-  
-  .Topbar .nav-Topbar {
-    display: flex !important;
-    gap: 8px;
-  }
-  
-  .Topbar .nav-Topbar .nav-item {
-    display: block !important;
-  }
-  
-  .Topbar .nav-link p {
-    display: none; /* Hide text, keep icons only */
-  }
-  
-  /* ====================
-     HIDE DESKTOP ELEMENTS ON HOME VIEW
-     ==================== */
-  
-  /* Hide member info card on mobile home view */
-  .member-info-card {
-    display: none !important;
-  }
-  
-  /* Hide loan fees cards on mobile home view */
-  .loan-fees-container {
-    display: none !important;
-  }
-  
-  /* Hide loan action buttons on mobile home view */
-  .loan-buttons-container {
-    display: none !important;
-  }
-  
-  /* ====================
-     MOBILE HOME VIEW - LOAN DETAILS ONLY
-     ==================== */
-  
-  .home-content {
-    padding: 10px;
-    margin-top: 65px;
-    padding-bottom: 80px; /* Space for bottom nav */
-  }
-  
-  .main-grid {
-    display: block;
-    grid-template-columns: 1fr;
-  }
-  
-  /* Left panel should be hidden */
-  .left-panel {
-    display: none;
-  }
-  
-  /* Right panel takes full width - LOAN DETAILS ONLY */
-  .right-panel {
-    width: 100%;
-    padding: 0;
-  }
-  
-  /* Loan Details Cards - Stack Vertically */
-  .loan-details-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    margin-top: 0;
-  }
-  
-  .loan-details-card {
-    width: 100% !important;
-    margin: 0 !important;
-    padding: 12px;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  }
-  
-  .loan-details-card.regular,
-  .loan-details-card.emergency {
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-    height: auto;
-  }
-  
-  /* Loan Details Title */
-  .loan-details-title {
-    font-size: 12px;
-    padding-bottom: 8px;
-    margin-bottom: 10px;
-  }
-  
-  /* Loan Details Row - Responsive Grid */
-  .loan-details-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-  }
-  
-  /* Balance row - full width */
-  .loan-details-row.balance {
-    grid-template-columns: 1fr;
-  }
-  
-  .loan-detail-item {
-    padding: 8px;
-    border-radius: 8px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  }
-  
-  .loan-detail-label {
-    font-size: 9px;
-    margin-bottom: 4px;
-  }
-  
-  .loan-detail-value {
-    font-size: 11px;
-  }
-  
-  .loan-detail-value.medium {
-    font-size: 11px;
-  }
-  
-  .loan-detail-value.large {
-    font-size: 12px;
-  }
-  
-  /* No loan message */
-  .no-loan-message {
-    padding: 20px 15px;
-  }
-  
-  .no-loan-text {
-    font-size: 11px;
-  }
-  
-  /* ====================
-     HIDE PAYMENT TABLES ON HOME VIEW
-     ==================== */
-  
-  #payment-section {
-    display: none !important;
-  }
-  
-  /* When payments nav is active, show payment section */
-  body.show-payments #payment-section {
-    display: block !important;
-    margin-top: 20px;
-  }
-  
-  /* When payments nav is active, hide loan details */
-  body.show-payments .loan-details-grid {
-    display: none !important;
-  }
-  
-  /* ====================
-     MOBILE BOTTOM NAVIGATION
-     ==================== */
-  
-  .mobile-nav-bar {
-    display: flex !important;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 60px;
-    background: #0D5D24;
-    border-top: 2px solid goldenrod;
-    z-index: 999;
-    box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
-  }
-  
-  .mobile-nav-bar ul {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    height: 100%;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    width: 100%;
-  }
-  
-  .mobile-nav-bar li {
-    display: flex;
-    flex: 1;
-    height: 100%;
-  }
-  
-  .mobile-nav-bar a,
-  .mobile-nav-bar button {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    text-decoration: none;
-    gap: 4px;
-    width: 100%;
-    height: 100%;
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
-  
-  .mobile-nav-bar a:active,
-  .mobile-nav-bar button:active {
-    background: #03b86d;
-  }
-  
-  .mobile-nav-bar a.active,
-  .mobile-nav-bar button.active {
-    background: #03b86d;
-    border-top: 3px solid goldenrod;
-  }
-  
-  .mobile-nav-bar svg {
-    font-size: 20px;
-    color: goldenrod;
-  }
-  
-  .mobile-nav-bar span {
-    font-size: 10px;
-    font-weight: 600;
-    text-transform: uppercase;
-    color: white;
-  }
-  
-  /* ====================
-     PAYMENT TABLES - MOBILE VIEW
-     ==================== */
-  
-  body.show-payments .payment-tables-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-  }
-  
-  .payment-table-container {
-    width: 100% !important;
-    margin: 0 !important;
-  }
-  
-  .payment-table-wrapper {
-    width: 100% !important;
-    max-height: 300px;
-    margin: 0 !important;
-  }
-  
-  .payment-table-header {
-    padding: 10px;
-    font-size: 13px;
-  }
-  
-  .payment-table-title {
-    font-size: 13px;
-  }
-  
-  .payment-table-scroll {
-    max-height: 250px;
-  }
-  
-  /* Table Buttons Container */
-  .table-buttons-container {
-    flex-direction: column;
-    gap: 6px;
-    margin-bottom: 10px;
-  }
-  
-  .table-buttons-container.regular,
-  .table-buttons-container.emergency {
-    margin-left: 0 !important;
-  }
-  
-  .table-button {
-    width: 100%;
-    min-width: auto;
-    padding: 10px;
-    font-size: 10px;
-  }
-  
-  /* Payment Table Styles */
-  .payment-table {
-    font-size: 10px;
-  }
-  
-  .payment-table th {
-    padding: 8px 4px;
-    font-size: 9px;
-  }
-  
-  .payment-table td {
-    padding: 8px 4px;
-  }
-  
-  /* Hide TYPE column on mobile to save space */
-  .payment-table th:nth-child(1),
-  .payment-table td:nth-child(1) {
-    display: none;
-  }
-  
-  /* Badges */
-  .loan-type-badge,
-  .status-badge {
-    padding: 3px 6px;
-    font-size: 8px;
-  }
-  
-  /* OR Group Toggle */
-  .or-toggle-icon {
-    font-size: 12px;
-  }
-  
-  .or-count {
-    font-size: 9px;
-  }
-  
-  /* Empty State */
-  .empty-state {
-    padding: 30px 15px;
-  }
-  
-  .empty-state-icon {
-    font-size: 36px;
-  }
-  
-  .empty-text {
-    font-size: 12px;
-  }
-  
-  .empty-subtext {
-    font-size: 11px;
-  }
-  
-  /* ====================
-     MODAL ADJUSTMENTS
-     ==================== */
-  
-  .modal-content {
-    width: 95% !important;
-    max-width: 100%;
-    border-radius: 12px;
-  }
-  
-  .modal-header {
-    padding: 12px 15px;
-    flex-wrap: wrap;
-  }
-  
-  .modal-title {
-    font-size: 14px;
-  }
-  
-  .modal-buttons {
-    width: 100%;
-    margin-top: 8px;
-    justify-content: flex-end;
-  }
-  
-  .modal-button {
-    padding: 6px 12px;
-    font-size: 11px;
-  }
-  
-  .modal-scroll {
-    max-height: 60vh;
-  }
-  
-  /* ====================
-     SHARE CAPITAL & AMORTIZATION BUTTONS
-     ==================== */
-  
-  /* These appear in bottom nav, so hide original buttons */
-  body.show-payments .loan-button {
-    display: none;
-  }
+/* Main Container */
+.home-container {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  min-height: 100vh;
 }
 
-/* ====================
-   TABLET ADJUSTMENTS (601px - 768px)
-   ==================== */
-
-@media (min-width: 601px) and (max-width: 768px) {
-  
-  .home-content {
-    padding: 15px;
-    margin-top: 85px;
-  }
-  
-  /* Show member info on tablet */
-  .member-info-card {
-    display: block !important;
-    max-width: 100%;
-  }
-  
-  /* Loan details side by side on tablet */
-  .loan-details-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
-  }
-  
-  .loan-details-card {
-    width: 100% !important;
-    margin: 0 !important;
-  }
-  
-  /* Keep payment tables stacked */
-  body.show-payments .payment-tables-grid {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .payment-table-wrapper {
-    max-height: 350px;
-  }
+/* Welcome Section */
+.welcome-section h2 {
+  text-align: center;
+  color: black;
+  font-size: 50px;
+  margin-bottom: 60px;
+  border-bottom: 3px solid black;
+  font-weight: bolder;
 }
 
-/* ====================
-   LANDSCAPE MODE (max-height: 500px)
-   ==================== */
-
-@media (max-height: 500px) and (orientation: landscape) {
-  
-  .home-content {
-    margin-top: 60px;
-  }
-  
-  .loan-details-card {
-    padding: 8px;
-  }
-  
-  .loan-detail-item {
-    padding: 6px;
-  }
-  
-  .payment-table-wrapper {
-    max-height: 200px;
-  }
+/* Cards Container */
+.cards-container {
+  display: flex;
+  justify-content: space-around;
+  gap: 20px;
+  margin-top: 60px;
 }
 
-/* ====================
-   UTILITY CLASSES
-   ==================== */
-
-/* Hide on mobile */
-.hide-on-mobile {
-  display: inherit;
+/* Left Card (Member Info) */
+.left-card {
+  border-radius: 8px;
+  width: 45%;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-@media (max-width: 600px) {
-  .hide-on-mobile {
-    display: none !important;
-  }
+.left-card h3 {
+  text-align: center;
+  font-size: 30px;
+  font-weight: bold;
+  margin-bottom: 20px;
 }
 
-/* Show only on mobile */
-.show-on-mobile {
-  display: none;
+.left-card p {
+  text-align: center;
+  font-size: 20px;
 }
 
-@media (max-width: 600px) {
-  .show-on-mobile {
-    display: inherit !important;
-  }
+/* Loan Summary */
+.loan-summary {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 30px;
 }
 
-/* Prevent text selection on interactive elements */
-.mobile-nav-bar a,
-.mobile-nav-bar button,
-.table-button,
-.or-toggle-icon {
-  -webkit-tap-highlight-color: transparent;
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  user-select: none;
+.loan-card {
+  background-color: green;
+  border-radius: 20px;
+  padding: 15px;
+  text-align: center;
+  font-weight: bold;
+  color: white;
+  width: 45%;
+}
+
+.loan-card.red {
+  background-color: rgb(85, 26, 26);
+}
+
+/* Right Card (Payment Info) */
+.right-card {
+  background-color: #c8f7ce;
+  border-radius: 8px;
+  width: 45%;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.payment-summary {
+  text-align: left;
+  font-size: 20px;
+}
+
+.payment-progress-bar {
+  background-color: red;
+  height: 8px;
+  width: 10px;
+  border-radius: 20px;
+  position: relative;
+  margin: 10px 0;
+}
+
+.payment-progress-bar .paid {
+  background-color: green;
+  height: 100%;
+  border-radius: 20px;
+}
+
+.payment-progress-bar .remaining {
+  background-color: #ddd;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 20px;
+}
+
+.dropdown {
+  margin-top: 15px;
+}
+
+.dropdown button {
+  padding: 8px 15px;
+  background-color: #007bff;
+  color: white;
+  border-radius: 5px;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.dropdown-menu {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.dropdown-menu button {
+  background-color: #28a745;
+  margin: 5px 0;
 }

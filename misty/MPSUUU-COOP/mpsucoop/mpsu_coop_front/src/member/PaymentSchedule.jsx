@@ -106,7 +106,7 @@ const PaymentSchedule = () => {
   if (error) {
     return (
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif" }}>
-        <div style={{ background: 'white', padding: '40px', borderRadius: '20px', boxShadow: '0 20px 40px rgba(0,0,0,0.1)', textAlign: 'center', maxWidth: '500px' }}>
+        <div className="error-container" style={{ background: 'white', padding: '40px', borderRadius: '20px', boxShadow: '0 20px 40px rgba(0,0,0,0.1)', textAlign: 'center', maxWidth: '500px' }}>
           <div style={{ width: '80px', height: '80px', background: 'linear-gradient(45deg, #ff6b6b, #ee5a24)', borderRadius: '50%', margin: '0 auto 20px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '40px', color: 'white' }}>⚠</div>
           <h2 style={{ color: '#2c3e50', marginBottom: '15px' }}>Error Loading Data</h2>
           <p style={{ color: '#7f8c8d', marginBottom: '30px', fontSize: '16px' }}>{error}</p>
@@ -139,7 +139,7 @@ const PaymentSchedule = () => {
     <div style={{ minHeight: '100vh', fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif" }}>
       <Topbar />
       
-      {/* Hidden Scrollbar Styles */}
+      {/* Hidden Scrollbar Styles + RESPONSIVE MEDIA QUERIES */}
       <style>
         {`
           .hidden-scrollbar {
@@ -156,15 +156,228 @@ const PaymentSchedule = () => {
           .bimonthly-cell:hover {
             background-color: #e3f2fd !important;
           }
+
+          /* ============================================ */
+          /* RESPONSIVE MEDIA QUERIES */
+          /* ============================================ */
+
+          /* Mobile Devices (up to 480px) */
+          @media (max-width: 480px) {
+            .main-content-wrapper {
+              padding: 10px 10px !important;
+              margin-top: 80px !important;
+            }
+            .content-container {
+              width: 100% !important;
+              max-width: 100% !important;
+            }
+            .stats-grid {
+              grid-template-columns: repeat(3, 1fr) !important;
+              gap: 8px !important;
+            }
+            .stat-card {
+              padding: 8px !important;
+            }
+            .stat-title {
+              font-size: 12px !important;
+            }
+            .stat-value {
+              font-size: 14px !important;
+            }
+            .stat-footer {
+              flex-direction: column !important;
+              gap: 4px !important;
+              align-items: center !important;
+              margin-top: 8px !important;
+            }
+            .stat-footer-text {
+              font-size: 10px !important;
+              text-align: center !important;
+            }
+            .table-wrapper {
+              max-width: 100% !important;
+              border-radius: 10px !important;
+              margin-left: -5px;
+            }
+            .table-header-container {
+              flex-direction: column !important;
+              padding: 15px !important;
+              gap: 10px !important;
+            }
+            .back-button {
+              position: fixed !important;
+              max-width: 110%;
+              margin: 0 !important;
+              left: 20px !important;
+              font-size: 11px !important;
+              padding: 5px !important;
+            }
+            .table-title-center {
+              margin-left: 80px !important;
+              font-size: 14px !important;
+            }
+            .year-filter-wrapper {
+              max-width: 100% !important;
+              width: 100% !important;
+            }
+            .table-scroll-container {
+              max-height: 320px !important;
+            }
+            .payment-table {
+              font-size: 11px !important;
+            }
+            .table-header-cell {
+              font-size: 12px !important;
+              padding: 8px 4px !important;
+            }
+            .table-body-cell {
+              padding: 8px 4px !important;
+              font-size: 11px !important;
+            }
+            .breakdown-row {
+              flex-direction: column !important;
+              gap: 10px !important;
+              padding: 5px 5px !important;
+            }
+            .empty-state {
+              padding: 30px 20px !important;
+            }
+            .empty-icon {
+              width: 60px !important;
+              height: 60px !important;
+              font-size: 30px !important;
+            }
+            .empty-title {
+              font-size: 18px !important;
+            }
+            .empty-text {
+              font-size: 14px !important;
+            }
+            .error-container {
+              padding: 30px 20px !important;
+              margin: 0 15px !important;
+            }
+          }
+
+          /* Tablets (481px - 768px) */
+          @media (min-width: 481px) and (max-width: 768px) {
+            .main-content-wrapper {
+              padding: 25px 15px !important;
+              margin-top: 100px !important;
+            }
+            .content-container {
+              width: 100% !important;
+              max-width: 100% !important;
+            }
+            .stats-grid {
+              grid-template-columns: repeat(3, 1fr) !important;
+              gap: 15px !important;
+            }
+            .stat-card {
+              padding: 12px !important;
+            }
+            .stat-title {
+              font-size: 14px !important;
+            }
+            .stat-value {
+              font-size: 18px !important;
+            }
+            .stat-footer {
+              flex-direction: column !important;
+              gap: 5px !important;
+              align-items: center !important;
+            }
+            .stat-footer-text {
+              font-size: 11px !important;
+              text-align: center !important;
+            }
+            .table-wrapper {
+              max-width: 100% !important;
+            }
+            .table-header-container {
+              flex-direction: column !important;
+              padding: 15px !important;
+              gap: 12px !important;
+            }
+            .back-button {
+              position: static !important;
+              width: auto;
+              left: auto !important;
+            }
+            .table-title-center {
+              margin-left: 0 !important;
+              font-size: 20px !important;
+            }
+            .year-filter-wrapper {
+              max-width: 200px !important;
+            }
+            .table-header-cell {
+              font-size: 14px !important;
+            }
+            .breakdown-row {
+              gap: 20px !important;
+            }
+          }
+
+          /* Small Tablets & Large Phones (769px - 1024px) */
+          @media (min-width: 769px) and (max-width: 1024px) {
+            .main-content-wrapper {
+              padding: 30px 20px !important;
+              margin-top: 120px !important;
+            }
+            .content-container {
+              width: 95% !important;
+              max-width: 95% !important;
+            }
+            .stats-grid {
+              grid-template-columns: repeat(3, 1fr) !important;
+              gap: 20px !important;
+            }
+            .table-wrapper {
+              max-width: 100% !important;
+            }
+            .back-button {
+              left: 50px !important;
+            }
+            .table-title-center {
+              margin-left: 0 !important;
+            }
+          }
+
+          /* Medium Desktops (1025px - 1366px) */
+          @media (min-width: 1025px) and (max-width: 1366px) {
+            .content-container {
+              width: 1100px !important;
+            }
+            .back-button {
+              left: 100px !important;
+            }
+            .table-wrapper {
+              max-width: 1100px !important;
+            }
+          }
+
+          @keyframes slideDown {
+            from {
+              opacity: 0;
+              max-height: 0;
+              transform: translateY(-10px);
+            }
+            to {
+              opacity: 1;
+              max-height: 200px;
+              transform: translateY(0);
+            }
+          }
         `}
       </style>
       
-      <div style={{ padding: '40px 20px', marginTop: '170px' }}>
-        <div style={{ width: '1300px', margin: '0 auto' }}>
+      <div className="main-content-wrapper" style={{ padding: '40px 20px', marginTop: '120px' }}>
+        <div className="content-container" style={{ width: '1300px', margin: '0 auto' }}>
           
           {/* Statistics Cards */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '50px', marginBottom: '40px' }}>
-            <div style={{
+          <div className="stats-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '50px', marginBottom: '30px' }}>
+            <div className="stat-card" style={{
               background: '#28a745',
               boxShadow: '0px 8px 8px rgba(59, 59, 59, 0.99)',
               borderRadius: '15px',
@@ -172,25 +385,25 @@ const PaymentSchedule = () => {
               color: 'black',
               textAlign: 'center',
             }}>
-              <div style={{ fontSize: '22px', fontWeight: '600', marginBottom: '5px' }}>💰 Remaining Balance</div>
-              <div style={{ fontSize: '26px', fontWeight: '800' }}>₱{formatNumber(parseFloat(totalRemainingPrincipal).toFixed(2))}</div>
-              <div style={{ 
+              <div className="stat-title" style={{ fontSize: '22px', fontWeight: '600', marginBottom: '5px', color: 'black', }}>💰 Remaining Balance</div>
+              <div className="stat-value" style={{ fontSize: '26px', color: 'black', fontWeight: '800' }}>₱{formatNumber(parseFloat(totalRemainingPrincipal).toFixed(2))}</div>
+              <div className="stat-footer" style={{ 
                 display: 'flex', 
                 justifyContent: 'space-between', 
                 alignItems: 'center',
                 marginTop: '15px',
                 padding: '0 10px'
               }}>
-                <div style={{ fontSize: '16px', color: 'white', textAlign: 'left', fontWeight: 'bold' }}>
+                <div className="stat-footer-text" style={{ fontSize: '16px', color: 'white', textAlign: 'left', fontWeight: 'bold' }}>
                   Control No: {control_number}
                 </div>
-                <div style={{ fontSize: '16px', color: 'black', textAlign: 'right', fontWeight: 'bold' }}>
+                <div className="stat-footer-text" style={{ fontSize: '16px', color: 'black', textAlign: 'right', fontWeight: 'bold' }}>
                   Loan Type: {loanType || "N/A"}
                 </div>
               </div>
             </div>
 
-            <div style={{
+            <div className="stat-card" style={{
               background: '#ffffffff',
               boxShadow: '0px 8px 8px rgba(59, 59, 59, 0.99)',
               borderRadius: '15px',
@@ -198,11 +411,11 @@ const PaymentSchedule = () => {
               color: 'black',
               textAlign: 'center'
             }}>
-              <div style={{ fontSize: '22px', fontWeight: '600', marginBottom: '5px' }}>📅 No. of Payments left</div>
-              <div style={{ fontSize: '32px', fontWeight: '800' }}>{upcomingSchedules.length}</div>
+              <div className="stat-title" style={{ fontSize: '22px', fontWeight: '600', color: 'black',marginBottom: '5px' }}>📅 No. of Payments left</div>
+              <div className="stat-value" style={{ fontSize: '32px', color: 'black',fontWeight: '800' }}>{upcomingSchedules.length}</div>
             </div>
 
-            <div style={{
+            <div className="stat-card" style={{
               background: '#dc3545',
               boxShadow: '0px 8px 8px rgba(59, 59, 59, 0.99)',
               borderRadius: '15px',
@@ -210,8 +423,8 @@ const PaymentSchedule = () => {
               color: 'black',
               textAlign: 'center'
             }}>
-              <div style={{ fontSize: '22px', fontWeight: '600', marginBottom: '5px' }}>⚠️ Overdue</div>
-              <div style={{ fontSize: '26px', fontWeight: '800' }}>{overdueSchedules.length}</div>
+              <div className="stat-title" style={{ fontSize: '22px', fontWeight: '600', color: 'black',marginBottom: '5px' }}>⚠️ Overdue</div>
+              <div className="stat-value" style={{ fontSize: '26px', color: 'black',fontWeight: '800' }}>{overdueSchedules.length}</div>
               <div style={{ fontSize: '16px', marginTop: '10px', color: 'white' }}>
                 Schedules Past Due
               </div>
@@ -220,26 +433,27 @@ const PaymentSchedule = () => {
 
           {/* Payment Schedule Table Section */}
           {filteredSchedules.length > 0 ? (
-            <div style={{
+            <div className="table-wrapper" style={{
               background: 'white',
               boxShadow: '0px 8px 8px rgba(59, 59, 59, 0.99)',
               borderRadius: '15px',
               overflow: 'hidden',
-              maxWidth: '1200px',
-              margin: '0 auto'
+              maxWidth: '1300px',
+              marginTop: '5px'
             }}>
               
               {/* Table Header with Back Button and Year Filter */}
-              <div style={{
+              <div className="table-header-container" style={{
                 background: '#000000ff',
                 color: 'white',
                 padding: '15px 20px',
                 display: 'flex',
                 justifyContent: 'space-between',
-                alignItems: 'center'
+                alignItems: 'center',
               }}>
                 {/* Back Button on Left */}
                 <button
+                  className="back-button"
                   onClick={() => navigate(-1)}
                     style={{
                       background: 'rgba(94, 94, 94, 1)',
@@ -255,7 +469,8 @@ const PaymentSchedule = () => {
                       alignItems: 'center',
                       gap: '8px',
                       position: 'absolute',
-                      left: '180px'
+                      left: '130px',
+                      maxWidth: '100px'
                     }}
                     onMouseOver={(e) => {
                       e.target.style.transform = 'translateY(-3px)';
@@ -268,7 +483,7 @@ const PaymentSchedule = () => {
                 </button>
 
                 {/* Title in Center */}
-                <div style={{
+                <div className="table-title-center" style={{
                   fontSize: '24px',
                   fontWeight: '700',
                   textAlign: 'center',
@@ -279,7 +494,7 @@ const PaymentSchedule = () => {
                 </div>
 
                 {/* Year Filter on Right */}
-                <div style={{ maxWidth: '120px', width: '100%' }}>
+                {/* <div className="year-filter-wrapper" style={{ maxWidth: '120px', width: '100%' }}>
                   <select
                     value={yearFilter}
                     onChange={(e) => handleYearChange(e.target.value)}
@@ -311,19 +526,19 @@ const PaymentSchedule = () => {
                       </option>
                     ))}
                   </select>
-                </div>
+                </div> */}
               </div>
 
               {/* Table Container with Hidden Scrollbar */}
               <div 
-                className="hidden-scrollbar"
+                className="hidden-scrollbar table-scroll-container"
                 style={{
-                  maxHeight: '360px',
+                  maxHeight: '345px',
                   overflowY: 'auto',
-                  overflowX: 'auto'
+                  overflowX: 'auto',
                 }}
               >
-                <table style={{
+                <table className="payment-table" style={{
                   width: '100%',
                   borderCollapse: 'collapse',
                   fontSize: '12px',
@@ -336,9 +551,9 @@ const PaymentSchedule = () => {
                     zIndex: 10
                   }}>
                     <tr>
-                      <th style={{ padding: '10px 8px', textAlign: 'center', color: '#000000', fontSize: '16px', borderBottom: '1px solid #9b9b9bff', borderRight: '1px solid #9b9b9bff', textTransform: 'uppercase'}}>Bimonthly Amortization</th>
-                      <th style={{ padding: '10px 8px', textAlign: 'center', color: '#000000', fontSize: '16px', borderBottom: '1px solid #9b9b9bff', borderRight: '1px solid #9b9b9bff', textTransform: 'uppercase'}}>Due Date</th>
-                      <th style={{ padding: '10px 8px', textAlign: 'center', color: '#000000', fontSize: '16px', borderBottom: '1px solid #9b9b9bff', textTransform: 'uppercase' }}>Status</th>
+                      <th className="table-header-cell" style={{ padding: '10px 8px', textAlign: 'center', color: '#000000', fontSize: '16px', borderBottom: '1px solid #9b9b9bff', borderRight: '1px solid #9b9b9bff', textTransform: 'uppercase'}}>Bimonthly Amortization</th>
+                      <th className="table-header-cell" style={{ padding: '10px 8px', textAlign: 'center', color: '#000000', fontSize: '16px', borderBottom: '1px solid #9b9b9bff', borderRight: '1px solid #9b9b9bff', textTransform: 'uppercase'}}>Due Date</th>
+                      <th className="table-header-cell" style={{ padding: '10px 8px', textAlign: 'center', color: '#000000', fontSize: '16px', borderBottom: '1px solid #9b9b9bff', textTransform: 'uppercase' }}>Status</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -356,7 +571,7 @@ const PaymentSchedule = () => {
                           <tr>
                             {/* Bimonthly Amortization (Principal + Interest) */}
                             <td 
-                              className="bimonthly-cell"
+                              className="bimonthly-cell table-body-cell"
                               onClick={() => setSelectedSchedule(isExpanded ? null : schedule)}
                               style={{ 
                                 padding: '10px 5px', 
@@ -374,7 +589,7 @@ const PaymentSchedule = () => {
                             </td>
                             
                             {/* Due Date */}
-                            <td style={{ 
+                            <td className="table-body-cell" style={{ 
                               padding: '10px 5px', 
                               textAlign: 'center',
                               color: isOverdue ? '#e74c3c' : '#000000',
@@ -391,7 +606,7 @@ const PaymentSchedule = () => {
                             </td>
                             
                             {/* Status */}
-                            <td style={{ 
+                            <td className="table-body-cell" style={{ 
                               padding: '10px 5px', 
                               textAlign: 'center', 
                               borderBottom: isExpanded ? 'none' : '1px solid #9b9b9bff' 
@@ -415,7 +630,7 @@ const PaymentSchedule = () => {
                               <td colSpan="3" style={{
                                 padding: '15px 30px',
                               }}>
-                                <div style={{
+                                <div className="breakdown-row" style={{
                                   display: 'flex',
                                   justifyContent: 'center',
                                   alignItems: 'center',
@@ -447,14 +662,14 @@ const PaymentSchedule = () => {
               </div>
             </div>
           ) : (
-            <div style={{
+            <div className="empty-state" style={{
               background: 'white',
               padding: '60px',
               borderRadius: '20px',
               boxShadow: '0 20px 40px rgba(0,0,0,0.1)',
               textAlign: 'center'
             }}>
-              <div style={{
+              <div className="empty-icon" style={{
                 width: '100px',
                 height: '100px',
                 background: 'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)',
@@ -467,7 +682,7 @@ const PaymentSchedule = () => {
               }}>
                 📅
               </div>
-              <h3 style={{
+              <h3 className="empty-title" style={{
                 color: '#2c3e50',
                 fontSize: '24px',
                 fontWeight: '700',
@@ -475,7 +690,7 @@ const PaymentSchedule = () => {
               }}>
                 No Payment Schedules Found
               </h3>
-              <p style={{
+              <p className="empty-text" style={{
                 color: '#7f8c8d',
                 fontSize: '16px',
                 margin: 0
@@ -486,24 +701,6 @@ const PaymentSchedule = () => {
           )}
         </div>
       </div>
-
-      {/* Slide Down Animation */}
-      <style>
-        {`
-          @keyframes slideDown {
-            from {
-              opacity: 0;
-              max-height: 0;
-              transform: translateY(-10px);
-            }
-            to {
-              opacity: 1;
-              max-height: 200px;
-              transform: translateY(0);
-            }
-          }
-        `}
-      </style>
     </div>
   );
 };

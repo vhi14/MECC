@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTachometerAlt, faUser, faUserCircle, faChevronDown, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+import { faTachometerAlt, faUser, faUserCircle, faChevronDown, faSignOutAlt, faBars, faTimes } from '@fortawesome/free-solid-svg-icons';
 import coopLogo from './COOP.png';
 import ReactDOM from "react-dom";
 import './Topbar.css';
@@ -11,8 +11,10 @@ const Topbar = () => {
   const location = useLocation();
   const [showLogoutPopup, setShowLogoutPopup] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [username, setUsername] = useState('');
   const dropdownRef = useRef(null);
+  const mobileMenuRef = useRef(null);
 
   useEffect(() => {
     // Get username from localStorage
@@ -24,6 +26,9 @@ const Topbar = () => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setShowDropdown(false);
       }
+      if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target)) {
+        setShowMobileMenu(false);
+      }
     };
 
     document.addEventListener('mousedown', handleClickOutside);
@@ -34,8 +39,13 @@ const Topbar = () => {
     setShowDropdown(!showDropdown);
   };
 
+  const toggleMobileMenu = () => {
+    setShowMobileMenu(!showMobileMenu);
+  };
+
   const handleLogout = () => {
     setShowDropdown(false);
+    setShowMobileMenu(false);
     setShowLogoutPopup(true);
   };
 
@@ -46,6 +56,10 @@ const Topbar = () => {
 
   const handleLogoutCancel = () => {
     setShowLogoutPopup(false);
+  };
+
+  const closeMobileMenu = () => {
+    setShowMobileMenu(false);
   };
 
   return (
@@ -60,8 +74,9 @@ const Topbar = () => {
           />
           <div className="nav-header">MPSPC EMPLOYEES CREDIT COOPERATIVE</div>
         </div>
-        
-        <div className="nav-container">
+
+        {/* Desktop Navigation */}
+        <div className="nav-container-desktop">
           <ul className="nav-Topbar">
             <li className="nav-item">
               <Link 
@@ -111,109 +126,94 @@ const Topbar = () => {
             )}
           </div>
         </div>
-      </div>
 
-      {/* Mobile Navigation Bar */}
-      <div className="mobile-nav-bar">
-        <ul>
-          <li>
-            <Link 
-              to="/Home" 
-              className={location.pathname === '/Home' ? 'active' : ''}
-              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            >
-              <FontAwesomeIcon icon={faTachometerAlt} />
-              <span>Home</span>
-            </Link>
-          </li>
-          <li>
-            <a 
-              href="#payment-section"
-              className="payment-nav-link"
-              onClick={(e) => {
-                e.preventDefault();
-                const paymentSection = document.getElementById('payment-section');
-                if (paymentSection) {
-                  paymentSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-              }}
-            >
-              <FontAwesomeIcon icon={faUser} />
-              <span>Payments</span>
-            </a>
-          </li>
-          <li>
-            <div 
-              style={{ cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '4px', width: '100%', height: '100%' }}
-              onClick={toggleDropdown}
-            >
-              <FontAwesomeIcon icon={faUserCircle} />
-              <span style={{ fontSize: '10px', fontWeight: '600', textTransform: 'uppercase' }}>Menu</span>
-            </div>
-          </li>
-        </ul>
+        {/* Mobile Hamburger Menu */}
+        <div className="mobile-menu-trigger" ref={mobileMenuRef}>
+          <button 
+            className="hamburger-btn"
+            onClick={toggleMobileMenu}
+            aria-label="Toggle menu"
+          >
+            <FontAwesomeIcon 
+              icon={showMobileMenu ? faTimes : faBars} 
+              className="hamburger-icon"
+            />
+          </button>
+
+          {/* Mobile Side Menu */}
+          {showMobileMenu && (
+            <>
+              <div className="mobile-menu-backdrop" onClick={() => setShowMobileMenu(false)} />
+              <div className="mobile-menu-panel">
+                {/* Mobile Profile Header */}
+                <div className="mobile-profile-header">
+                  <FontAwesomeIcon icon={faUserCircle} className="mobile-profile-icon" />
+                  <div className="mobile-profile-info">
+                    <p className="mobile-profile-name">{username}</p>
+                    <p className="mobile-profile-label">Member</p>
+                  </div>
+                </div>
+
+                <ul className="mobile-nav-menu">
+                  <li className="mobile-nav-item">
+                    <Link 
+                      to="/Home" 
+                      className={`mobile-nav-link ${location.pathname === '/Home' ? 'active' : ''}`}
+                      onClick={closeMobileMenu}
+                    >
+                      <FontAwesomeIcon icon={faTachometerAlt} className="mobile-nav-icon" />
+                      <span>Home</span>
+                    </Link>
+                  </li>
+                  <li className="mobile-nav-item">
+                    <Link 
+                      to="/infos" 
+                      className={`mobile-nav-link ${location.pathname === '/infos' ? 'active' : ''}`}
+                      onClick={closeMobileMenu}
+                    >
+                      <FontAwesomeIcon icon={faUser} className="mobile-nav-icon" />
+                      <span>Profile</span>
+                    </Link>
+                  </li>
+                  <li className="mobile-nav-item">
+                    <div 
+                      className="mobile-nav-link logout-item"
+                      onClick={handleLogout}
+                    >
+                      <FontAwesomeIcon icon={faSignOutAlt} className="mobile-nav-icon" />
+                      <span>Log out</span>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </>
+          )}
+        </div>
       </div>
 
       {/* Logout Confirmation Popup */}
       {showLogoutPopup &&
         ReactDOM.createPortal(
           <>
-            <div
-              style={{
-                position: "fixed",
-                top: 0,
-                left: 0,
-                width: "100vw",
-                height: "100vh",
-                backgroundColor: "rgba(0,0,0,0.4)",
-                backdropFilter: "blur(6px)",
-                WebkitBackdropFilter: "blur(6px)",
-                zIndex: 9998,
-              }}
-            />
-            <div
-              style={{
-                position: "fixed",
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
-                backgroundColor: "white",
-                padding: "20px",
-                borderRadius: "10px",
-                boxShadow: '0px 0px 15px 0px rgb(154, 154, 154)',
-                textAlign: "center",
-                zIndex: 9999,
-              }}
-            >
-              <p style={{ fontSize: "18px", marginBottom: "20px" }}>
+            <div className="logout-popup-backdrop" />
+            <div className="logout-popup-container">
+              <p className="logout-popup-text">
                 Are you sure you want to log out?
               </p>
-              <button
-                onClick={handleLogoutConfirm}
-                style={{
-                  marginRight: '10px',
-                  padding: '8px 20px',
-                  backgroundColor: '#049927ff',
-                  color: 'black',
-                  border: 'none',
-                  borderRadius: '5px',
-                  cursor: 'pointer'
-                }}
-              >
-                Yes
-              </button>
-              <button
-                onClick={handleLogoutCancel}
-                style={{
-                  padding: '8px 20px',
-                  backgroundColor: 'gray',
-                  borderRadius: '5px',
-                  cursor: 'pointer',
-                  color: 'black',
-                }}
-              >
-                Cancel
-              </button>
+              <div className="logout-popup-buttons">
+                <button
+                  onClick={handleLogoutConfirm}
+                  className="logout-confirm-btn"
+                >
+                  Yes
+                </button>
+                <button
+                  onClick={handleLogoutCancel}
+                  className="logout-cancel-btn"
+                >
+                  Cancel
+                </button>
+              </div>
             </div>
           </>,
           document.body

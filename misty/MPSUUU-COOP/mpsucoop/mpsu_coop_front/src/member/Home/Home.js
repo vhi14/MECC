@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Topbar from '../Topbar/Topbar';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTachometerAlt, faUserCircle } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 import { Eye } from 'lucide-react';
 import { BsFillPrinterFill } from "react-icons/bs";
@@ -32,75 +30,6 @@ const Home = () => {
   // NEW: State for current year tracking
   const [currentRegularYear, setCurrentRegularYear] = useState(1);
   const [currentEmergencyYear, setCurrentEmergencyYear] = useState(1);
-  const [mobileView, setMobileView] = useState('home'); 
-  const [showProfileDropdown, setShowProfileDropdown] = useState(false);
-
-// // Add this useEffect to handle mobile navigation
-useEffect(() => {
-  // Handle mobile view changes
-  if (window.innerWidth <= 600) {
-    if (mobileView === 'payments') {
-      document.body.classList.add('show-payments');
-    } else {
-      document.body.classList.remove('show-payments');
-    }
-  }
-
-  // Cleanup
-  return () => {
-    document.body.classList.remove('show-payments');
-  };
-}, [mobileView]);
-
-// Add this function to handle mobile navigation clicks
-// const handleMobileNav = (view) => {
-//   setMobileView(view);
-  
-//   // Scroll to top when changing views
-//   window.scrollTo({ top: 0, behavior: 'smooth' });
-  
-//   // Handle navigation based on view
-//   switch(view) {
-//     case 'home':
-//       // Already on home, just show loan details
-//       break;
-//     case 'payments':
-//       // Show payment tables
-//       const paymentSection = document.getElementById('payment-section');
-//       if (paymentSection) {
-//         setTimeout(() => {
-//           paymentSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-//         }, 100);
-//       }
-//       break;
-//     case 'share-capital':
-//       // Navigate to share capital page
-//       navigate('/accounts');
-//       break;
-//     case 'amortization':
-//       // Navigate to loans/amortization page
-//       navigate('/loans');
-//       break;
-//     default:
-//       break;
-//   }
-// };
-// Add this useEffect to handle mobile navigation
-useEffect(() => {
-  // Handle mobile view changes
-  if (window.innerWidth <= 600) {
-    if (mobileView === 'payments') {
-      document.body.classList.add('show-payments');
-    } else {
-      document.body.classList.remove('show-payments');
-    }
-  }
-
-  // Cleanup
-  return () => {
-    document.body.classList.remove('show-payments');
-  };
-}, [mobileView]);
   
   // Loan fees state - NOW STORES ALL YEARS
   const [loanFees, setLoanFees] = useState({
@@ -1073,7 +1002,7 @@ const filteredEmergency = schedulesWithDetails.filter((schedule) => {
           return;
         }
 
-        const memberResponse = await axios.get(`${process.env.REACT_APP_API_URL}/api/member/profile/`, {
+        const memberResponse = await axios.get('${process.env.REACT_APP_API_URL}/api/member/profile/', {
           params: { account_number: acc_number },
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -1187,43 +1116,7 @@ const filteredEmergency = schedulesWithDetails.filter((schedule) => {
       </div>
     );
   }
-  const handleMobileNav = (view) => {
-    setMobileView(view);
-    
-    // Scroll to top when changing views
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    
-    // Handle navigation based on view
-    switch(view) {
-      case 'home':
-        // Already on home, just show loan details
-        break;
-      case 'payments':
-        // Show payment tables
-        setTimeout(() => {
-          const paymentSection = document.getElementById('payment-section');
-          if (paymentSection) {
-            paymentSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          }
-        }, 100);
-        break;
-      case 'share-capital':
-        // Navigate to share capital page
-        navigate('/accounts');
-        break;
-      case 'amortization':
-        // Navigate to loans/amortization page
-        navigate('/loans');
-        break;
-      default:
-        break;
-    }
-  };
 
-  // Toggle profile dropdown
-  const toggleDropdown = () => {
-    setShowProfileDropdown(!showProfileDropdown);
-  };
   return (
     <div style={{ minHeight: '100vh', fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif" }}>
       <Topbar />
@@ -1584,7 +1477,7 @@ const filteredEmergency = schedulesWithDetails.filter((schedule) => {
           </div>
 
           {/* PAYMENT TABLES SECTION */}
-          <div id="payment-section" style={{ marginTop: '80px' }}>
+          <div style={{ marginTop: '80px' }}>
             
             {/* Payment Tables with Dropdown Buttons Above */}
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '5px' }}>
@@ -1975,199 +1868,6 @@ const filteredEmergency = schedulesWithDetails.filter((schedule) => {
           `}</style>
         </div>
       </div>
-      {/* Mobile Navigation Bar */}
-<div className="mobile-nav-bar">
-  <ul>
-    <li>
-      <button
-        onClick={() => handleMobileNav('home')}
-        className={mobileView === 'home' ? 'active' : ''}
-        style={{
-          background: 'transparent',
-          border: 'none',
-          color: 'white',
-          cursor: 'pointer',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: '4px',
-          width: '100%',
-          height: '100%',
-          padding: 0
-        }}
-      >
-        <FontAwesomeIcon icon={faTachometerAlt} style={{ fontSize: '20px', color: 'goldenrod' }} />
-        <span style={{ fontSize: '10px', fontWeight: '600', textTransform: 'uppercase' }}>Home</span>
-      </button>
-    </li>
-    <li>
-      <button
-        onClick={() => handleMobileNav('share-capital')}
-        className={mobileView === 'share-capital' ? 'active' : ''}
-        style={{
-          background: 'transparent',
-          border: 'none',
-          color: 'white',
-          cursor: 'pointer',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: '4px',
-          width: '100%',
-          height: '100%',
-          padding: 0
-        }}
-      >
-        <span style={{ fontSize: '20px', color: 'goldenrod' }}>📊</span>
-        <span style={{ fontSize: '10px', fontWeight: '600', textTransform: 'uppercase' }}>Share</span>
-      </button>
-    </li>
-    <li>
-      <button
-        onClick={() => handleMobileNav('amortization')}
-        className={mobileView === 'amortization' ? 'active' : ''}
-        style={{
-          background: 'transparent',
-          border: 'none',
-          color: 'white',
-          cursor: 'pointer',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: '4px',
-          width: '100%',
-          height: '100%',
-          padding: 0
-        }}
-      >
-        <span style={{ fontSize: '20px', color: 'goldenrod' }}>💳</span>
-        <span style={{ fontSize: '10px', fontWeight: '600', textTransform: 'uppercase' }}>Amort</span>
-      </button>
-    </li>
-    <li>
-      <button
-        onClick={() => handleMobileNav('payments')}
-        className={mobileView === 'payments' ? 'active' : ''}
-        style={{
-          background: 'transparent',
-          border: 'none',
-          color: 'white',
-          cursor: 'pointer',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: '4px',
-          width: '100%',
-          height: '100%',
-          padding: 0
-        }}
-      >
-        <span style={{ fontSize: '20px', color: 'goldenrod' }}>💰</span>
-        <span style={{ fontSize: '10px', fontWeight: '600', textTransform: 'uppercase' }}>Payments</span>
-      </button>
-    </li>
-    <li>
-      <button
-        onClick={toggleDropdown}
-        style={{
-          background: 'transparent',
-          border: 'none',
-          color: 'white',
-          cursor: 'pointer',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: '4px',
-          width: '100%',
-          height: '100%',
-          padding: 0
-        }}
-      >
-        <FontAwesomeIcon icon={faUserCircle} style={{ fontSize: '20px', color: 'goldenrod' }} />
-        <span style={{ fontSize: '10px', fontWeight: '600', textTransform: 'uppercase' }}>Menu</span>
-      </button>
-    </li>
-  </ul>
-</div>
-{showProfileDropdown && (
-  <div 
-    style={{
-      position: 'fixed',
-      bottom: '70px',
-      right: '10px',
-      background: '#0d512c',
-      border: '2px solid goldenrod',
-      borderRadius: '12px',
-      boxShadow: '0 4px 15px rgba(0, 0, 0, 0.4)',
-      minWidth: '180px',
-      overflow: 'hidden',
-      zIndex: 1001,
-      animation: 'slideUp 0.3s ease'
-    }}
-  >
-    <div
-      onClick={() => {
-        navigate('/infos');
-        setShowProfileDropdown(false);
-      }}
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: '10px',
-        padding: '12px 16px',
-        color: 'white',
-        cursor: 'pointer',
-        fontSize: '14px',
-        fontWeight: 'bold',
-        borderBottom: '1px solid rgba(218, 165, 32, 0.3)'
-      }}
-    >
-      <span style={{ color: 'goldenrod' }}>👤</span>
-      <span>Profile</span>
-    </div>
-    <div
-      onClick={() => {
-        localStorage.clear();
-        navigate('/');
-        setShowProfileDropdown(false);
-      }}
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: '10px',
-        padding: '12px 16px',
-        color: 'white',
-        cursor: 'pointer',
-        fontSize: '14px',
-        fontWeight: 'bold'
-      }}
-    >
-      <span style={{ color: 'goldenrod' }}>🚪</span>
-      <span>Logout</span>
-    </div>
-  </div>
-)}
-
-{/* Backdrop to close dropdown when clicking outside - Add this too */}
-{showProfileDropdown && (
-  <div
-    onClick={() => setShowProfileDropdown(false)}
-    style={{
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      zIndex: 1000,
-      background: 'transparent'
-    }}
-  />
-)}
     </div>
   );
 };

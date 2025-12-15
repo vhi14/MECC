@@ -1,15 +1,13 @@
-/* Payments Page Responsive Styling */
-
 .container {
   padding: 10px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: Arial, sans-serif;
   min-height: 100px;
   box-sizing: border-box;
 }
 
 .pageTitle {
   text-align: center;
-  color: #0D5D24;
+  color: #000000;
   font-size: 24px;
   margin-bottom: 50px;
   margin-top: 120px;
@@ -53,24 +51,23 @@
 .regularLoanTitle {
   text-align: center;
   margin-bottom: 10px;
-  color: #28a745;
-  font-weight: 600;
+  color: green;
 }
 
 .emergencyLoanTitle {
   text-align: center;
   margin-bottom: 10px;
-  color: #dc3545;
-  font-weight: 600;
+  color: red;
 }
 
 .tableWrapper {
   max-height: 380px;
   overflow-y: scroll;
-  border: 1px solid #ddd;
+  border: 1px solid black;
+  position: fixed;
   scrollbar-width: none;
   -ms-overflow-style: none;
-  border-radius: 8px;
+  width: 49%;
 }
 
 .tableWrapper::-webkit-scrollbar {
@@ -81,25 +78,26 @@
   width: 100%;
   border-collapse: collapse;
   font-size: 14px;
+  border: 2px solid black;
 }
 
 .stickyHeader {
   position: sticky;
   top: 0;
-  background-color: #f8f9fa;
+  background-color: gray;
   z-index: 2;
   padding: 8px;
-  border-bottom: 2px solid #ddd;
-  font-weight: 600;
+  border: 2px solid black;
 }
 
 .tableCell {
   padding: 8px;
   border-bottom: 1px solid #eee;
+  border: 2px solid black;
 }
 
 .paidStatus {
-  color: #28a745;
+  color: green;
 }
 
 .noPaymentsText {
@@ -107,116 +105,5 @@
   font-size: 11px;
   color: #000000;
   margin-top: 20px;
+  border: 2px solid black;
 }
-
-/* Mobile Responsive Styles (<768px) */
-@media (max-width: 767px) {
-  .pageTitle {
-    font-size: 18px;
-    margin-bottom: 20px;
-    margin-top: 80px;
-  }
-
-  .searchContainer {
-    margin-bottom: 20px;
-    margin-top: -20px;
-  }
-
-  .searchInput {
-    width: 100%;
-    font-size: 12px;
-  }
-
-  .tablesContainer {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 15px;
-  }
-
-  .tableSection {
-    width: 100%;
-  }
-
-  .tableWrapper {
-    max-height: 300px;
-    width: 100% !important;
-    position: relative !important;
-  }
-
-  .table {
-    font-size: 11px;
-  }
-
-  .tableCell {
-    padding: 6px 4px;
-  }
-
-  .stickyHeader {
-    padding: 6px 4px;
-    font-size: 10px;
-  }
-
-  .regularLoanTitle,
-  .emergencyLoanTitle {
-    font-size: 14px;
-    margin-bottom: 8px;
-  }
-
-  /* Hide non-critical columns on small screens */
-  .table th:nth-child(4),
-  .table td:nth-child(4) {
-    display: none;
-  }
-
-  .loanInfo {
-    font-size: 12px;
-  }
-}
-
-/* Tablet Responsive Styles (768px - 1024px) */
-@media (min-width: 768px) and (max-width: 1024px) {
-  .pageTitle {
-    font-size: 20px;
-    margin-bottom: 30px;
-    margin-top: 100px;
-  }
-
-  .tablesContainer {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 20px;
-  }
-
-  .tableWrapper {
-    max-height: 350px;
-    width: 100% !important;
-    position: relative !important;
-  }
-
-  .table {
-    font-size: 12px;
-  }
-
-  .tableCell {
-    padding: 8px;
-  }
-}
-
-/* Large Desktop (1400px and up) */
-@media (min-width: 1400px) {
-  .tablesContainer {
-    display: flex;
-    gap: 30px;
-  }
-
-  .tableWrapper {
-    width: 48% !important;
-    position: relative !important;
-  }
-
-  .table {
-    font-size: 14px;
-  }
-}
-  /* border: 2px solid black;
-} */

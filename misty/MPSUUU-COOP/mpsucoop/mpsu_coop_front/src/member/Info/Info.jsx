@@ -34,7 +34,7 @@ const Home = () => {
 
         const acc_number = localStorage.getItem('account_number');
 
-        const memberResponse = await axios.get(`${process.env.REACT_APP_API_URL}/api/member/profile/`, {
+        const memberResponse = await axios.get('${process.env.REACT_APP_API_URL}/api/member/profile/', {
           params: { account_number: acc_number },
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -72,7 +72,7 @@ const Home = () => {
         const formData = new FormData();
         formData.append('profile_picture', file);
 
-        const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/member/upload-profile-picture/`, formData, {
+        const response = await axios.post('${process.env.REACT_APP_API_URL}/api/member/upload-profile-picture/', formData, {
           headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data' },
         });
 
@@ -111,7 +111,7 @@ const Home = () => {
         updatedMemberData.last_name !== memberData.last_name;
 
       await axios.put(
-        `${process.env.REACT_APP_API_URL}/api/member/profile/`,
+        '${process.env.REACT_APP_API_URL}/api/member/profile/',
         updatedMemberData,
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -139,7 +139,7 @@ const Home = () => {
           };
           
           const usernameUpdateResponse = await axios.put(
-            `${process.env.REACT_APP_API_URL}/update-user-password/`,
+            '${process.env.REACT_APP_API_URL}/update-user-password/',
             updatePayload,
             { 
               headers: { 

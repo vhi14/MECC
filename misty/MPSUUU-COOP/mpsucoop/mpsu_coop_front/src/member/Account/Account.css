@@ -154,12 +154,13 @@
   height: 100%;
   width: 100%;
   margin-top: -30px;
-  overflow-y: auto;
+  overflow-y: hidden;
   overflow-x: hidden;
   scroll-behavior: smooth;
   scrollbar-width: thin;
   scrollbar-color: #888 #f1f1f1;
   padding-bottom: 20px;
+  margin-left: -30px;
 }
 
 .table-container::-webkit-scrollbar {
@@ -327,7 +328,7 @@
 }
 
 .mobile-transaction-card {
-  background: #e6e6e6;
+  background: #dadada;
   border: 1px solid #000000;
   border-radius: 12px;
   padding: 10px;
@@ -336,7 +337,7 @@
 }
 
 .mobile-transaction-card.even-row {
-  background-color: #e6e6e6;
+  background-color: #dadada;
 }
 
 .mobile-card-header {
@@ -351,14 +352,14 @@
 .mobile-card-type {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 5px;
   font-weight: 700;
   font-size: 12px;
   color: #000000ff;
 }
 
 .mobile-card-amount {
-  font-size: 16px;
+  font-size: 12px;
   font-weight: 700;
   color: #28a745;
 }
@@ -388,7 +389,7 @@
 
 .mobile-card-value {
   text-align: right;
-  color: #000000ff;
+  color: rgb(0, 0, 0);
   font-weight: 500;
   flex: 1;
   word-wrap: break-word;
@@ -703,12 +704,14 @@
 
 @media (max-width: 480px) {
   .ledger-page-content {
-    margin-top: 120px;
+    margin-top: 145px;
   }
 
   .ledger-stats-grid {
     gap: 12px;
     margin-bottom: 15px;
+    max-width: 290px;
+    margin-left: 20px;
   }
 
   .ledger-stat-card {
@@ -724,7 +727,7 @@
   }
 
   .ledger-stat-value-large {
-    font-size: 13px;
+    font-size: 12px;
   }
 
   .ledger-stat-deposits,
@@ -734,24 +737,27 @@
 
   .ledger-stat-deposits-value,
   .ledger-stat-withdrawals-value {
-    font-size: 13px;
+    font-size: 12px;
   }
 
   .ledger-header {
     padding: 10px;
+    max-width: 290px;
+    margin-left: 10px;
+    border-radius: 10px;
   }
 
   .ledger-back-button {
     padding: 5px 5px;
     font-size: 11px;
     max-width: 60px;
-    margin-right: 270px;
+    margin-right: 250px;
     position: fixed;
     margin-top: 15px;
   }
 
   .ledger-header-title {
-    font-size: 13px;
+    font-size: 12px;
   }
 
   .ledger-header-subtitle {
@@ -760,7 +766,7 @@
 
   .ledger-table-wrapper {
     padding: 12px;
-    max-height: 280px;
+    max-height: 335px;
     scrollbar-width: none;
   }
 
@@ -774,7 +780,7 @@
   }
 
   .mobile-card-amount {
-    font-size: 16px;
+    font-size: 14px;
   }
 
   .mobile-card-row {

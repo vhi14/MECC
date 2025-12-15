@@ -477,7 +477,6 @@ class MemberFilter(django_filters.FilterSet):
 class MemberViewSet(viewsets.ModelViewSet):
     serializer_class = MemberSerializer
     permission_classes = [AllowAny]
-    pagination_class = StandardPagination
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     filterset_class = MemberFilter  
     search_fields = ['accountN__account_number', 'first_name', 'last_name']
@@ -676,7 +675,6 @@ def detailed_loan_info_view(request, control_number):
 class LoanViewSet(viewsets.ModelViewSet):
     serializer_class = LoanSerializer
     permission_classes = [AllowAny]
-    pagination_class = StandardPagination
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     filterset_fields = ['loan_type', 'status']
     search_fields = ['control_number', 'account__account_number']

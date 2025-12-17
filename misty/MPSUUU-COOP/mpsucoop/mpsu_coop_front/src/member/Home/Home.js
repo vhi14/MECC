@@ -76,9 +76,6 @@ const Home = () => {
   const handlePrint = (historyType, data) => {
     const printWindow = window.open('', '_blank');
     
-    // Get the normalized data for printing
-    const normalizedData = normalizeHistoryForTable(historyType);
-    
     printWindow.document.write(`
       <html>
         <head>
@@ -126,27 +123,25 @@ const Home = () => {
                 <th>AMOUNT</th>
                 <th>DATE PAID</th>
                 <th>OR NO.</th>
-                <th>DESCRIPTION</th>
+                <th>STATUS</th>
               </tr>
             </thead>
             <tbody>
-              ${normalizedData.map(payment => {
-                const isAdvance = String(payment.payment_type || '').toLowerCase().includes('advance');
-                return `
+              ${data.map(payment => `
                 <tr>
                   <td><span class="type-badge">${payment.loan_type}</span></td>
                   <td>₱${formatNumber(parseFloat(payment.payment_amount || 0).toFixed(2))}</td>
-                  <td>${formatISODate(String(payment.date_paid || payment.payment_date || '').slice(0, 10))}</td>
+                  <td>${formatISODate(payment.payment_date || payment.date_paid)}</td>
                   <td>${payment.or_number}</td>
-                  <td><span class="${isAdvance ? 'advance-badge' : 'type-badge'}">${isAdvance ? '💰 Advance Payment' : '📋 Regular Payment'}</span></td>
+                  <td><span class="type-badge">✓ Settled</span></td>
                 </tr>
-              `;
-              }).join('')}
+              `).join('')}
             </tbody>
           </table>
         </body>
       </html>
     `);
+    
     printWindow.document.close();
     printWindow.focus();
     printWindow.print();
@@ -282,7 +277,7 @@ const Home = () => {
   const fetchLoanDetailsWithRecalculations = async (controlNumber, token) => {
     try {
       const response = await axios.get(
-        `http://127.0.0.1:8000/loans/${controlNumber}/detailed_loan_info/`,
+        `${process.env.REACT_APP_API_URL}/loans/${controlNumber}/detailed_loan_info/`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -300,8 +295,8 @@ const Home = () => {
   const fetchCompletePaymentHistory = async (accountNumber) => {
     try {
       const [archivedResponse, activeResponse] = await Promise.all([
-        axios.get(`http://127.0.0.1:8000/payment-history/${accountNumber}/`),
-        axios.get(`http://127.0.0.1:8000/payment-schedules/?account_number=${accountNumber}`)
+        axios.get(`${process.env.REACT_APP_API_URL}/payment-history/${accountNumber}/`),
+        axios.get(`${process.env.REACT_APP_API_URL}/payment-schedules/?account_number=${accountNumber}`)
       ]);
 
       const archivedPayments = archivedResponse.data || [];
@@ -448,64 +443,54 @@ const filteredEmergency = schedulesWithDetails.filter((schedule) => {
     .filter(payment => payment.loan_type === 'Emergency')
     .sort((a, b) => new Date(a.payment_date) - new Date(b.payment_date));
 
-  // NEW: Normalize history data - FROM LOANS PAYMENTS TABLE + ADVANCE PAYMENTS (no duplicates)
-  const normalizeHistoryForTable = (loanType) => {
-    // Get the paid schedules from the main payments table (regular payments)
-    const paidSchedules = loanType === 'Regular' 
-      ? filteredRegular 
-      : filteredEmergency;
-
-    const regularPayments = (paidSchedules || [])
-      .map(schedule => {
-        const orNumber = schedule.or_number || 'N/A';
-        return {
-          id: schedule.id || `${schedule.control_number || 'cn'}-${orNumber}`,
-          loan_type: schedule.loan_type || loanType,
-          payment_amount: schedule.payment_amount || 0,
-          payment_date: schedule.payment_date || schedule.date_paid || null,
-          date_paid: schedule.date_paid || schedule.payment_date || null,
-          or_number: orNumber,
-          payment_type: schedule.payment_type || 'regular',
-          status: 'Paid',
-          sourceType: 'schedule' // Mark source to avoid duplicates
-        };
-      });
-
-    // Get advance payments from archived payments table
-    const advancePayments = (archivedPayments || [])
-      .filter(ap => String(ap.loan_type || '').toLowerCase() === String(loanType).toLowerCase())
-      .filter(ap => {
-        const paymentType = String(ap.payment_type || '').toLowerCase().trim();
-        return paymentType === 'advance' || paymentType === 'advance payment' || paymentType === 'pay_ahead';
-      })
-      .map(ap => {
-        const orNumber = ap.OR || ap.or_number || ap.orNumber || ap.or_num || ap.receipt_number || ap.receipt_no || ap.official_receipt || ap.or_id || 'N/A';
-        return {
-          id: ap.id || `${ap.loan_control_number || ap.control_number || 'adv'}-${orNumber}`,
-          loan_type: ap.loan_type || loanType,
-          payment_amount: ap.payment_amount || 0,
-          payment_date: ap.payment_date || ap.date_paid || null,
-          date_paid: ap.date_paid || ap.payment_date || null,
-          or_number: orNumber,
-          payment_type: ap.payment_type || 'advance',
-          status: 'Advance',
-          sourceType: 'archived' // Mark source to avoid duplicates
-        };
-      });
-
-    // Merge both and remove duplicates based on OR number + date
-    const merged = [...regularPayments, ...advancePayments];
-    const seen = new Set();
-    const deduplicated = merged.filter(item => {
-      const key = `${item.or_number}_${item.payment_date || item.date_paid}`;
-      if (seen.has(key)) return false;
-      seen.add(key);
-      return true;
+  // NEW: Normalize history data to mirror tables and include archived advances
+// NEW: Normalize history data to mirror tables and include archived advances
+const normalizeHistoryForTable = (historyList, loanType) => {
+  const base = (historyList || [])
+    .filter(p => String(p.loan_type || '').toLowerCase() === String(loanType).toLowerCase())
+    .map(p => {
+      const orNumber = p.OR || p.or_number || p.orNumber || p.or_num || p.receipt_number || p.receipt_no || p.official_receipt || p.or_id || 'N/A';
+      
+      // Check if this is an advance payment by checking payment_type field or status
+      const isAdvance = (p.payment_type && String(p.payment_type).toLowerCase().includes('advance')) || 
+                        (p.status && String(p.status).toLowerCase() === 'advance');
+      
+      return {
+        id: p.id || `${p.control_number || p.loan_control_number || 'cn'}-${orNumber}`,
+        loan_type: p.loan_type || loanType,
+        payment_amount: p.payment_amount || 0,
+        payment_date: p.payment_date || p.date_paid || p.due_date || null,
+        date_paid: p.date_paid || p.payment_date || null,
+        or_number: orNumber,
+        status: isAdvance ? 'Advance' : 'Settled'
+      };
     });
 
-    // Sort by payment_date desc (most recent first)
-    return deduplicated.sort((a, b) => new Date(b.payment_date || b.date_paid || 0) - new Date(a.payment_date || a.date_paid || 0));
-  };
+  // Merge archived advances for the same loan type (if not already included in base)
+  const existingORs = new Set(base.map(b => b.or_number));
+  const adv = (archivedPayments || [])
+    .filter(ap => String(ap.loan_type || '').toLowerCase() === String(loanType).toLowerCase())
+    .filter(ap => {
+      const orNumber = ap.OR || ap.or_number || ap.orNumber || ap.or_num || ap.receipt_number || ap.receipt_no || ap.official_receipt || ap.or_id || 'N/A';
+      return !existingORs.has(orNumber); // Don't duplicate if already in base
+    })
+    .map(ap => {
+      const orNumber = ap.OR || ap.or_number || ap.orNumber || ap.or_num || ap.receipt_number || ap.receipt_no || ap.official_receipt || ap.or_id || 'N/A';
+      return {
+        id: ap.id || `${ap.loan_control_number || ap.control_number || 'adv'}-${orNumber}`,
+        loan_type: ap.loan_type || loanType,
+        payment_amount: ap.payment_amount || 0,
+        payment_date: ap.payment_date || ap.date_paid || null,
+        date_paid: ap.date_paid || ap.payment_date || null,
+        or_number: orNumber,
+        status: 'Advance'
+      };
+    });
+
+  const merged = [...base, ...adv];
+  // Sort by payment_date desc to mirror typical history
+  return merged.sort((a, b) => new Date(b.payment_date || b.date_paid || 0) - new Date(a.payment_date || a.date_paid || 0));
+};
 
   // Calculate paid balance for regular loans
   const calculatePaidBalance = () => {
@@ -794,110 +779,112 @@ const filteredEmergency = schedulesWithDetails.filter((schedule) => {
   };
 
   // NEW: Render Payment History mirroring tables with OR grouping and Advance inclusion
-  const renderHistoryWithORGrouping = (historyItems, loanType) => {
-    const groupedByOR = (historyItems || []).reduce((acc, item) => {
-      const key = item.or_number || 'N/A';
-      if (!acc[key]) acc[key] = [];
-      acc[key].push(item);
-      return acc;
-    }, {});
+// NEW: Render Payment History mirroring tables with OR grouping and Advance inclusion
+const renderHistoryWithORGrouping = (historyItems, loanType) => {
+  const groupedByOR = (historyItems || []).reduce((acc, item) => {
+    const key = item.or_number || 'N/A';
+    if (!acc[key]) acc[key] = [];
+    acc[key].push(item);
+    return acc;
+  }, {});
 
-    const rows = [];
-    Object.entries(groupedByOR).forEach(([orNumber, items]) => {
-      const isOpen = openORGroups[`${loanType}-HIST-${orNumber}`];
-      const hasMultiple = items.length > 1;
-      const first = items[0];
-      
-      // Strict check: ONLY mark as advance if payment_type explicitly says "advance"
-      const isAdvance = (payment) => {
-        const paymentType = String(payment.payment_type || '').toLowerCase().trim();
-        // ONLY return true if explicitly marked as advance, pay_ahead, etc.
-        return paymentType === 'advance' || 
-               paymentType === 'advance payment' || 
-               paymentType === 'pay_ahead' ||
-               paymentType.includes('advance');
-      };
-      
-      const firstIsAdvance = isAdvance(first);
+  const rows = [];
+  Object.entries(groupedByOR).forEach(([orNumber, items]) => {
+    const isOpen = openORGroups[`${loanType}-HIST-${orNumber}`];
+    const hasMultiple = items.length > 1;
+    const first = items[0];
 
-      rows.push(
-        <tr key={`hist-${loanType}-${orNumber}-main`}>
-          <td style={{ padding: '10px 8px', borderRight: '1px solid #9b9b9bff', borderBottom: '1px solid #9b9b9bff' }}>
-            <span style={{ padding: '4px 8px', borderRadius: '12px', backgroundColor: loanType === 'Regular' ? '#28a745' : '#dc3545', color: '#fff', fontSize: '11px', fontWeight: '600' }}>
-              {loanType}
-            </span>
-          </td>
-          <td style={{ padding: '10px 8px', fontWeight: '600', borderRight: '1px solid #9b9b9bff', borderBottom: '1px solid #9b9b9bff' }}>
-            ₱{formatNumber(parseFloat(first.payment_amount || 0).toFixed(2))}
-          </td>
-          <td style={{ padding: '10px 8px', borderRight: '1px solid #9b9b9bff', borderBottom: '1px solid #9b9b9bff' }}>
-            {(() => {
-              const datePaid = first.date_paid || first.payment_date;
-              if (datePaid) return formatISODate(String(datePaid).slice(0,10));
-              return <span style={{ color: '#6c757d', fontSize: '12px' }}>—</span>;
-            })()}
-          </td>
-          <td style={{ padding: '10px 8px', fontWeight: '600', borderRight: '1px solid #9b9b9bff', borderBottom: '1px solid #9b9b9bff' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              {hasMultiple && (
-                <span
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setOpenORGroups(prev => ({ ...prev, [`${loanType}-HIST-${orNumber}`]: !prev[`${loanType}-HIST-${orNumber}`] }));
-                  }}
-                  style={{ cursor: 'pointer', userSelect: 'none', fontSize: '16px', color: '#0b26f7ff', fontWeight: 'bold' }}
-                >
-                  {isOpen ? '▼' : '►'}
-                </span>
-              )}
-              <span>{first.or_number}</span>
-              {hasMultiple && (
-                <span style={{ fontSize: '12px', color: '#000000ff' }}>({items.length})</span>
-              )}
-            </div>
-          </td>
-          <td style={{ padding: '10px 8px', borderRight: '1px solid #9b9b9bff', borderBottom: '1px solid #9b9b9bff' }}>
-            <span style={{ padding: '4px 8px', borderRadius: '12px', backgroundColor: firstIsAdvance ? '#0d6efd' : '#28a745', color: 'white', fontSize: '11px', fontWeight: '600' }}>
-              {firstIsAdvance ? '💰 Advance Payment' : '📋 Regular Payment'}
-            </span>
-          </td>
-        </tr>
-      );
+    rows.push(
+      <tr key={`hist-${loanType}-${orNumber}-main`}>
+        <td style={{ padding: '10px 8px', borderRight: '1px solid #9b9b9bff', borderBottom: '1px solid #9b9b9bff' }}>
+          <span style={{ padding: '4px 8px', borderRadius: '12px', backgroundColor: loanType === 'Regular' ? '#28a745' : '#dc3545', color: '#fff', fontSize: '11px', fontWeight: '600' }}>
+            {loanType}
+          </span>
+        </td>
+        <td style={{ padding: '10px 8px', fontWeight: '600', borderRight: '1px solid #9b9b9bff', borderBottom: '1px solid #9b9b9bff' }}>
+          ₱{formatNumber(parseFloat(first.payment_amount || 0).toFixed(2))}
+        </td>
+        <td style={{ padding: '10px 8px', borderRight: '1px solid #9b9b9bff', borderBottom: '1px solid #9b9b9bff' }}>
+          {(() => {
+            const datePaid = first.date_paid || first.payment_date;
+            if (datePaid) return formatISODate(String(datePaid).slice(0,10));
+            return <span style={{ color: '#6c757d', fontSize: '12px' }}>—</span>;
+          })()}
+        </td>
+        <td style={{ padding: '10px 8px', fontWeight: '600', borderRight: '1px solid #9b9b9bff', borderBottom: '1px solid #9b9b9bff' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            {hasMultiple && (
+              <span
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setOpenORGroups(prev => ({ ...prev, [`${loanType}-HIST-${orNumber}`]: !prev[`${loanType}-HIST-${orNumber}`] }));
+                }}
+                style={{ cursor: 'pointer', userSelect: 'none', fontSize: '16px', color: '#0b26f7ff', fontWeight: 'bold' }}
+              >
+                {isOpen ? '▼' : '►'}
+              </span>
+            )}
+            <span>{first.or_number}</span>
+            {hasMultiple && (
+              <span style={{ fontSize: '12px', color: '#000000ff' }}>({items.length})</span>
+            )}
+          </div>
+        </td>
+        {/* <td style={{ padding: '10px 8px', borderBottom: '1px solid #9b9b9bff' }}>
+          <span style={{ 
+            padding: '4px 8px', 
+            borderRadius: '12px', 
+            backgroundColor: (first.status && String(first.status).toLowerCase() === 'advance') ? '#0d6efd' : '#28a745', 
+            color: 'white', 
+            fontSize: '11px', 
+            fontWeight: '600' 
+          }}>
+            {(first.status && String(first.status).toLowerCase() === 'advance') ? '✓ Advance' : '✓ Settled'}
+          </span>
+        </td> */}
+      </tr>
+    );
 
-      if (hasMultiple && isOpen) {
-        items.slice(1).forEach((it, idx) => {
-          const itIsAdvance = isAdvance(it);
-          rows.push(
-            <tr key={`hist-${loanType}-${orNumber}-${idx}`} style={{ backgroundColor: '#f9f9f9' }}>
-              <td style={{ padding: '10px 8px', paddingLeft: '20px', borderRight: '1px solid #9b9b9bff', borderBottom: '1px solid #9b9b9bff' }}>
-                <span style={{ padding: '4px 8px', borderRadius: '12px', backgroundColor: loanType === 'Regular' ? '#28a745' : '#dc3545', color: '#fff', fontSize: '11px', fontWeight: '600' }}>{loanType}</span>
-              </td>
-              <td style={{ padding: '10px 8px', paddingLeft: '20px', fontWeight: '600', borderRight: '1px solid #9b9b9bff', borderBottom: '1px solid #9b9b9bff' }}>
-                ₱{formatNumber(parseFloat(it.payment_amount || 0).toFixed(2))}
-              </td>
-              <td style={{ padding: '10px 8px', borderRight: '1px solid #9b9b9bff', borderBottom: '1px solid #9b9b9bff' }}>
-                {(() => {
-                  const datePaid = it.date_paid || it.payment_date;
-                  if (datePaid) return formatISODate(String(datePaid).slice(0,10));
-                  return <span style={{ color: '#6c757d', fontSize: '12px' }}>—</span>;
-                })()}
-              </td>
-              <td style={{ padding: '10px 8px', paddingLeft: '30px', fontWeight: '600', borderRight: '1px solid #9b9b9bff', borderBottom: '1px solid #9b9b9bff' }}>
-                {it.or_number}
-              </td>
-              <td style={{ padding: '10px 8px', borderRight: '1px solid #9b9b9bff', borderBottom: '1px solid #9b9b9bff' }}>
-                <span style={{ padding: '4px 8px', borderRadius: '12px', backgroundColor: itIsAdvance ? '#0d6efd' : '#28a745', color: 'white', fontSize: '11px', fontWeight: '600' }}>
-                  {itIsAdvance ? '💰 Advance Payment' : '📋 Regular Payment'}
-                </span>
-              </td>
-            </tr>
-          );
-        });
-      }
-    });
+    if (hasMultiple && isOpen) {
+      items.slice(1).forEach((it, idx) => {
+        rows.push(
+          <tr key={`hist-${loanType}-${orNumber}-${idx}`} style={{ backgroundColor: '#f9f9f9' }}>
+            <td style={{ padding: '10px 8px', paddingLeft: '20px', borderRight: '1px solid #9b9b9bff', borderBottom: '1px solid #9b9b9bff' }}>
+              <span style={{ padding: '4px 8px', borderRadius: '12px', backgroundColor: loanType === 'Regular' ? '#28a745' : '#dc3545', color: '#fff', fontSize: '11px', fontWeight: '600' }}>{loanType}</span>
+            </td>
+            <td style={{ padding: '10px 8px', paddingLeft: '20px', fontWeight: '600', borderRight: '1px solid #9b9b9bff', borderBottom: '1px solid #9b9b9bff' }}>
+              ₱{formatNumber(parseFloat(it.payment_amount || 0).toFixed(2))}
+            </td>
+            <td style={{ padding: '10px 8px', borderRight: '1px solid #9b9b9bff', borderBottom: '1px solid #9b9b9bff' }}>
+              {(() => {
+                const datePaid = it.date_paid || it.payment_date;
+                if (datePaid) return formatISODate(String(datePaid).slice(0,10));
+                return <span style={{ color: '#6c757d', fontSize: '12px' }}>—</span>;
+              })()}
+            </td>
+            <td style={{ padding: '10px 8px', paddingLeft: '30px', fontWeight: '600', borderRight: '1px solid #9b9b9bff', borderBottom: '1px solid #9b9b9bff' }}>
+              {it.or_number}
+            </td>
+            <td style={{ padding: '10px 8px', borderBottom: '1px solid #9b9b9bff' }}>
+              <span style={{ 
+                padding: '4px 8px', 
+                borderRadius: '12px', 
+                backgroundColor: (it.status && String(it.status).toLowerCase() === 'advance') ? '#0d6efd' : '#28a745', 
+                color: 'white', 
+                fontSize: '11px', 
+                fontWeight: '600' 
+              }}>
+                {(it.status && String(it.status).toLowerCase() === 'advance') ? '✓ Advance' : '✓ Settled'}
+              </span>
+            </td>
+          </tr>
+        );
+      });
+    }
+  });
 
-    return rows;
-  };
+  return rows;
+};
 
   // NEW EFFECT: Fetch loan fees based on current year and recalculations
   useEffect(() => {
@@ -1041,22 +1028,22 @@ const filteredEmergency = schedulesWithDetails.filter((schedule) => {
           return;
         }
 
-        const memberResponse = await axios.get('http://localhost:8000/api/member/profile/', {
+        const memberResponse = await axios.get(`${process.env.REACT_APP_API_URL}/api/member/profile/`, {
           params: { account_number: acc_number },
           headers: { Authorization: `Bearer ${token}` },
         });
 
         const accountNumber = memberResponse.data.accountN;
 
-        const loanResponse = await axios.get(`http://localhost:8000/loans/?account_number=${accountNumber}`, {
+        const loanResponse = await axios.get(`${process.env.REACT_APP_API_URL}/loans/?account_number=${accountNumber}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
-        const paymentScheduleResponse = await axios.get(`http://localhost:8000/payment-schedules/?account_number=${accountNumber}`, {
+        const paymentScheduleResponse = await axios.get(`${process.env.REACT_APP_API_URL}/payment-schedules/?account_number=${accountNumber}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
-        const paymentResponse = await axios.get(`http://localhost:8000/payments/?account_number=${accountNumber}`, {
+        const paymentResponse = await axios.get(`${process.env.REACT_APP_API_URL}/payments/?account_number=${accountNumber}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -1071,7 +1058,7 @@ const filteredEmergency = schedulesWithDetails.filter((schedule) => {
 
         // Fetch archived payments for advance-only views
         try {
-          const archResp = await axios.get(`http://localhost:8000/archived-payment-records/?account_number=${accountNumber}`,
+          const archResp = await axios.get(`${process.env.REACT_APP_API_URL}/archived-payment-records/?account_number=${accountNumber}`,
             { headers: { Authorization: `Bearer ${token}` } }
           );
           setArchivedPayments(Array.isArray(archResp.data) ? archResp.data : []);
@@ -1098,7 +1085,7 @@ const filteredEmergency = schedulesWithDetails.filter((schedule) => {
       try {
         const details = await Promise.all(
           controlNumbers.map(async (control_number) => {
-            const response = await axios.get(`http://localhost:8000/api/loans/details?control_number=${control_number}`, {
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/loans/details?control_number=${control_number}`, {
               headers: { Authorization: `Bearer ${token}` },
             });
             return response.data;
@@ -1313,14 +1300,13 @@ const filteredEmergency = schedulesWithDetails.filter((schedule) => {
             </div>
 
             {/* Right Panel - Loan Details */}
-            {loansForMember.length > 0 && (
             <div style={{ padding: '4px' }}>
 
               {/* Detailed Loan Information Cards - Side by Side */}
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginTop: '-50px' }}>
                 
                 {/* Regular Loan Details Card */}
-                <div style={{ boxShadow: '0px 8px 5px rgba(161, 161, 161, 0.99)', borderRadius: '15px', padding: '10px', color: 'black', marginTop: '-10px', height: 'auto', width: '530px', marginLeft: '-10px', marginRight: '50px', visibility: loansForMember.some(loan => loan.loan_type === 'Regular') ? 'visible' : 'hidden' }}>
+                <div style={{ boxShadow: '0px 8px 5px rgba(161, 161, 161, 0.99)', borderRadius: '15px', padding: '10px', color: 'black', marginTop: '-10px', height: 'auto', width: '530px', marginLeft: '-10px', marginRight: '50px' }}>
                   <h3 style={{ fontSize: '14px', fontWeight: '700', margin: '0 0 10px 0', textAlign: 'center', borderBottom: '2px solid rgba(0, 0, 0, 1)', paddingBottom: '5px' }}>
                     🏦 REGULAR LOAN DETAILS
                   </h3>
@@ -1416,7 +1402,7 @@ const filteredEmergency = schedulesWithDetails.filter((schedule) => {
                 </div>
 
                 {/* Emergency Loan Details Card */}
-                  <div style={{ boxShadow: '0px 8px 5px rgba(161, 161, 161, 0.99)', borderRadius: '15px', padding: '10px', color: 'black', marginTop: '-10px', height: '180px', width: '530px', marginLeft: '-50px', marginRight: '80px', visibility: loansForMember.some(loan => loan.loan_type === 'Emergency') ? 'visible' : 'hidden' }}>
+                  <div style={{ boxShadow: '0px 8px 5px rgba(161, 161, 161, 0.99)', borderRadius: '15px', padding: '10px', color: 'black', marginTop: '-10px', height: '180px', width: '530px', marginLeft: '-50px', marginRight: '80px' }}>
                     <h3 style={{ fontSize: '14px', fontWeight: '700', margin: '0 0 10px 0', textAlign: 'center', borderBottom: '2px solid rgba(0, 0, 0, 1)', paddingBottom: '5px' }}>
                       🚨 EMERGENCY LOAN DETAILS
                     </h3>
@@ -1513,18 +1499,16 @@ const filteredEmergency = schedulesWithDetails.filter((schedule) => {
 
               </div>
             </div>
-            )}
 
           </div>
 
           {/* PAYMENT TABLES SECTION */}
-          <div style={{ marginTop: '80px', visibility: loansForMember.length > 0 ? 'visible' : 'hidden' }}>
+          <div style={{ marginTop: '80px' }}>
             
             {/* Payment Tables with Dropdown Buttons Above */}
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '5px' }}>
               
-              {/* Regular Loan Payment Table Section - Only show if member has regular loan */}
-              {loansForMember.some(loan => loan.loan_type === 'Regular') && (
+              {/* Regular Loan Payment Table Section */}
               <div style={{ width: '550px', marginTop: '-450px', marginLeft: '330px' }}>
                 {/* Regular History Button - Above Table */}
                 <div style={{ display: 'flex', gap: '8px', marginBottom: '10px', marginLeft: '20px' }}>
@@ -1558,8 +1542,8 @@ const filteredEmergency = schedulesWithDetails.filter((schedule) => {
                   >
                     CLICK TO VIEW PAYMENTS HISTORY
                   </button>
-                  <button
-                    onClick={() => setShowRegularAdvanceOnly(!showRegularAdvanceOnly)}
+                  {/* <button
+                    onClick={() => setShowRegularAdvanceOnly(true)}
                     style={{
                       background: showRegularAdvanceOnly ? '#28a745' : '#f0f7ff',
                       color: showRegularAdvanceOnly ? 'white' : '#000',
@@ -1576,7 +1560,7 @@ const filteredEmergency = schedulesWithDetails.filter((schedule) => {
                       gap: '8px',
                       flex: 1
                     }}
-                    title={showRegularAdvanceOnly ? 'Return to full payments view' : 'Show archived advance payments only'}
+                    title={'Show archived advance payments only'}
                     onMouseOver={(e) => {
                       e.target.style.transform = 'translateY(-3px)';
                       e.target.style.boxShadow = '0 5px 15px rgba(13, 110, 253, 0.2)';
@@ -1586,8 +1570,8 @@ const filteredEmergency = schedulesWithDetails.filter((schedule) => {
                       e.target.style.boxShadow = 'none';
                     }}
                   >
-                    {showRegularAdvanceOnly ? 'Back to Regular Loan' : 'Advance Payments'}
-                  </button>
+                    ADVANCE PAYMENT
+                  </button> */}
                 </div>
                 {/* Regular Loan Payment Table */}
                 <div style={{ background: 'white', boxShadow: '0px 8px 8px rgba(59, 59, 59, 0.99)', borderRadius: '15px', overflow: 'hidden', height: '310px', marginLeft: '20px', width: '550px' }}>
@@ -1638,10 +1622,8 @@ const filteredEmergency = schedulesWithDetails.filter((schedule) => {
                   </div>
                 </div>
               </div>
-            )}
 
-              {/* Emergency Loan Payment Table Section - Only show if member has emergency loan */}
-              {loansForMember.some(loan => loan.loan_type === 'Emergency') && (
+              {/* Emergency Loan Payment Table Section */}
               <div style={{ width: '550px', marginTop: '-450px', marginRight: '300px' }}>
                 {/* Emergency History Button - Above Table */}
                 <div style={{ display: 'flex', gap: '8px', marginBottom: '10px', marginLeft: '50px' }}>
@@ -1675,8 +1657,8 @@ const filteredEmergency = schedulesWithDetails.filter((schedule) => {
                   >
                     CLICK TO VIEW PAYMENTS HISTORY
                   </button>
-                  <button
-                    onClick={() => setShowEmergencyAdvanceOnly(!showEmergencyAdvanceOnly)}
+                  {/* <button
+                    onClick={() => setShowEmergencyAdvanceOnly(true)}
                     style={{
                       background: showEmergencyAdvanceOnly ? '#dc3545' : '#fbe9ef',
                       color: showEmergencyAdvanceOnly ? 'white' : '#000',
@@ -1693,7 +1675,7 @@ const filteredEmergency = schedulesWithDetails.filter((schedule) => {
                       gap: '8px',
                       flex: 1
                     }}
-                    title={showEmergencyAdvanceOnly ? 'Return to full payments view' : 'Show archived advance payments only'}
+                    title={'Show archived advance payments only'}
                     onMouseOver={(e) => {
                       e.target.style.transform = 'translateY(-3px)';
                       e.target.style.boxShadow = '0 5px 15px rgba(220, 53, 69, 0.2)';
@@ -1703,8 +1685,8 @@ const filteredEmergency = schedulesWithDetails.filter((schedule) => {
                       e.target.style.boxShadow = 'none';
                     }}
                   >
-                    {showEmergencyAdvanceOnly ? 'Back to Emergency Loan' : 'Advance Payments'}
-                  </button>
+                    {/* ADVANCE PAYMENT
+                  </button> */}
                 </div>
                 {/* Emergency Loan Payment Table */}
                 <div style={{ background: 'white', boxShadow: '0px 8px 8px rgba(59, 59, 59, 0.99)', borderRadius: '15px', overflow: 'hidden', height: '310px', marginLeft: '50px', width: '550px' }}>
@@ -1752,11 +1734,9 @@ const filteredEmergency = schedulesWithDetails.filter((schedule) => {
                         </div>
                       )
                     )}
-                     </div>
+                  </div>
                 </div>
               </div>
-            )}
-
             </div>
           </div>
 
@@ -1798,17 +1778,16 @@ const filteredEmergency = schedulesWithDetails.filter((schedule) => {
                         <th style={{ padding: '12px', textAlign: 'left', fontWeight: '700', fontSize: '12px', borderRight: '1px solid #9b9b9bff' }}>AMOUNT</th>
                         <th style={{ padding: '12px', textAlign: 'left', fontWeight: '700', fontSize: '12px', borderRight: '1px solid #9b9b9bff' }}>DATE PAID</th>
                         <th style={{ padding: '12px', textAlign: 'left', fontWeight: '700', fontSize: '12px', borderRight: '1px solid #9b9b9bff' }}>OR NO.</th>
-                        <th style={{ padding: '12px', textAlign: 'left', fontWeight: '700', fontSize: '12px', borderRight: '1px solid #9b9b9bff' }}>DESCRIPTION</th>
                         {/* <th style={{ padding: '12px', textAlign: 'left', fontWeight: '700', fontSize: '12px' }}>STATUS</th> */}
                       </tr>
                     </thead>
                     <tbody>
                       {(() => {
-                        const normalized = normalizeHistoryForTable('Regular');
+                        const normalized = normalizeHistoryForTable(regularPaymentHistory, 'Regular');
                         if (normalized.length === 0) {
                           return (
                             <tr>
-                              <td colSpan="6" style={{ textAlign: 'center', padding: '40px', color: '#6c757d' }}>
+                              <td colSpan="5" style={{ textAlign: 'center', padding: '40px', color: '#6c757d' }}>
                                 <div style={{ fontSize: '48px', opacity: '0.5' }}>📭</div>
                                 <div>No payment history found for regular loans</div>
                               </td>
@@ -1862,17 +1841,16 @@ const filteredEmergency = schedulesWithDetails.filter((schedule) => {
                         <th style={{ padding: '12px', textAlign: 'left', fontWeight: '700', fontSize: '12px', borderRight: '1px solid #9b9b9bff' }}>AMOUNT</th>
                         <th style={{ padding: '12px', textAlign: 'left', fontWeight: '700', fontSize: '12px', borderRight: '1px solid #9b9b9bff' }}>DATE PAID</th>
                         <th style={{ padding: '12px', textAlign: 'left', fontWeight: '700', fontSize: '12px', borderRight: '1px solid #9b9b9bff' }}>OR NO.</th>
-                        <th style={{ padding: '12px', textAlign: 'left', fontWeight: '700', fontSize: '12px', borderRight: '1px solid #9b9b9bff' }}>DESCRIPTION</th>
                         {/* <th style={{ padding: '12px', textAlign: 'left', fontWeight: '700', fontSize: '12px' }}>STATUS</th> */}
                       </tr>
                     </thead>
                     <tbody>
                       {(() => {
-                        const normalized = normalizeHistoryForTable('Emergency');
+                        const normalized = normalizeHistoryForTable(emergencyPaymentHistory, 'Emergency');
                         if (normalized.length === 0) {
                           return (
                             <tr>
-                              <td colSpan="6" style={{ textAlign: 'center', padding: '40px', color: '#6c757d' }}>
+                              <td colSpan="5" style={{ textAlign: 'center', padding: '40px', color: '#6c757d' }}>
                                 <div style={{ fontSize: '48px', opacity: '0.5' }}>📭</div>
                                 <div>No payment history found for emergency loans</div>
                               </td>

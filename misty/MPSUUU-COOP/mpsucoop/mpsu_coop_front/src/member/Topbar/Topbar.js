@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTachometerAlt, faUser, faUserCircle, faChevronDown, faSignOutAlt, faBars, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faTachometerAlt, faUser, faUserCircle, faChevronDown, faSignOutAlt, faBars, faTimes, faWallet, faFileContract} from '@fortawesome/free-solid-svg-icons';
 import coopLogo from './COOP.png';
 import ReactDOM from "react-dom";
 import './Topbar.css';
@@ -173,6 +173,26 @@ const Topbar = () => {
                     >
                       <FontAwesomeIcon icon={faUser} className="mobile-nav-icon" />
                       <span>Profile</span>
+                    </Link>
+                  </li>
+                  <li className="mobile-nav-item">
+                    <Link 
+                      to="/accounts" 
+                      className={`mobile-nav-link ${location.pathname === '/accounts' ? 'active' : ''}`}
+                      onClick={closeMobileMenu}
+                    >
+                      <FontAwesomeIcon icon={faWallet} className="mobile-nav-icon" />
+                      <span>Accounts</span>
+                    </Link>
+                  </li>
+                  <li className="mobile-nav-item">
+                    <Link 
+                      to="/loans" 
+                      className={`mobile-nav-link ${location.pathname === '/loans' ? 'active' : ''}`}
+                      onClick={closeMobileMenu}
+                    >
+                      <FontAwesomeIcon icon={faFileContract} className="mobile-nav-icon" />
+                      <span>Loans</span>
                     </Link>
                   </li>
                   <li className="mobile-nav-item">

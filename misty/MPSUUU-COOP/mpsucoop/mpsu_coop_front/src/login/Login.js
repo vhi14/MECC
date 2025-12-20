@@ -497,7 +497,7 @@ function Login() {
               <p>
                 Don’t have an account?{" "}
                 <a href="#" className="create" onClick={() => setShowSignup(true)}>
-                  Create an Account
+                  Create
                 </a>
               </p>
             </form>

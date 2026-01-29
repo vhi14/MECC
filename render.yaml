@@ -6,7 +6,7 @@ services:
     region: oregon
     buildCommand: |
       python -m pip install --upgrade pip;
-      pip install -r requirements.txt;
+      pip install -r misty/MPSUUU-COOP/mpsucoop/mcoop_db/mcoop_db/requirements.txt;
       cd misty/MPSUUU-COOP/mpsucoop/mcoop_db && python manage.py collectstatic --noinput
     startCommand: bash -c "cd misty/MPSUUU-COOP/mpsucoop/mcoop_db && python manage.py migrate --noinput && gunicorn mcoop_db.wsgi:application --bind 0.0.0.0:\$PORT --log-level debug --access-logfile - --error-logfile -"
     autoDeploy: true
@@ -21,7 +21,7 @@ services:
       - key: CSRF_TRUSTED_ORIGINS
         value: https://mecc-60lx.onrender.com,https://mecc-ebon.vercel.app
       - key: CORS_ALLOWED_ORIGINS
-        value: https://mecc-60lx.onrender.com,http://localhost:3000,https://mecc-ebon.vercel.app
+        value: https://mecc-60lx.onrender.com,http://localhost:3000,https://mecc-ebon.vercel.app,https://mecc-ebon.vercel.app
       - key: DATABASE_URL
         fromDatabase:
           name: mcoop-db

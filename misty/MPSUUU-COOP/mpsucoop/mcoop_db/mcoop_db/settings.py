@@ -288,9 +288,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-d=rrmuud(ebm%&fex9hzz7qa+2
 # Controlled via env var: set DEBUG=False in Render
 DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
-# Allowed hosts: comma-separated env var, defaults to local dev
-# _allowed_hosts_env = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1')
-# ALLOWED_HOSTS = [h.strip() for h in _allowed_hosts_env.split(',') if h.strip()]
+
 _allowed_hosts_env = os.getenv('ALLOWED_HOSTS', 'mecc-60lx.onrender.com,localhost,127.0.0.1')
 ALLOWED_HOSTS = [h.strip() for h in _allowed_hosts_env.split(',') if h.strip()]
 # Application definition

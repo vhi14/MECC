@@ -29,7 +29,3 @@ urlpatterns = [
     path('', include('mcoop_app.urls')),
     path('health', health),  # Health check endpoint for Render (adjust healthCheckPath if you add a trailing slash)
 ]
-urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', include('mcoop_app.urls')),
-]

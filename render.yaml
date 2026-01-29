@@ -10,9 +10,10 @@ services:
       cd misty/MPSUUU-COOP/mpsucoop/mcoop_db && python manage.py collectstatic --noinput
     startCommand: >
       bash -c
-      "python misty/MPSUUU-COOP/mpsucoop/mcoop_db/manage.py migrate --noinput &&
+      "cd misty/MPSUUU-COOP/mpsucoop/mcoop_db &&
+       python manage.py migrate --noinput &&
        gunicorn mcoop_db.wsgi:application
-         --chdir misty/MPSUUU-COOP/mpsucoop/mcoop_db
+         --chdir .
          --bind 0.0.0.0:$PORT
          --log-level debug
          --access-logfile - --error-logfile -"

@@ -16,7 +16,19 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.http import HttpResponse
 
+
+def health(request):
+    # Minimal health check view for Render; returns HTTP 200 with plain text.
+    return HttpResponse("ok", content_type="text/plain")
+
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('', include('mcoop_app.urls')),
+    path('health', health),  # Health check endpoint for Render (adjust healthCheckPath if you add a trailing slash)
+]
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('mcoop_app.urls')),

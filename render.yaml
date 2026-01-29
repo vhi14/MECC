@@ -9,7 +9,7 @@ services:
       pip install -r requirements.txt;
       cd misty/MPSUUU-COOP/mpsucoop/mcoop_db && python manage.py collectstatic --noinput
     startCommand: |
-      cd misty/MPSUUU-COOP/mpsucoop/mcoop_db && python manage.py migrate --noinput && gunicorn mcoop_db.wsgi:application --bind 0.0.0.0:$PORT --log-level debug --access-logfile - --error-logfile -
+      cd misty/MPSUUU-COOP/mpsucoop/mcoop_db && python manage.py migrate --noinput && gunicorn mcoop_db.wsgi:application --chdir . --bind 0.0.0.0:$PORT --log-level debug --access-logfile - --error-logfile -
     autoDeploy: true
     healthCheckPath: /health
     envVars:

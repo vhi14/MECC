@@ -23,7 +23,6 @@ def health(request):
     # Minimal health check view for Render; returns HTTP 200 with plain text.
     return HttpResponse("ok", content_type="text/plain")
 
-
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('mcoop_app.urls')),

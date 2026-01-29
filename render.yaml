@@ -7,16 +7,13 @@ services:
     buildCommand: |
       python -m pip install --upgrade pip
       pip install -r misty/MPSUUU-COOP/mpsucoop/mcoop_db/mcoop_db/requirements.txt
-      cd misty/MPSUUU-COOP/mpsucoop/mcoop_db && python manage.py collectstatic --noinput
+      python misty/MPSUUU-COOP/mpsucoop/mcoop_db/manage.py collectstatic --noinput
     startCommand: >
-      bash -c
-      "cd misty/MPSUUU-COOP/mpsucoop/mcoop_db &&
-       python manage.py migrate --noinput &&
-       gunicorn mcoop_db.wsgi:application
-         --chdir .
-         --bind 0.0.0.0:$PORT
-         --log-level debug
-         --access-logfile - --error-logfile -"
+      gunicorn mcoop_db.wsgi:application
+        --chdir misty/MPSUUU-COOP/mpsucoop/mcoop_db
+        --bind 0.0.0.0:$PORT
+        --log-level debug
+        --access-logfile - --error-logfile -
     autoDeploy: true
     healthCheckPath: /health
     envVars:

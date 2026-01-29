@@ -12,4 +12,4 @@ pytz
 sqlparse
 psycopg2-binary
 python-dotenv
- 
+-r misty/MPSUUU-COOP/mpsucoop/mcoop_db/mcoop_db/requirements.txt

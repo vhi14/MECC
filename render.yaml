@@ -46,6 +46,9 @@ services:
       pip install -r misty/MPSUUU-COOP/mpsucoop/mcoop_db/mcoop_db/requirements.txt
       python misty/MPSUUU-COOP/mpsucoop/mcoop_db/manage.py collectstatic --noinput
     startCommand: >
+      bash -c
+      "python misty/MPSUUU-COOP/mpsucoop/mcoop_db/manage.py migrate --noinput &&
+       python misty/MPSUUU-COOP/mpsucoop/mcoop_db/manage.py createsuperuser --noinput || true &&
       gunicorn mcoop_db.wsgi:application
         --chdir misty/MPSUUU-COOP/mpsucoop/mcoop_db
         --bind 0.0.0.0:$PORT
@@ -68,6 +71,13 @@ services:
         fromDatabase:
           name: mcoop-db
           property: connectionString
+      # One-time superuser creation (remove DJANGO_SUPERUSER_* or the createsuperuser step after first deploy)
+      - key: DJANGO_SUPERUSER_USERNAME
+        value: youradmin
+      - key: DJANGO_SUPERUSER_EMAIL
+        value: you@example.com
+      - key: DJANGO_SUPERUSER_PASSWORD
+        value: StrongTempPass!234
 
 databases:
   - name: mcoop-db

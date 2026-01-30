@@ -338,7 +338,7 @@ function Login() {
   };
 
   // 🔑 Unified Login (works for both Admin + Member)
-  const handleLoginSubmit = async (e) => {
+  const handleLoginSubmit = async (e) => 
     e.preventDefault();
     if (isLocked) return; // Prevent login attempts during lockout
     setLoading(true);
@@ -383,7 +383,7 @@ function Login() {
     } finally {
       setLoading(false);
     }
-  };
+  ;
 
   // 🔑 Signup (for members only)
   const handleSignupSubmit = async (e) => {

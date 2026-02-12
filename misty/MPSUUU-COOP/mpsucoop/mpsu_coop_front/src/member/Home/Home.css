@@ -1,3 +1,8 @@
+/* ============================================
+   MPSPC CREDIT COOPERATIVE - HOME COMPONENT
+   Mobile-First Responsive Design
+   ============================================ */
+
 :root {
   --paypal-blue: #0099ff;
   --paypal-dark-blue: #003087;
@@ -28,66 +33,68 @@
 
 body {
   overflow-x: hidden;
-  overflow-y: hidden;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
 }
 
 .paypal-dashboard {
   font-family: 'Helvetica Neue', Arial, sans-serif;
-  height: 100%;
   color: black;
-  width: auto;
-  margin-top: 20px;
+  width: 100%;
+  padding-bottom: 100px; /* Space for mobile floating buttons */
 }
 
-/* ===== CONTAINER ===== */
+/* ===== CONTAINER - MOBILE FIRST ===== */
 .paypal-container {
-  width: 1570px;
-  min-width: 1570px;
-  padding: 100px 24px 40px;
+  width: 100%;
+  padding: 80px 15px 40px;
 }
 
 .paypal-content {
   animation: fadeInUp 0.5s ease-out;
+  max-width: 1570px;
+  margin: 0 auto;
 }
 
 /* ===== HEADER ===== */
 .paypal-header {
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 }
 
 .welcome-text h1 {
-  font-size: 26px;
+  font-size: 20px;
   font-weight: 600;
   color: var(--text-primary);
   margin-bottom: 8px;
 }
 
 .account-info {
-  font-size: 16px;
+  font-size: 14px;
   color: black;
   font-weight: 400;
-  margin-bottom: 40px;
+  margin-bottom: 25px;
 }
 
-/* ===== GRID LAYOUT ===== */
+/* ===== GRID LAYOUT - MOBILE FIRST ===== */
 .paypal-grid {
-  display: grid;
-  grid-template-columns: 350px 1fr;
-  gap: 10px;
-}
-
-/* ===== SIDEBAR ===== */
-.paypal-sidebar {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 15px;
+}
+
+/* ===== SIDEBAR - MOBILE FIRST ===== */
+.paypal-sidebar {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
 
 /* ===== MAIN CONTENT ===== */
 .paypal-main {
+  width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 15px;
 }
 
 /* ===== CARD STYLES ===== */
@@ -108,7 +115,7 @@ body {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
   color: black;
 }
 
@@ -130,12 +137,13 @@ body {
 .balance-card .balance-amount {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 12px;
+  margin-top: 15px;
 }
 
-/* ===== AUTO-ADJUST WELCOME NAME (UPPERCASE + RESPONSIVE FONT) ===== */
+/* Auto-adjust welcome name - responsive */
 .balance-card h1 {
-  font-size: clamp(1rem, 3vw + 0.5rem, 1.8rem);
+  font-size: clamp(1rem, 4vw + 0.5rem, 1.8rem);
   font-weight: 700;
   color: #000000;
   margin-bottom: 8px;
@@ -148,69 +156,35 @@ body {
   letter-spacing: 0.5px;
 }
 
-/* Responsive adjustments para sa welcome name */
-@media (max-width: 1024px) {
-  .balance-card h1 {
-    font-size: clamp(0.9rem, 2.5vw + 0.4rem, 1.5rem);
-  }
-}
-
-@media (max-width: 768px) {
-  .balance-card h1 {
-    font-size: clamp(0.85rem, 2.2vw + 0.3rem, 1.3rem);
-    line-height: 1.25;
-  }
-}
-
-@media (max-width: 600px) {
-  .balance-card h1 {
-    font-size: clamp(1rem, 4vw + 0.5rem, 1.5rem);
-    line-height: 1.25;
-  }
-}
-
-@media (max-width: 480px) {
-  .balance-card h1 {
-    font-size: clamp(0.95rem, 3.5vw + 0.3rem, 1.4rem);
-    letter-spacing: 0.3px;
-  }
-}
-
-@media (max-width: 375px) {
-  .balance-card h1 {
-    font-size: clamp(0.9rem, 3vw + 0.25rem, 1.3rem);
-  }
-}
-
 .balance-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px;
+  padding: 12px;
   background: rgb(201, 201, 201);
   border-radius: var(--radius-sm);
   border: 1px solid black;
 }
 
 .balance-label {
-  font-size: 16px;
+  font-size: 14px;
   color: black;
   font-weight: 500;
 }
 
 .balance-value {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 700;
   color: rgb(0, 110, 255);
 }
 
 /* ===== FEES CARD WITH 2X2 GRID ===== */
 .fees-card {
-  padding: 10px !important;
+  padding: 15px !important;
 }
 
 .fees-card .card-header {
-  margin-bottom: 5px;
+  margin-bottom: 12px;
 }
 
 .fees-card .card-header.regular {
@@ -223,45 +197,50 @@ body {
 
 .fees-grid-2x2 {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 5px;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
 }
 
 .fees-grid-2x2 .fee-item {
   display: flex;
-  justify-content: space-between;
-  padding: 10px 10px;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px;
   background: rgb(209, 209, 209);
   border-radius: var(--radius-sm);
-  font-size: 12px;
+  font-size: 11px;
   border: 1px solid black;
 }
 
 .fees-grid-2x2 .fee-item span:first-child {
   color: black;
-  font-weight: 500;
+  font-weight: 600;
+  text-transform: uppercase;
 }
 
 .fees-grid-2x2 .fee-item span:last-child {
   color: blue;
   font-weight: 700;
+  font-size: 13px;
 }
 
 .fees-grid-2x2.settled .fee-item {
   background: #e8f5e9;
+  opacity: 0.7;
 }
 
 .fees-grid-2x2.settled .fee-item span:last-child {
   color: var(--success-green);
 }
 
-/* ===== ACTIONS CARD ===== */
+/* ===== ACTIONS CARD - MOBILE HIDDEN BY DEFAULT ===== */
 .actionss-card {
   background: transparent !important;
   box-shadow: none !important;
   border: none !important;
   padding: 0 !important;
   margin-top: 15px;
+  display: none; /* Hidden on mobile */
 }
 
 .actionss-card:hover {
@@ -278,18 +257,17 @@ body {
 }
 
 .action-buttons {
-  display: grid !important;
-  grid-template-columns: 1fr 1fr;
+  display: grid;
+  grid-template-columns: 1fr;
   gap: 10px;
   color: black;
-  visibility: visible !important;
 }
 
 /* ===== LOAN SUMMARY CARDS ===== */
 .loan-cards-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
-  gap: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
 
 .loan-summary-card {
@@ -309,20 +287,20 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 5px;
-  padding-bottom: 5px;
+  margin-bottom: 15px;
+  padding-bottom: 12px;
   border-bottom: 2px solid black;
 }
 
 .loan-title {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 8px;
   color: black;
 }
 
 .loan-title h3 {
-  font-size: 20px;
+  font-size: 16px;
   font-weight: 600;
   margin: 0;
 }
@@ -330,7 +308,7 @@ body {
 .status-pill {
   padding: 5px 10px;
   border-radius: 20px;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -349,9 +327,9 @@ body {
 /* ===== LOAN AMOUNT SECTION ===== */
 .loan-amount-section {
   background: rgb(209, 209, 209);
-  padding: 5px;
+  padding: 12px;
   border-radius: var(--radius-sm);
-  margin-bottom: 5px;
+  margin-bottom: 15px;
 }
 
 .loan-amount {
@@ -361,7 +339,7 @@ body {
 }
 
 .loan-amount .label {
-  font-size: 16px;
+  font-size: 13px;
   color: black;
   font-weight: 500;
 }
@@ -376,18 +354,21 @@ body {
   color: red;
 }
 
-/* ===== LOAN DETAILS GRID ===== */
+/* ===== LOAN DETAILS GRID - MOBILE FIRST ===== */
 .loan-details-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 5px;
-  margin-bottom: 10px;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  margin-bottom: 15px;
 }
 
 .detail-item {
   display: flex;
   align-items: flex-start;
   gap: 8px;
+  padding: 10px;
+  background: rgba(209, 209, 209, 0.5);
+  border-radius: var(--radius-sm);
 }
 
 .detail-item > svg {
@@ -400,17 +381,19 @@ body {
   display: flex;
   flex-direction: column;
   gap: 4px;
+  flex: 1;
 }
 
 .detail-label {
-  font-size: 12px;
+  font-size: 11px;
   color: black;
-  font-weight: 500;
+  font-weight: 600;
   display: block;
+  text-transform: uppercase;
 }
 
 .detail-value {
-  font-size: 14px;
+  font-size: 13px;
   color: black;
   font-weight: 600;
   display: block;
@@ -424,14 +407,14 @@ body {
 }
 
 .detail-value.link:hover {
-  color: blue;
+  color: darkblue;
 }
 
 /* ===== PROGRESS SECTION ===== */
 .progress-section {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
 }
 
 .progress-item {
@@ -447,13 +430,13 @@ body {
 }
 
 .progress-label span:first-child {
-  font-size: 14px;
+  font-size: 13px;
   color: black;
   font-weight: 500;
 }
 
 .progress-amount {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 700;
   color: black;
 }
@@ -479,9 +462,9 @@ body {
 
 /* ===== PAYMENT TABLES ===== */
 .payment-tables-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
-  gap: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
 
 .payment-table-card {
@@ -490,12 +473,12 @@ body {
 }
 
 .payment-table-header {
-  padding: 10px 10px;
+  padding: 15px;
   background: #c0c0c0;
   border-bottom: 2px solid black;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .payment-table-header h3 {
@@ -508,7 +491,7 @@ body {
 }
 
 .payment-table-header .icon {
-  font-size: 30px;
+  font-size: 16px;
 }
 
 .payment-table-header .icon.regular {
@@ -521,16 +504,19 @@ body {
 
 .table-actions {
   display: flex;
-  gap: 5px;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
-/* ===== TABLE STYLES ===== */
+/* ===== TABLE STYLES - MOBILE OPTIMIZED ===== */
 .paypal-table-container {
   max-height: 270px;
   overflow-y: auto;
+  overflow-x: auto;
   padding: 0;
-  -ms-overflow-style: none;
+  -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 .paypal-table-container::-webkit-scrollbar {
@@ -540,7 +526,8 @@ body {
 .paypal-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 14px;
+  font-size: 13px;
+  min-width: 600px; /* Ensures horizontal scroll on small screens */
 }
 
 .paypal-table thead {
@@ -555,10 +542,10 @@ body {
 }
 
 .paypal-table th {
-  padding: 16px;
+  padding: 12px 8px;
   text-align: left;
   font-weight: 600;
-  font-size: 12px;
+  font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   color: black;
@@ -580,9 +567,10 @@ body {
 }
 
 .paypal-table td {
-  padding: 16px;
+  padding: 12px 8px;
   color: black;
   border: 1px solid #000000;
+  font-size: 12px;
 }
 
 .amount-cell {
@@ -592,18 +580,19 @@ body {
 
 .or-number-cell {
   font-weight: 600;
+  font-family: 'Courier New', monospace;
 }
 
 .or-number-cell.nested {
-  padding-left: 40px;
+  padding-left: 30px !important;
 }
 
 /* ===== BADGES ===== */
 .loan-type-badge {
   display: inline-block;
-  padding: 4px 12px;
+  padding: 4px 10px;
   border-radius: 12px;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -622,10 +611,10 @@ body {
 .status-badge {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 6px 12px;
+  gap: 5px;
+  padding: 5px 10px;
   border-radius: 12px;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
 }
 
@@ -645,30 +634,40 @@ body {
 }
 
 .count-badge {
-  font-size: 12px;
+  font-size: 10px;
   color: black;
-  font-weight: 500;
+  font-weight: 600;
+  background: rgba(0, 0, 0, 0.1);
+  padding: 2px 6px;
+  border-radius: 10px;
 }
 
 .expand-icon {
   cursor: pointer;
   user-select: none;
-  font-size: 14px;
+  font-size: 12px;
   color: var(--paypal-blue);
   font-weight: bold;
   transition: transform 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
 }
 
 .expand-icon:hover {
   transform: scale(1.2);
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 4px;
 }
 
 /* ===== BUTTONS ===== */
 .paypal-btn {
-  padding: 12px 20px;
+  padding: 12px 16px;
   border-radius: var(--radius-sm);
   border: none;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -693,11 +692,11 @@ body {
 
 .paypal-btn.secondary {
   background: var(--bg-gray);
-  color: var(--text-primary);
+  color: white;
 }
 
 .paypal-btn.secondary:hover {
-  background: #e5e7eb;
+  background: #1e5fd0;
   transform: translateY(-2px);
 }
 
@@ -705,6 +704,7 @@ body {
   background: linear-gradient(135deg, var(--paypal-blue) 0%, var(--paypal-light-blue) 100%);
   color: white;
   width: 100%;
+  flex-direction: row;
 }
 
 .paypal-btn.action:hover {
@@ -712,9 +712,48 @@ body {
   box-shadow: var(--shadow-md);
 }
 
+.paypal-btn.action:active {
+  transform: scale(0.95);
+}
+
 .paypal-btn.small {
-  padding: 8px 16px;
-  font-size: 13px;
+  padding: 8px 12px;
+  font-size: 12px;
+}
+
+/* ===== FLOATING ACTION BUTTONS - MOBILE ONLY ===== */
+.home-floating-buttons {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  z-index: 999;
+}
+
+.home-floating-buttons button {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: none;
+  color: white;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.home-floating-buttons button:active {
+  transform: scale(0.9);
+}
+
+.home-floating-buttons button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
 }
 
 /* ===== MODAL ===== */
@@ -731,24 +770,27 @@ body {
   justify-content: center;
   z-index: 1000;
   animation: fadeIn 0.3s ease-out;
+  padding: 15px;
 }
 
 .paypal-modal {
   background: white;
   border-radius: var(--radius-lg);
-  max-width: 90%;
+  width: 100%;
+  max-width: 900px;
   max-height: 85vh;
-  width: 1200px;
   box-shadow: var(--shadow-lg);
   overflow: hidden;
   animation: slideUp 0.3s ease-out;
+  display: flex;
+  flex-direction: column;
 }
 
 .modal-header {
-  padding: 24px 32px;
+  padding: 20px;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  gap: 12px;
   border-bottom: 2px solid var(--bg-gray);
 }
 
@@ -763,7 +805,7 @@ body {
 }
 
 .modal-header h3 {
-  font-size: 24px;
+  font-size: 18px;
   font-weight: 600;
   margin: 0;
   color: var(--text-primary);
@@ -771,11 +813,12 @@ body {
 
 .modal-actions {
   display: flex;
-  gap: 12px;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
 .modal-body {
-  max-height: 70vh;
+  flex: 1;
   overflow-y: auto;
   padding: 0;
 }
@@ -795,19 +838,19 @@ body {
 
 /* ===== EMPTY STATE ===== */
 .empty-state {
-  padding: 60px 40px;
+  padding: 40px 20px;
   text-align: center;
   color: var(--text-secondary);
 }
 
 .empty-icon {
-  font-size: 64px;
+  font-size: 48px;
   opacity: 0.5;
   margin-bottom: 16px;
 }
 
 .empty-state p {
-  font-size: 16px;
+  font-size: 14px;
   margin: 0;
 }
 
@@ -817,16 +860,20 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  min-height: 100vh;
+  padding: 20px;
   font-family: 'Helvetica Neue', Arial, sans-serif;
 }
 
 .paypal-error-card,
 .paypal-loading-card {
-  padding: 60px;
+  padding: 40px 30px;
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-lg);
   text-align: center;
-  max-width: 500px;
+  max-width: 400px;
+  width: 100%;
+  background: white;
 }
 
 .error-icon {
@@ -837,14 +884,14 @@ body {
 .paypal-error-card h2 {
   color: var(--text-primary);
   margin-bottom: 16px;
-  font-size: 28px;
+  font-size: 22px;
   font-weight: 600;
 }
 
 .paypal-error-card p {
   color: var(--text-secondary);
-  margin-bottom: 32px;
-  font-size: 16px;
+  margin-bottom: 24px;
+  font-size: 14px;
   line-height: 1.5;
 }
 
@@ -861,17 +908,13 @@ body {
 
 .paypal-loading-card p {
   color: var(--text-secondary);
-  font-size: 16px;
+  font-size: 14px;
 }
 
 /* ===== ANIMATIONS ===== */
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 @keyframes fadeInUp {
@@ -897,12 +940,7 @@ body {
 }
 
 @keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+  to { transform: rotate(360deg); }
 }
 
 /* ===== UTILITY CLASSES ===== */
@@ -915,73 +953,30 @@ body {
   scrollbar-width: none;
 }
 
-/* ===== RESPONSIVE DESIGN - FLOATING BUTTONS RIGHT SIDE ===== */
+/* ============================================
+   RESPONSIVE BREAKPOINTS
+   ============================================ */
 
-/* Hide action buttons in responsive mode */
-@media (max-width: 1024px) {
-  .actionss-card {
-    display: none !important;
-  }
-}
-
-/* Tablet Landscape & Below (1024px and down) */
-@media (max-width: 1024px) {
+/* ===== TABLET (768px and up) ===== */
+@media (min-width: 768px) {
   body {
     overflow-y: auto;
   }
 
-  .paypal-dashboard {
-    height: auto;
-    min-height: 100vh;
-  }
-
   .paypal-container {
-    width: 100%;
-    max-width: 100%;
-    min-width: auto;
-    padding: 80px 20px 32px;
+    padding: 90px 20px 40px;
   }
 
   .paypal-grid {
-    grid-template-columns: 1fr;
-    gap: 16px;
+    gap: 20px;
   }
 
   .paypal-sidebar {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
+    gap: 20px;
   }
 
-  .loan-cards-grid {
-    grid-template-columns: 1fr;
-    gap: 16px;
-  }
-
-  .payment-tables-grid {
-    grid-template-columns: 1fr;
-    gap: 16px;
-  }
-
-    /* HIDE LOAN FEES SA RESPONSIVE */
-  .fees-card {
-    display: none !important;
-  }
-
-  /* HIDE ACTION BUTTONS SA RESPONSIVE */
-  .actionss-card {
-    display: none !important;
-  }
-}
-
-/* Tablet Portrait & Below (768px and down) */
-@media (max-width: 768px) {
-  body {
-    overflow-y: auto;
-  }
-
-  .paypal-container {
-    padding: 70px 16px 24px;
+  .paypal-main {
+    gap: 20px;
   }
 
   .welcome-text h1 {
@@ -989,314 +984,233 @@ body {
   }
 
   .account-info {
-    font-size: 15px;
-    margin-bottom: 24px;
+    font-size: 16px;
+    margin-bottom: 30px;
   }
 
-  .paypal-sidebar {
-    grid-template-columns: 1fr;
-    gap: 12px;
+  .balance-card h1 {
+    font-size: clamp(1.1rem, 2.5vw + 0.4rem, 1.6rem);
+  }
+
+  .balance-amount {
+    flex-direction: row;
+    gap: 15px;
+  }
+
+  .balance-item {
+    flex: 1;
+    padding: 14px;
+  }
+
+  .balance-value {
+    font-size: 20px;
+  }
+
+  .fees-grid-2x2 {
+    gap: 10px;
+  }
+
+  .fees-grid-2x2 .fee-item {
+    padding: 12px;
+    font-size: 12px;
+  }
+
+  .fees-grid-2x2 .fee-item span:last-child {
+    font-size: 14px;
+  }
+
+  .loan-title h3 {
+    font-size: 18px;
+  }
+
+  .loan-amount .value {
+    font-size: 24px;
   }
 
   .loan-details-grid {
-    grid-template-columns: 1fr;
-    gap: 12px;
+    grid-template-columns: 1fr 1fr;
   }
 
-  .payment-tables-grid {
-    grid-template-columns: 1fr;
-    gap: 16px;
+  .payment-table-header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .payment-table-header h3 {
+    font-size: 18px;
   }
 
   .paypal-table {
-    font-size: 13px;
+    font-size: 14px;
+    min-width: auto;
   }
 
   .paypal-table th {
-    padding: 12px 10px;
-    font-size: 11px;
+    padding: 14px 12px;
+    font-size: 12px;
   }
 
   .paypal-table td {
-    padding: 12px 10px;
-  }
-
-  .paypal-modal {
-    width: 95%;
-    max-width: 95%;
+    padding: 14px 12px;
+    font-size: 13px;
   }
 
   .modal-header {
-    padding: 16px 20px;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 30px;
   }
 
   .modal-header h3 {
     font-size: 20px;
   }
 
-  .modal-actions {
-    width: 100%;
+  .empty-state {
+    padding: 60px 40px;
   }
 
-  /* HIDE LOAN FEES SA RESPONSIVE */
-  .fees-card {
-    display: none !important;
+  .empty-icon {
+    font-size: 64px;
   }
 
-  /* HIDE ACTION BUTTONS SA RESPONSIVE */
-  .actionss-card {
-    display: none !important;
+  .empty-state p {
+    font-size: 16px;
   }
 }
 
-/* Mobile Large & Below (640px and down) */
+/* ===== DESKTOP (1024px and up) ===== */
+@media (min-width: 1024px) {
+  .paypal-container {
+    padding: 100px 24px 40px;
+  }
+
+  .paypal-grid {
+    display: grid;
+    grid-template-columns: 350px 1fr;
+    gap: 20px;
+  }
+
+  .paypal-sidebar {
+    width: 350px;
+  }
+
+  .paypal-main {
+    flex: 1;
+  }
+
+  .welcome-text h1 {
+    font-size: 26px;
+  }
+
+  .account-info {
+    font-size: 16px;
+    margin-bottom: 40px;
+  }
+
+  .balance-card h1 {
+    font-size: clamp(1rem, 3vw + 0.5rem, 1.8rem);
+  }
+
+  .loan-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+  .payment-tables-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+  .loan-title h3 {
+    font-size: 20px;
+  }
+
+  .loan-amount .value {
+    font-size: 26px;
+  }
+
+  /* Show desktop action buttons */
+  .actionss-card {
+    display: block !important;
+  }
+
+  .action-buttons {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  /* Hide floating buttons on desktop */
+  .home-floating-buttons {
+    display: none !important;
+  }
+
+  .paypal-table-container {
+    overflow-x: visible;
+  }
+
+  .modal-header h3 {
+    font-size: 24px;
+  }
+}
+
+/* ===== LARGE DESKTOP (1200px and up) ===== */
+@media (min-width: 1200px) {
+  .paypal-sidebar {
+    width: 350px;
+  }
+
+  .card-header h3 {
+    font-size: 18px;
+  }
+
+  .payment-table-header h3 {
+    font-size: 20px;
+  }
+}
+
+/* ===== EXTRA LARGE DESKTOP (1570px and up) ===== */
+@media (min-width: 1570px) {
+  .paypal-content {
+    max-width: 1570px;
+  }
+}
+
+/* ===== MOBILE SPECIFIC (Max 767px) ===== */
+@media (max-width: 767px) {
+  .fees-card {
+    display: block !important; /* Show fees on mobile now */
+  }
+
+  .paypal-table thead {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .modal-body {
+    max-height: 70vh;
+  }
+}
+
+/* ===== SMALL MOBILE (Max 600px) ===== */
 @media (max-width: 600px) {
   body {
     overflow-y: auto;
   }
 
   .paypal-container {
-    padding: 60px 12px 20px;
-  }
-
-  .welcome-text h1 {
-    font-size: 22px;
-  }
-
-  .account-info {
-    font-size: 14px;
-    margin-bottom: 20px;
-  }
-
-  .paypal-header {
-    margin-bottom: 16px;
-  }
-
-  .paypal-card {
-    padding: 16px;
-    border-radius: var(--radius-sm);
-  }
-
-  .card-header h3 {
-    font-size: 15px;
-  }
-
-  .balance-item {
-    padding: 14px;
-  }
-
-  .balance-label {
-    font-size: 15px;
-  }
-
-  .balance-value {
-    font-size: 19px;
-  }
-
-  .loan-title h3 {
-    font-size: 18px;
-  }
-
-  .loan-amount .value {
-    font-size: 22px;
-  }
-
-  .status-pill {
-    padding: 4px 10px;
-    font-size: 11px;
-  }
-
-  .loan-type-badge {
-    padding: 3px 10px;
-    font-size: 10px;
-  }
-
-  .status-badge {
-    padding: 5px 10px;
-    font-size: 11px;
-  }
-
-  .paypal-table-container {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  .paypal-table {
-    min-width: 500px;
-  }
-
-  .empty-state {
-    padding: 40px 20px;
-  }
-
-  .empty-icon {
-    font-size: 48px;
-  }
-
-  .empty-state p {
-    font-size: 14px;
-  }
-
-    /* HIDE LOAN FEES SA RESPONSIVE */
-  .fees-card {
-    display: none !important;
-  }
-
-  /* HIDE ACTION BUTTONS SA RESPONSIVE */
-  .actionss-card {
-    display: none !important;
-  }
-}
-
-/* Mobile Standard & Below (480px and down) */
-@media (max-width: 480px) {
-  body {
-    overflow-y: auto;
-  }
-
-  .paypal-container {
-    padding: 1150px 12px 20px;
-  }
-
-  .welcome-text h1 {
-    font-size: 20px;
-  }
-
-  .account-info {
-    font-size: 12px;
-  }
-
-  .paypal-card {
-    padding: 15px;
-  }
-
-  .card-header {
-    gap: 5px;
-    margin-bottom: 5px;
-  }
-
-  .card-header h3 {
-    font-size: 14px;
-  }
-
-  .balance-item {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 5px;
-    padding: 5px;
-  }
-
-  .balance-value {
-    align-self: flex-end;
-    font-size: 18px;
-  }
-
-  .loan-amount {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: -10px;
-  }
-
-  .loan-amount .value {
-    align-self: flex-end;
-    font-size: 18px;
-  }
-
-  .loan-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 5px;
-  }
-
-  .loan-title h3 {
-    font-size: 16px;
-  }
-
-  .paypal-table {
-    font-size: 12px;
-    min-width: 100px;
-  }
-
-  .paypal-table th,
-  .paypal-table td {
-    padding: 10px 8px;
-    font-size: 11px;
-  }
-
-  .or-number-cell.nested {
-    padding-left: 24px;
-  }
-
-  .modal-header {
-    padding: 14px 16px;
-  }
-
-  .modal-header h3 {
-    font-size: 18px;
-  }
-
-  .modal-body {
-    max-height: 65vh;
-  }
-
-  .paypal-error-card,
-  .paypal-loading-card {
-    padding: 40px 20px;
-  }
-
-  .paypal-error-card h2 {
-    font-size: 22px;
-  }
-
-  .paypal-error-card p,
-  .paypal-loading-card p {
-    font-size: 14px;
-  }
-
-  .spinner {
-    width: 40px;
-    height: 40px;
-  }
-
-    /* HIDE LOAN FEES SA RESPONSIVE */
-  .fees-card {
-    display: none !important;
-  }
-
-  /* HIDE ACTION BUTTONS SA RESPONSIVE */
-  .actionss-card {
-    display: none !important;
-  }
-}
-
-/* Mobile Small & Below (375px and down) */
-@media (max-width: 375px) {
-  body {
-    overflow-y: auto;
-  }
-
-  .paypal-container {
-    padding: 60px 10px 16px;
-  }
-
-  .welcome-text h1 {
-    font-size: 18px;
-  }
-
-  .account-info {
-    font-size: 12px;
-    margin-bottom: 16px;
+    padding: 70px 12px 20px;
   }
 
   .paypal-card {
     padding: 12px;
   }
 
-  .card-header h3 {
-    font-size: 13px;
+  .balance-item {
+    padding: 10px;
   }
 
   .balance-label {
@@ -1307,132 +1221,120 @@ body {
     font-size: 16px;
   }
 
-  /* FLOATING BUTTONS - MINI */
-  .actionss-card {
-    right: 6px;
-    bottom: 40px;
-  }
-
-  .action-buttons {
-    gap: 8px;
-  }
-
-  .action-buttons button,
-  .action-buttons .paypal-btn {
-    width: 46px;
-    height: 46px;
-  }
-
-  .action-buttons button::before,
-  .action-buttons .paypal-btn::before {
-    font-size: 18px;
-  }
-
-  .loan-title h3 {
-    font-size: 15px;
-  }
-
   .loan-amount .value {
     font-size: 18px;
   }
 
-  .paypal-table {
-    min-width: 420px;
-  }
-
-  .paypal-table th,
-  .paypal-table td {
-    padding: 8px 6px;
-    font-size: 10px;
-  }
-
-  .paypal-btn {
-    padding: 10px 14px;
-    font-size: 13px;
-  }
-
-  .paypal-btn.small {
-    padding: 8px 12px;
-    font-size: 12px;
-  }
-
-  .modal-header h3 {
-    font-size: 16px;
-  }
-
-    /* HIDE LOAN FEES SA RESPONSIVE */
-  .fees-card {
-    display: none !important;
-  }
-
-  /* HIDE ACTION BUTTONS SA RESPONSIVE */
-  .actionss-card {
-    display: none !important;
+  .paypal-table-container {
+    margin: 0 -12px;
+    padding: 0 12px;
   }
 }
 
-/* Landscape orientation optimization */
-@media (max-height: 600px) and (orientation: landscape) {
-  body {
-    overflow-y: auto;
-  }
-
+/* ===== EXTRA SMALL MOBILE (Max 480px) ===== */
+@media (max-width: 480px) {
   .paypal-container {
-    padding-top: 50px;
-    padding-bottom: 16px;
+    padding: 60px 10px 20px;
   }
 
   .welcome-text h1 {
-    font-size: 20px;
+    font-size: 18px;
   }
 
   .account-info {
-    margin-bottom: 16px;
-    font-size: 13px;
+    font-size: 12px;
   }
 
-  .paypal-header {
-    margin-bottom: 12px;
+  .card-header h3 {
+    font-size: 14px;
   }
 
-  /* FLOATING BUTTONS - LANDSCAPE */
-  .actionss-card {
-    right: 10px;
-    bottom: 20px;
+  .balance-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+    padding: 10px;
   }
 
-  .action-buttons {
+  .balance-value {
+    align-self: flex-end;
+  }
+
+  .loan-amount {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+
+  .loan-amount .value {
+    align-self: flex-end;
+  }
+
+  .loan-header {
+    flex-direction: column;
+    align-items: flex-start;
     gap: 8px;
   }
 
-  .action-buttons button,
-  .action-buttons .paypal-btn {
-    width: 44px;
-    height: 44px;
+  .home-floating-buttons button {
+    width: 52px;
+    height: 52px;
+    font-size: 22px;
   }
+}
 
-  .paypal-modal {
-    max-height: 90vh;
-  }
-
-  .modal-body {
-    max-height: 65vh;
+/* ===== LANDSCAPE ORIENTATION ===== */
+@media (max-height: 600px) and (orientation: landscape) {
+  .paypal-container {
+    padding-top: 50px;
+    padding-bottom: 16px;
   }
 
   .paypal-table-container {
     max-height: 200px;
   }
 
-    /* HIDE LOAN FEES SA RESPONSIVE */
-  .fees-card {
-    display: none !important;
+  .modal-body {
+    max-height: 65vh;
   }
 
-  /* HIDE ACTION BUTTONS SA RESPONSIVE */
-  .actionss-card {
-    display: none !important;
+  .home-floating-buttons {
+    bottom: 10px;
+    right: 10px;
+  }
+
+  .home-floating-buttons button {
+    width: 48px;
+    height: 48px;
+    font-size: 20px;
   }
 }
 
+/* ===== ACCESSIBILITY ===== */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
 
-/*fixing the floating buttons*/
+/* Focus styles for keyboard navigation */
+.paypal-btn:focus,
+.expand-icon:focus,
+.detail-value.link:focus {
+  outline: 2px solid var(--paypal-blue);
+  outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .paypal-card {
+    border: 2px solid currentColor;
+  }
+
+  .loan-type-badge,
+  .status-badge {
+    border: 1px solid currentColor;
+  }
+}

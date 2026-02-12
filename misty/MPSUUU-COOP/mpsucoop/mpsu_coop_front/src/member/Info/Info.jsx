@@ -177,6 +177,10 @@ const Home = () => {
     navigate('/reset-password');
   };
 
+  const handleBack = () => {
+    navigate(-1); // Go back to previous page
+  };
+
   if (error) {
     return (
       <div className="error-container">
@@ -229,6 +233,12 @@ const Home = () => {
                 
                 {/* Header */}
                 <div className="info-header">
+                  <button onClick={handleBack} className="btn-back">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M19 12H5M12 19l-7-7 7-7"/>
+                    </svg>
+                    <span>Back</span>
+                  </button>
                   <h3 className="info-title">
                     {isEditMode ? 'Edit Information' : 'My Information'}
                   </h3>
@@ -376,7 +386,7 @@ const Home = () => {
                 </div>
 
                 {/* Action Buttons */}
-                <div className="action-buttons">
+                <div className="action-buttonss">
                   {isEditMode ? (
                     <div className="button-group">
                       <button onClick={handleSaveChanges} className="btn btn-save">

@@ -1,4 +1,4 @@
-/* Ledger.css - Separated styles from inline CSS */
+/* Ledger.css - PayPal-Style Responsive Design */
 
 /* Base container styles */
 .ledger-container {
@@ -513,15 +513,24 @@
   transform: translateY(-2px);
 }
 
-/* Responsive styles */
+/* ========================================
+   RESPONSIVE DESIGN - PAYPAL STYLE
+   Desktop layout is preserved, only mobile adjusts
+   ======================================== */
+
+/* Large screens - Minor adjustments only */
 @media (max-width: 1440px) {
   .ledger-main-container {
-    width: 100%;
+    width: 95%;
     max-width: 1380px;
-    padding: 0 20px;
   }
 
   .ledger-page-content {
+    margin-left: 0;
+    padding: 0 20px;
+  }
+
+  .table-container {
     margin-left: 0;
   }
 
@@ -531,161 +540,109 @@
   }
 }
 
+/* Tablet landscape - Enable horizontal scroll for table */
 @media (max-width: 1024px) {
   .ledger-page-content {
-    padding: 0 20px;
-    margin-top: 130px;
     margin-left: 0;
+    padding: 0 15px;
   }
 
   .ledger-main-container {
     width: 100%;
-    padding: 0;
   }
-  
+
   .ledger-stats-grid {
-    grid-template-columns: repeat(2, 1fr);
     gap: 20px;
-    margin-bottom: 30px;
-  }
-  
-  .ledger-stat-card {
-    padding: 15px;
-  }
-  
-  .ledger-stat-card-title {
-    font-size: 16px;
-  }
-  
-  .ledger-stat-value {
-    font-size: 18px;
-  }
-  
-  .ledger-stat-value-large {
-    font-size: 22px;
-  }
-  
-  .ledger-transactions-container {
-    height: auto;
-    min-height: 400px;
-  }
-  
-  .ledger-header-title {
-    font-size: 20px;
-  }
-  
-  .ledger-header-subtitle {
-    font-size: 14px;
-  }
-  
-  .ledger-table-wrapper {
-    height: 350px;
   }
 
   .table-container {
     overflow-x: auto;
-    overflow-y: auto;
+    margin-left: 0;
   }
-  
+
   .ledger-table {
     min-width: 1200px;
-    width: auto;
-  }
-  
-  .ledger-table-header-cell {
-    padding: 10px 8px;
-    font-size: 14px;
-  }
-  
-  .ledger-table-body-cell {
-    padding: 10px 8px;
-    font-size: 13px;
   }
 }
 
-/* Mobile Portrait Mode - Card Layout */
+/* Tablet portrait - Switch to card view */
 @media (max-width: 768px) {
   .ledger-page-content {
-    padding: 0 15px;
-    margin-top: 100px;
     margin-left: 0;
+    padding: 0 15px;
+    margin-top: 120px;
   }
 
   .ledger-main-container {
     width: 100%;
-    padding: 0;
   }
-  
+
   .ledger-stats-grid {
-    grid-template-columns: 1fr;
-    gap: 15px;
-    margin-bottom: 20px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 25px;
   }
-  
+
   .ledger-stat-card {
-    padding: 12px;
+    padding: 10px;
   }
-  
+
   .ledger-stat-card-title {
-    font-size: 15px;
+    font-size: 12px;
   }
-  
-  .ledger-stat-value {
-    font-size: 16px;
-  }
-  
+
   .ledger-stat-value-large {
-    font-size: 20px;
+    font-size: 18px;
   }
 
   .ledger-stat-deposits,
   .ledger-stat-withdrawals {
-    font-size: 13px;
+    font-size: 11px;
   }
 
   .ledger-stat-deposits-value,
   .ledger-stat-withdrawals-value {
-    font-size: 18px;
+    font-size: 16px;
   }
 
   .ledger-transactions-container {
     height: auto;
-    border-radius: 10px;
   }
-  
+
   .ledger-header {
-    flex-direction: column;
-    padding: 15px;
+    flex-direction: row;
     gap: 10px;
+    padding: 15px;
+    align-items: center;
   }
-  
+
   .ledger-back-button {
-    padding: 10px 15px;
-    font-size: 14px;
-    width: 100%;
+    width: auto;
     max-width: none;
-    justify-content: center;
+    padding: 8px 12px;
+    font-size: 13px;
+    flex-shrink: 0;
   }
-  
+
   .ledger-header-title-section {
-    width: 100%;
-    margin: 0;
+    width: auto;
+    flex: 1;
+    text-align: left;
+  }
+
+  .ledger-header-title {
+    font-size: 16px;
+    margin-bottom: 5px;
+  }
+
+  .ledger-header-subtitle {
+    font-size: 12px;
   }
 
   .ledger-header-spacer {
     display: none;
   }
-  
-  .ledger-header-title {
-    font-size: 18px;
-    margin-bottom: 5px;
-  }
-  
-  .ledger-header-subtitle {
-    font-size: 13px;
-  }
 
-  /* Hide table, show cards */
   .ledger-table-wrapper {
     height: auto;
     max-height: 600px;
@@ -693,6 +650,7 @@
     padding: 15px;
   }
 
+  /* Hide table, show cards */
   .table-container {
     display: none;
   }
@@ -702,28 +660,25 @@
   }
 }
 
+/* Mobile - Optimized card view */
 @media (max-width: 480px) {
   .ledger-page-content {
-    margin-top: 145px;
+    padding: 0 10px;
+    margin-top: 60px;
   }
 
   .ledger-stats-grid {
-    gap: 12px;
-    margin-bottom: 15px;
-    max-width: 290px;
-    margin-left: 20px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 10px;
   }
 
   .ledger-stat-card {
-    padding: 10px;
+    padding: 5px;
   }
 
   .ledger-stat-card-title {
-    font-size: 12px;
-  }
-
-  .ledger-stat-value {
-    font-size: 12px;
+    font-size: 11px;
   }
 
   .ledger-stat-value-large {
@@ -732,7 +687,7 @@
 
   .ledger-stat-deposits,
   .ledger-stat-withdrawals {
-    font-size: 12px;
+    font-size: 9px;
   }
 
   .ledger-stat-deposits-value,
@@ -741,23 +696,27 @@
   }
 
   .ledger-header {
-    padding: 10px;
-    max-width: 290px;
-    margin-left: 10px;
-    border-radius: 10px;
+    padding: 12px;
+    flex-direction: row;
+    gap: 8px;
   }
 
   .ledger-back-button {
     padding: 5px 5px;
-    font-size: 11px;
+    font-size: 12px;
+    width: auto;
     max-width: 60px;
-    margin-right: 250px;
-    position: fixed;
-    margin-top: 15px;
+    flex-shrink: 0;
+  }
+
+  .ledger-header-title-section {
+    text-align: center;
+    flex: 1;
   }
 
   .ledger-header-title {
-    font-size: 12px;
+    font-size: 14px;
+    margin-bottom: 3px;
   }
 
   .ledger-header-subtitle {
@@ -766,8 +725,7 @@
 
   .ledger-table-wrapper {
     padding: 12px;
-    max-height: 335px;
-    scrollbar-width: none;
+    max-height: 400px;
   }
 
   .mobile-transaction-card {
@@ -776,46 +734,42 @@
   }
 
   .mobile-card-type {
-    font-size: 14px;
+    font-size: 13px;
   }
 
   .mobile-card-amount {
     font-size: 14px;
   }
 
+  .mobile-card-label {
+    min-width: 110px;
+  }
+
   .mobile-card-row {
     font-size: 12px;
   }
-
-  .mobile-card-label {
-    min-width: 215px;
-  }
 }
 
-/* Landscape orientation - Keep table */
+/* Landscape phones - Keep table visible with scroll */
 @media (max-height: 600px) and (orientation: landscape) {
   .ledger-page-content {
-    padding: 15px;
-    margin-top: 80px;
+    margin-top: 90px;
+    padding: 0 15px;
   }
-  
+
   .ledger-stats-grid {
     grid-template-columns: repeat(3, 1fr);
-    gap: 15px;
+    gap: 12px;
     margin-bottom: 15px;
   }
 
   .ledger-stat-card {
-    padding: 8px;
+    padding: 10px;
   }
 
   .ledger-stat-card-title {
     font-size: 13px;
     margin-bottom: 5px;
-  }
-
-  .ledger-stat-value {
-    font-size: 15px;
   }
 
   .ledger-stat-value-large {
@@ -825,24 +779,25 @@
   .ledger-transactions-container {
     height: auto;
   }
-  
+
   .ledger-header {
     padding: 10px;
   }
-  
+
   .ledger-header-title {
-    font-size: 16px;
-    margin-bottom: 3px;
+    font-size: 18px;
+    margin-bottom: 5px;
   }
-  
+
   .ledger-header-subtitle {
-    font-size: 12px;
+    font-size: 13px;
   }
-  
+
   .ledger-table-wrapper {
     height: 280px;
   }
 
+  /* Keep table in landscape */
   .table-container {
     display: block;
     overflow-x: auto;
@@ -852,18 +807,17 @@
   .mobile-transaction-cards {
     display: none;
   }
-  
+
   .ledger-table {
-    display: table;
     font-size: 11px;
     min-width: 1000px;
   }
-  
+
   .ledger-table-header-cell {
     padding: 6px 5px;
     font-size: 12px;
   }
-  
+
   .ledger-table-body-cell {
     padding: 6px 5px;
     font-size: 11px;

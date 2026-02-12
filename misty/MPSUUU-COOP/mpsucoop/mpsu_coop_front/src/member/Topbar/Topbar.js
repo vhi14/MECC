@@ -176,26 +176,6 @@ const Topbar = () => {
                     </Link>
                   </li>
                   <li className="mobile-nav-item">
-                    <Link 
-                      to="/accounts" 
-                      className={`mobile-nav-link ${location.pathname === '/accounts' ? 'active' : ''}`}
-                      onClick={closeMobileMenu}
-                    >
-                      <FontAwesomeIcon icon={faWallet} className="mobile-nav-icon" />
-                      <span>Accounts</span>
-                    </Link>
-                  </li>
-                  <li className="mobile-nav-item">
-                    <Link 
-                      to="/loans" 
-                      className={`mobile-nav-link ${location.pathname === '/loans' ? 'active' : ''}`}
-                      onClick={closeMobileMenu}
-                    >
-                      <FontAwesomeIcon icon={faFileContract} className="mobile-nav-icon" />
-                      <span>Loans</span>
-                    </Link>
-                  </li>
-                  <li className="mobile-nav-item">
                     <div 
                       className="mobile-nav-link logout-item"
                       onClick={handleLogout}

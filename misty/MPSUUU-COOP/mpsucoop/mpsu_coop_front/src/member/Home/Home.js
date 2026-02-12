@@ -253,9 +253,14 @@ const Home = () => {
 
   const fetchCompletePaymentHistory = async (accountNumber) => {
     try {
+      const token = localStorage.getItem('accessToken');
       const [archivedResponse, activeResponse] = await Promise.all([
-        axios.get(`${process.env.REACT_APP_API_URL}/payment-history/${accountNumber}/`),
-        axios.get(`${process.env.REACT_APP_API_URL}/payment-schedules/?account_number=${accountNumber}`)
+        axios.get(`${process.env.REACT_APP_API_URL}/payment-history/${accountNumber}/`, {
+          headers: { Authorization: `Bearer ${token}` }
+        }),
+        axios.get(`${process.env.REACT_APP_API_URL}/payment-schedules/?account_number=${accountNumber}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        })
       ]);
 
       const archivedPayments = archivedResponse.data || [];
@@ -999,7 +1004,7 @@ const Home = () => {
       try {
         const details = await Promise.all(
           controlNumbers.map(async (control_number) => {
-            const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/loans/details?control_number=${control_number}`, {
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/loans/${control_number}/detailed_loan_info/`, {
               headers: { Authorization: `Bearer ${token}` },
             });
             return response.data;

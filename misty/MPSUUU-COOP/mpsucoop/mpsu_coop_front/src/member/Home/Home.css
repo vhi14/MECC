@@ -1213,12 +1213,12 @@ body {
   }
 
   .loan-title h3 {
-    font-size: 14px;
+    font-size: 11px;
   }
 
   .paypal-table {
     font-size: 12px;
-    min-width: 110px;
+    max-width: 100px;
   }
 
   .paypal-table th,

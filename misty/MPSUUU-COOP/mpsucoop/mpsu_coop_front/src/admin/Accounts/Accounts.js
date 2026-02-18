@@ -57,7 +57,9 @@ function Accounts() {
   }, []);
 
   useEffect(() => {
-    axios.get(`${process.env.REACT_APP_API_URL}/archives/?archive_type=Account`)
+    axios.get(`${process.env.REACT_APP_API_URL}/archives/?archive_type=Account`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem('accessToken')}` }
+    })
       .then(response => setArchivedAccounts(response.data || []))
       .catch(error => console.error('Error fetching archived accounts:', error));
   }, [refreshArchives]);
@@ -65,7 +67,9 @@ function Accounts() {
    // OR number
   const fetchAccounts = async () => {
     try {
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/accounts/`);
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/accounts/`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem('accessToken')}` }
+      });
       const apiAccounts = Array.isArray(response.data) ? response.data : [];
 
       setAccounts(prev => {
@@ -95,7 +99,9 @@ function Accounts() {
 
   const fetchLoans = async () => {
     try {
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/loans/`);
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/loans/`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem('accessToken')}` }
+      });
       setAccountLoans(response.data);
     } catch (err) {
       console.error('Error fetching loans:', err.response || err);

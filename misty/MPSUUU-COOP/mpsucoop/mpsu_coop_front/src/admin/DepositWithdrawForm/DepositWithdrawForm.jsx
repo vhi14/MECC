@@ -288,7 +288,10 @@ function DepositWithdrawForm({
             };
 
       const response = await axios.post(endpoint, payload, {
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+        },
       });
 
       console.log('Response:', response);

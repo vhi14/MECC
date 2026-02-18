@@ -56,7 +56,11 @@ const LoanSummary = () => {
   useEffect(() => {
     const fetchCurrentYearData = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/yearly-summary/current/`);
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/yearly-summary/current/`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`
+          }
+        });
         setYearlyData(response.data);
       } catch (err) {
         console.error("Error fetching current year data:", err);
@@ -70,7 +74,11 @@ const LoanSummary = () => {
   useEffect(() => {
     const fetchHistoricalYears = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/yearly-summary/all/`);
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/yearly-summary/all/`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`
+          }
+        });
         // Extract years from the response
         if (response.data.available_years) {
           setHistoricalYears(response.data.available_years);
@@ -112,7 +120,11 @@ const LoanSummary = () => {
   setShowYearSelector(false);
   
   try {
-    const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/yearly-summary/${year}/`);
+    const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/yearly-summary/${year}/`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('accessToken')}`
+      }
+    });
     setYearlyData(response.data);
   } catch (err) {
     console.error(`Error fetching data for year ${year}:`, err);
@@ -123,9 +135,12 @@ const LoanSummary = () => {
   useEffect(() => {
     const fetchActiveMembers = async () => {
       try {
+        const authHeaders = {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`
+        };
         const [membersRes, archivesRes] = await Promise.all([
-          axios.get(`${process.env.REACT_APP_API_URL}/members/`),
-          axios.get(`${process.env.REACT_APP_API_URL}/archives/?archive_type=Member`),
+          axios.get(`${process.env.REACT_APP_API_URL}/members/`, { headers: authHeaders }),
+          axios.get(`${process.env.REACT_APP_API_URL}/archives/?archive_type=Member`, { headers: authHeaders }),
         ]);
 
         const archivedMemberIds = new Set(
@@ -147,7 +162,11 @@ const LoanSummary = () => {
   }, []);
 
   useEffect(() => {
-    axios.get(`${process.env.REACT_APP_API_URL}/api/total-penalties/`)
+    axios.get(`${process.env.REACT_APP_API_URL}/api/total-penalties/`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('accessToken')}`
+      }
+    })
       .then(res => {
         setTotalPenalties(res.data.total_penalty);
       })
@@ -157,7 +176,11 @@ const LoanSummary = () => {
   }, []);
 
   useEffect(() => {
-    axios.get(`${process.env.REACT_APP_API_URL}/api/total-fees-breakdown/`)
+    axios.get(`${process.env.REACT_APP_API_URL}/api/total-fees-breakdown/`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('accessToken')}`
+      }
+    })
       .then(res => {
         setFeesBreakdown(res.data);
       })
@@ -199,7 +222,12 @@ const LoanSummary = () => {
   useEffect(() => {
     const fetchLoanSummary = async () => {
       try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/loan-summary/`);
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/loan-summary/`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+          }
+        });
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }

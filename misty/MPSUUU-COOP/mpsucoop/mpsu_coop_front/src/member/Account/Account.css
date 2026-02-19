@@ -664,7 +664,7 @@
 @media (max-width: 480px) {
   .ledger-page-content {
     padding: 0 10px;
-    margin-top: 5px;
+    margin-top: 10px;
   }
 
   .ledger-stats-grid {

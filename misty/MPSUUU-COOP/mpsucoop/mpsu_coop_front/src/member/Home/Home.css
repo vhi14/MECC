@@ -1223,7 +1223,7 @@ body {
 
   .paypal-table th,
   .paypal-table td {
-    padding: 1px 1px;
+    padding: 5px 5px;
     font-size: 11px;
   }
 
@@ -1263,12 +1263,12 @@ body {
   }
 
   .paypal-btn {
-    padding: 1px 1px;
+    padding: 5px 5px;
     font-size: 12px;
   }
 
   .paypal-btn.small {
-    padding: 1px 1px;
+    padding: 5px 5px;
     font-size: 11px;
     margin-right: 1px;
   }

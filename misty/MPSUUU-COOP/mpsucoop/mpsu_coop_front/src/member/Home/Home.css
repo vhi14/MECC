@@ -1213,7 +1213,7 @@ body {
   }
 
   .loan-title h3 {
-    font-size: 11px;
+    font-size: 18px;
   }
 
   .paypal-table {
@@ -1260,6 +1260,21 @@ body {
   .spinner {
     width: 40px;
     height: 40px;
+  }
+
+  .paypal-btn {
+    padding: 5px 5px;
+    font-size: 12px;
+  }
+
+  .paypal-btn.small {
+    padding: 5px 5px;
+    font-size: 11px;
+    margin-right: 1px;
+  }
+
+  .payment-table-header h3 {
+    font-size: 12px;
   }
 
     /* HIDE LOAN FEES SA RESPONSIVE */

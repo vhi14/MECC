@@ -663,7 +663,7 @@
 /* Mobile - Optimized card view */
 @media (max-width: 480px) {
   .ledger-page-content {
-    padding: 0 10px;
+    padding: 0 100px;
     margin-top: 150px;
   }
 

@@ -1263,12 +1263,12 @@ body {
   }
 
   .paypal-btn {
-    padding: 5px 5px;
+    padding: 1px 1px;
     font-size: 12px;
   }
 
   .paypal-btn.small {
-    padding: 5px 5px;
+    padding: 1px 1px;
     font-size: 11px;
     margin-right: 1px;
   }

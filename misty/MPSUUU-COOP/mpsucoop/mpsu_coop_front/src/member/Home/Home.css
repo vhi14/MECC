@@ -978,8 +978,8 @@ body {
 
 @media (max-width: 480px) {
   body { overflow-y: auto; }
-  .paypal-container { padding: 1250px 10px 20px; }
-  .welcome-text h1 { font-size: 20px; }
+  .paypal-container { padding: 1200px 12px 20px; }
+  .welcome-text h1 { font-size: 18px; }
   .account-info { font-size: 12px; }
   .paypal-card { padding: 15px; }
   .card-header { gap: 5px; margin-bottom: 5px; }
@@ -989,7 +989,7 @@ body {
   .loan-amount { flex-direction: column; align-items: flex-start; gap: -10px; }
   .loan-amount .value { align-self: flex-end; font-size: 18px; }
   .loan-header { flex-direction: column; align-items: flex-start; gap: 5px; }
-  .loan-title h3 { font-size: 16px; }
+  .loan-title h3 { font-size: 18px; }
   .paypal-table { font-size: 12px; min-width: 100px; }
   .paypal-table th,
   .paypal-table td { padding: 1px 1px; font-size: 12px; }

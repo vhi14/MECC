@@ -106,7 +106,7 @@
 
 .home-content {
   padding: 40px 20px;
-  margin-top: 150px;
+  margin-top: 80px;
 }
 
 .home-wrapper {
@@ -172,7 +172,9 @@
   text-align: center;
   margin-top: 180px;
   height: 150px;
-  width: 500px;
+  width: 100%;
+  max-width: 500px;
+  box-sizing: border-box;
 }
 
 .member-name {
@@ -207,7 +209,9 @@
   max-height: 630px;
   margin-top: -20px;
   overflow-y: auto;
-  width: 700px;
+  width: 100%;
+  max-width: 700px;
+  box-sizing: border-box;
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
@@ -283,6 +287,8 @@
   color: rgb(0, 0, 0);
   transition: all 0.3s ease;
   outline: none;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .form-input.readonly {
@@ -326,7 +332,6 @@
 .btn-edit {
   background: #478dffff;
   margin-top: -50px;
-  margin-left: 200px;
   width: 200px;
 }
 
@@ -567,7 +572,7 @@
 /* Mobile Devices (576px and below) */
 @media screen and (max-width: 576px) {
   .home-content {
-    margin-top: 250px;
+    margin-top: 90px;
     padding: 5px 5px;
   }
 
@@ -669,9 +674,8 @@
 /* Extra Small Mobile Devices (400px and below) */
 @media screen and (max-width: 400px) {
   .home-content {
-    margin-top: 80px;
+    margin-top: 130px;
     padding: 10px 5px;
-    margin-right: 20px;
   }
 
   .profile-card {

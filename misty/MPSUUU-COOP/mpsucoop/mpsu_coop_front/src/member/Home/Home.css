@@ -986,7 +986,7 @@ body {
 
 @media (max-width: 480px) {
   body { overflow-y: auto; }
-  .paypal-container { padding: 1400px 12px 20px; }
+  .paypal-container { padding: 1000px 12px 20px; }
   .welcome-text h1 { font-size: 18px; }
   .account-info { font-size: 12px; }
   .paypal-card { padding: 15px; }

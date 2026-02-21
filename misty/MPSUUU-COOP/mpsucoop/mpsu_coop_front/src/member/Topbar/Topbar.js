@@ -166,11 +166,6 @@ const Topbar = () => {
                     </Link>
                   </li>
 
-                  {/* Divider */}
-                  <li className="mobile-nav-divider">
-                    <span>Quick Actions</span>
-                  </li>
-
                   {/* Share Capital */}
                   <li className="mobile-nav-item">
                     <Link

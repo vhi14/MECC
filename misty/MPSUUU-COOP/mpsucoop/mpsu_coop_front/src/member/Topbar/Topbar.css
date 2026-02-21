@@ -358,13 +358,14 @@
 }
 
 /* ========================================
-   QUICK ACCESS — SHARE CAPITAL & AMORTIZATION
+   QUICK ACTIONS DIVIDER
    ======================================== */
 
-/* Section divider label */
 .mobile-nav-divider {
   border-bottom: none !important;
-  padding: 10px 20px 4px;
+  padding: 10px 20px 6px;
+  border-top: 1px solid rgba(218, 165, 32, 0.25);
+  margin-top: 4px;
   background-color: rgba(0, 0, 0, 0.25);
 }
 
@@ -372,56 +373,8 @@
   font-size: 10px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 1.2px;
   color: rgba(218, 165, 32, 0.75);
-}
-
-/* Spacer divider at bottom of quick access */
-.mobile-nav-divider--bottom {
-  padding: 0;
-  height: 1px;
-  background-color: rgba(218, 165, 32, 0.2);
-}
-
-/* Share Capital item — blue tint */
-.mobile-nav-link--accent-blue {
-  background-color: rgba(0, 153, 255, 0.08);
-}
-
-.mobile-nav-link--accent-blue:hover {
-  background-color: rgba(0, 153, 255, 0.2) !important;
-  padding-left: 25px;
-}
-
-.mobile-nav-link--accent-blue.active {
-  background-color: rgba(0, 153, 255, 0.3);
-  border-left: 4px solid #00b4db;
-  color: #7dd6ff;
-}
-
-/* Amortization item — purple tint */
-.mobile-nav-link--accent-purple {
-  background-color: rgba(102, 126, 234, 0.08);
-}
-
-.mobile-nav-link--accent-purple:hover {
-  background-color: rgba(102, 126, 234, 0.22) !important;
-  padding-left: 25px;
-}
-
-.mobile-nav-link--accent-purple.active {
-  background-color: rgba(102, 126, 234, 0.3);
-  border-left: 4px solid #764ba2;
-  color: #c4b5fd;
-}
-
-/* Coloured icon overrides */
-.mobile-nav-icon--blue {
-  color: #7dd6ff !important;
-}
-
-.mobile-nav-icon--purple {
-  color: #c4b5fd !important;
 }
 
 /* ========================================
@@ -915,55 +868,4 @@
     border: 1px solid currentColor;
     padding: 7px 11px;
   }
-}
-
-/* ========================================
-   QUICK ACTIONS - MOBILE MENU
-   ======================================== */
-
-/* Divider label between nav links and quick actions */
-.mobile-nav-divider {
-  padding: 10px 20px 6px;
-  border-top: 1px solid rgba(218, 165, 32, 0.25);
-  margin-top: 4px;
-}
-
-.mobile-nav-divider span {
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 1.2px;
-  color: rgba(218, 165, 32, 0.7);
-}
-
-/* Action nav links (Share Capital, Amortization) */
-.mobile-nav-link.mobile-nav-action {
-  gap: 15px;
-}
-
-.mobile-nav-link.mobile-nav-action:hover {
-  background-color: rgba(255, 255, 255, 0.08);
-  padding-left: 25px;
-}
-
-/* Action icon containers */
-.mobile-action-icon {
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  flex-shrink: 0;
-}
-
-.share-capital-icon {
-  background: linear-gradient(135deg, #00b4db 0%, #0083b0 100%);
-  box-shadow: 0 2px 8px rgba(0, 180, 219, 0.4);
-}
-
-.amortization-icon {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.4);
 }

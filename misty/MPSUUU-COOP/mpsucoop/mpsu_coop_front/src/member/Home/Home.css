@@ -879,6 +879,16 @@ body {
   to { opacity: 1; transform: translateY(0); }
 }
 
+@keyframes slideInRight {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+@keyframes slideOutRight {
+  from { transform: translateX(0); }
+  to { transform: translateX(100%); }
+}
+
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
@@ -902,8 +912,6 @@ body {
   .actionss-card { display: none !important; }
 
   /* Hide Type (col 1) and Status columns in payment-table-card only */
-  /* Regular table: Type=col1, Status=col3 */
-  /* Advance table: Type=col1, Status=col5 */
   .payment-table-card .paypal-table th:nth-child(1),
   .payment-table-card .paypal-table td:nth-child(1),
   .payment-table-card .paypal-table th:nth-child(3),
@@ -978,7 +986,7 @@ body {
 
 @media (max-width: 480px) {
   body { overflow-y: auto; }
-  .paypal-container { padding: 1200px 12px 20px; }
+  .paypal-container { padding: 60px 12px 20px; }
   .welcome-text h1 { font-size: 18px; }
   .account-info { font-size: 12px; }
   .paypal-card { padding: 15px; }
@@ -1025,10 +1033,6 @@ body {
   .card-header h3 { font-size: 13px; }
   .balance-label { font-size: 13px; }
   .balance-value { font-size: 16px; }
-  .actionss-card { right: 6px; bottom: 40px; }
-  .action-buttons { gap: 8px; }
-  .action-buttons button, .action-buttons .paypal-btn { width: 46px; height: 46px; }
-  .action-buttons button::before, .action-buttons .paypal-btn::before { font-size: 180px; }
   .loan-title h3 { font-size: 15px; }
   .loan-amount .value { font-size: 18px; }
   .paypal-table { min-width: 420px; }
@@ -1055,9 +1059,6 @@ body {
   .welcome-text h1 { font-size: 20px; }
   .account-info { margin-bottom: 16px; font-size: 13px; }
   .paypal-header { margin-bottom: 12px; }
-  .actionss-card { right: 10px; bottom: 20px; }
-  .action-buttons { gap: 8px; }
-  .action-buttons button, .action-buttons .paypal-btn { width: 44px; height: 44px; }
   .paypal-modal { max-height: 90vh; }
   .modal-body { max-height: 65vh; }
   .paypal-table-container { max-height: 200px; }

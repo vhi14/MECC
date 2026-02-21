@@ -1523,72 +1523,6 @@ const Home = () => {
         </div>
       </div>
 
-      {/* FLOATING ACTION BUTTONS - Mobile Only */}
-      <div className="home-floating-buttons" style={{ 
-        position: 'fixed', 
-        bottom: '10px', 
-        right: '10px', 
-        display: 'none',
-        flexDirection: 'column', 
-        gap: '10px', 
-        zIndex: 999 
-      }}>
-        <button 
-          onClick={() => handleNavigation('/accounts')} 
-          style={{ 
-            width: '50px', 
-            height: '50px', 
-            borderRadius: '50%', 
-            background: 'linear-gradient(135deg, #00b4db 0%, #0083b0 100%)', 
-            color: 'white', 
-            border: 'none', 
-            boxShadow: '0 4px 15px rgba(0, 180, 219, 0.4)', 
-            display: 'flex', 
-            alignItems: 'center', 
-            justifyContent: 'center', 
-            fontSize: '24px', 
-            cursor: 'pointer', 
-            transition: 'all 0.3s ease' 
-          }} 
-          title="Share Capital Transactions"
-        >
-          <FaCoins />
-        </button>
-
-        <button 
-          onClick={() => handleNavigation('/loans')} 
-          style={{ 
-            width: '50px', 
-            height: '50px', 
-            borderRadius: '50%', 
-            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', 
-            color: 'white', 
-            border: 'none', 
-            boxShadow: '0 4px 15px rgba(102, 126, 234, 0.4)', 
-            display: 'flex', 
-            alignItems: 'center', 
-            justifyContent: 'center', 
-            fontSize: '24px', 
-            cursor: 'pointer', 
-            transition: 'all 0.3s ease' 
-          }} 
-          title="Bi Monthly Amortization"
-        >
-          <FaMoneyBillWave />
-        </button>
-      </div>
-
-      {/* Mobile CSS for Floating Buttons */}
-      <style>
-        {`
-          @media (max-width: 768px) {
-            .home-floating-buttons {
-              display: flex !important;
-            }
-          }
-        `}
-      </style>
-
       {/* PAYMENTS MODAL - Mobile */}
       {showPaymentsModal && (
         <>
@@ -1596,137 +1530,66 @@ const Home = () => {
             onClick={() => setShowPaymentsModal(false)} 
             style={{ 
               position: 'fixed', 
-              top: 0, 
-              left: 0, 
-              right: 0, 
-              bottom: 0, 
+              top: 0, left: 0, right: 0, bottom: 0, 
               backgroundColor: 'rgba(0, 0, 0, 0.6)', 
               backdropFilter: 'blur(5px)', 
               zIndex: 1000 
             }} 
           />
           <div style={{ 
-            position: 'fixed', 
-            top: '50%', 
-            left: '50%', 
+            position: 'fixed', top: '50%', left: '50%', 
             transform: 'translate(-50%, -50%)', 
-            background: 'white', 
-            borderRadius: '20px', 
-            maxWidth: '95%', 
-            width: '500px', 
-            maxHeight: '85vh', 
-            zIndex: 1001, 
-            overflow: 'hidden', 
+            background: 'white', borderRadius: '20px', 
+            maxWidth: '95%', width: '500px', maxHeight: '85vh', 
+            zIndex: 1001, overflow: 'hidden', 
             boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)' 
           }}>
             <div style={{ 
               background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', 
-              padding: '20px', 
-              display: 'flex', 
-              justifyContent: 'space-between', 
-              alignItems: 'center' 
+              padding: '20px', display: 'flex', 
+              justifyContent: 'space-between', alignItems: 'center' 
             }}>
               <h3 style={{ margin: 0, color: 'white', fontSize: '20px', fontWeight: '700' }}>
                 Payment History
               </h3>
               <button 
                 onClick={() => setShowPaymentsModal(false)} 
-                style={{ 
-                  background: 'white', 
-                  color: '#000', 
-                  border: 'none', 
-                  padding: '8px 15px', 
-                  borderRadius: '8px', 
-                  cursor: 'pointer', 
-                  fontWeight: '700' 
-                }}
+                style={{ background: 'white', color: '#000', border: 'none', padding: '8px 15px', borderRadius: '8px', cursor: 'pointer', fontWeight: '700' }}
               >
                 Close
               </button>
             </div>
-            
             <div style={{ maxHeight: '70vh', overflowY: 'auto', padding: '20px' }}>
-              {/* Regular Payments Section */}
               <div style={{ marginBottom: '30px' }}>
-                <h4 style={{ 
-                  fontSize: '16px', 
-                  fontWeight: '700', 
-                  marginBottom: '15px', 
-                  color: '#28a745', 
-                  borderBottom: '2px solid #28a745', 
-                  paddingBottom: '8px' 
-                }}>
+                <h4 style={{ fontSize: '16px', fontWeight: '700', marginBottom: '15px', color: '#28a745', borderBottom: '2px solid #28a745', paddingBottom: '8px' }}>
                   🟢 Regular Loan Payments
                 </h4>
                 {filteredRegular.length > 0 ? (
                   filteredRegular.map((payment, idx) => (
-                    <div 
-                      key={idx} 
-                      style={{ 
-                        background: '#f8f9ff', 
-                        borderRadius: '10px', 
-                        padding: '12px', 
-                        marginBottom: '10px', 
-                        border: '1px solid #e0e0e0' 
-                      }}
-                    >
-                      <p style={{ margin: '5px 0', fontSize: '13px', fontWeight: '600' }}>
-                        <strong>Amount:</strong> ₱{formatNumber(payment.payment_amount)}
-                      </p>
-                      <p style={{ margin: '5px 0', fontSize: '13px' }}>
-                        <strong>Date:</strong> {formatISODate(String(payment.date_paid || payment.payment_date || '').slice(0, 10))}
-                      </p>
-                      <p style={{ margin: '5px 0', fontSize: '13px' }}>
-                        <strong>OR #:</strong> {payment.or_number || 'N/A'}
-                      </p>
+                    <div key={idx} style={{ background: '#f8f9ff', borderRadius: '10px', padding: '12px', marginBottom: '10px', border: '1px solid #e0e0e0' }}>
+                      <p style={{ margin: '5px 0', fontSize: '13px', fontWeight: '600' }}><strong>Amount:</strong> ₱{formatNumber(payment.payment_amount)}</p>
+                      <p style={{ margin: '5px 0', fontSize: '13px' }}><strong>Date:</strong> {formatISODate(String(payment.date_paid || payment.payment_date || '').slice(0, 10))}</p>
+                      <p style={{ margin: '5px 0', fontSize: '13px' }}><strong>OR #:</strong> {payment.or_number || 'N/A'}</p>
                     </div>
                   ))
                 ) : (
-                  <p style={{ textAlign: 'center', color: '#6c757d', padding: '20px 0' }}>
-                    No payments found
-                  </p>
+                  <p style={{ textAlign: 'center', color: '#6c757d', padding: '20px 0' }}>No payments found</p>
                 )}
               </div>
-
-              {/* Emergency Payments Section */}
               <div>
-                <h4 style={{ 
-                  fontSize: '16px', 
-                  fontWeight: '700', 
-                  marginBottom: '15px', 
-                  color: '#dc3545', 
-                  borderBottom: '2px solid #dc3545', 
-                  paddingBottom: '8px' 
-                }}>
+                <h4 style={{ fontSize: '16px', fontWeight: '700', marginBottom: '15px', color: '#dc3545', borderBottom: '2px solid #dc3545', paddingBottom: '8px' }}>
                   🔴 Emergency Loan Payments
                 </h4>
                 {filteredEmergency.length > 0 ? (
                   filteredEmergency.map((payment, idx) => (
-                    <div 
-                      key={idx} 
-                      style={{ 
-                        background: '#fff5f5', 
-                        borderRadius: '10px', 
-                        padding: '12px', 
-                        marginBottom: '10px', 
-                        border: '1px solid #e0e0e0' 
-                      }}
-                    >
-                      <p style={{ margin: '5px 0', fontSize: '13px', fontWeight: '600' }}>
-                        <strong>Amount:</strong> ₱{formatNumber(payment.payment_amount)}
-                      </p>
-                      <p style={{ margin: '5px 0', fontSize: '13px' }}>
-                        <strong>Date:</strong> {formatISODate(String(payment.date_paid || payment.payment_date || '').slice(0, 10))}
-                      </p>
-                      <p style={{ margin: '5px 0', fontSize: '13px' }}>
-                        <strong>OR #:</strong> {payment.or_number || 'N/A'}
-                      </p>
+                    <div key={idx} style={{ background: '#fff5f5', borderRadius: '10px', padding: '12px', marginBottom: '10px', border: '1px solid #e0e0e0' }}>
+                      <p style={{ margin: '5px 0', fontSize: '13px', fontWeight: '600' }}><strong>Amount:</strong> ₱{formatNumber(payment.payment_amount)}</p>
+                      <p style={{ margin: '5px 0', fontSize: '13px' }}><strong>Date:</strong> {formatISODate(String(payment.date_paid || payment.payment_date || '').slice(0, 10))}</p>
+                      <p style={{ margin: '5px 0', fontSize: '13px' }}><strong>OR #:</strong> {payment.or_number || 'N/A'}</p>
                     </div>
                   ))
                 ) : (
-                  <p style={{ textAlign: 'center', color: '#6c757d', padding: '20px 0' }}>
-                    No payments found
-                  </p>
+                  <p style={{ textAlign: 'center', color: '#6c757d', padding: '20px 0' }}>No payments found</p>
                 )}
               </div>
             </div>
@@ -1741,16 +1604,10 @@ const Home = () => {
             <div className="modal-header regular">
               <h3>Regular Loan - Complete Payment History</h3>
               <div className="modal-actions">
-                <button
-                  onClick={() => handlePrint('Regular', regularPaymentHistory)}
-                  className="paypal-btn small secondary"
-                >
+                <button onClick={() => handlePrint('Regular', regularPaymentHistory)} className="paypal-btn small secondary">
                   <BsFillPrinterFill /> Print
                 </button>
-                <button
-                  onClick={() => setShowRegularHistory(false)}
-                  className="paypal-btn small secondary"
-                >
+                <button onClick={() => setShowRegularHistory(false)} className="paypal-btn small secondary">
                   Close
                 </button>
               </div>
@@ -1759,11 +1616,7 @@ const Home = () => {
               <table className="paypal-table">
                 <thead>
                   <tr>
-                    <th>Type</th>
-                    <th>Amount</th>
-                    <th>Date Paid</th>
-                    <th>OR No.</th>
-                    <th>Description</th>
+                    <th>Type</th><th>Amount</th><th>Date Paid</th><th>OR No.</th><th>Description</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -1771,14 +1624,12 @@ const Home = () => {
                     const normalized = normalizeHistoryForTable('Regular');
                     if (normalized.length === 0) {
                       return (
-                        <tr>
-                          <td colSpan="5">
-                            <div className="empty-state">
-                              <div className="empty-icon">📭</div>
-                              <p>No payment history found for regular loans</p>
-                            </div>
-                          </td>
-                        </tr>
+                        <tr><td colSpan="5">
+                          <div className="empty-state">
+                            <div className="empty-icon">📭</div>
+                            <p>No payment history found for regular loans</p>
+                          </div>
+                        </td></tr>
                       );
                     }
                     return renderHistoryWithORGrouping(normalized, 'Regular');
@@ -1797,16 +1648,10 @@ const Home = () => {
             <div className="modal-header emergency">
               <h3>Emergency Loan - Complete Payment History</h3>
               <div className="modal-actions">
-                <button
-                  onClick={() => handlePrint('Emergency', emergencyPaymentHistory)}
-                  className="paypal-btn small secondary"
-                >
+                <button onClick={() => handlePrint('Emergency', emergencyPaymentHistory)} className="paypal-btn small secondary">
                   <BsFillPrinterFill /> Print
                 </button>
-                <button
-                  onClick={() => setShowEmergencyHistory(false)}
-                  className="paypal-btn small secondary"
-                >
+                <button onClick={() => setShowEmergencyHistory(false)} className="paypal-btn small secondary">
                   Close
                 </button>
               </div>
@@ -1815,11 +1660,7 @@ const Home = () => {
               <table className="paypal-table">
                 <thead>
                   <tr>
-                    <th>Type</th>
-                    <th>Amount</th>
-                    <th>Date Paid</th>
-                    <th>OR No.</th>
-                    <th>Description</th>
+                    <th>Type</th><th>Amount</th><th>Date Paid</th><th>OR No.</th><th>Description</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -1827,14 +1668,12 @@ const Home = () => {
                     const normalized = normalizeHistoryForTable('Emergency');
                     if (normalized.length === 0) {
                       return (
-                        <tr>
-                          <td colSpan="5">
-                            <div className="empty-state">
-                              <div className="empty-icon">📭</div>
-                              <p>No payment history found for emergency loans</p>
-                            </div>
-                          </td>
-                        </tr>
+                        <tr><td colSpan="5">
+                          <div className="empty-state">
+                            <div className="empty-icon">📭</div>
+                            <p>No payment history found for emergency loans</p>
+                          </div>
+                        </td></tr>
                       );
                     }
                     return renderHistoryWithORGrouping(normalized, 'Emergency');

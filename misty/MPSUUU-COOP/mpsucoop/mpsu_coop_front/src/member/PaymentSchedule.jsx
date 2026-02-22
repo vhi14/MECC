@@ -221,7 +221,7 @@ const PaymentSchedule = () => {
               width: 100% !important;
             }
             .table-scroll-container {
-              max-height: 400px !important;
+              max-height: 600px !important;
             }
             .payment-table {
               font-size: 11px !important;

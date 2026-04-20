@@ -289,7 +289,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-d=rrmuud(ebm%&fex9hzz7qa+2
 DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
 
-_allowed_hosts_env = os.getenv('ALLOWED_HOSTS', 'mecc-60lx.onrender.com,localhost,127.0.0.1')
+_allowed_hosts_env = os.getenv('ALLOWED_HOSTS', 'https://mecc-1-a043.onrender.com,localhost,127.0.0.1')
 ALLOWED_HOSTS = [h.strip() for h in _allowed_hosts_env.split(',') if h.strip()]
 # Application definition
 
